@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Google's Agents CLI: Build &amp; Deploy Agents in Under 20 Minutes · DevFest Baguio 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&family=Google+Sans+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{
+  --bg:#FFFFFF; --surf:#F7F8F9; --surf-2:#EFF0F2; --line:#E3E3E6;
+  --ink:#1B1B1F; --gray:#5F6368; --gray-2:#9AA0A6;
+  --pri:#0B57D0; --pri-c:#D3E3FD;
+  --grad:linear-gradient(115deg,#4285F4 0%,#9B72CB 52%,#D96570 100%);
+  --r-xl:2.2em; --r-lg:1.5em; --r-md:1em; --r-sm:.65em; --pill:999px;
+  --sans:"Google Sans Flex","Google Sans","Poppins",system-ui,-apple-system,sans-serif;
+  --mono:"Google Sans Code",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit}
+:focus-visible{outline:2px solid var(--pri);outline-offset:3px}
+
+#app{height:100vh;height:100dvh;display:grid;place-items:center}
+.stage{position:relative;width:min(100vw,177.7vh);height:min(56.25vw,100vh);container-type:inline-size;overflow:hidden;background:var(--bg)}
+.slide{position:absolute;inset:0;display:none;font-size:1.28cqw;padding:3.1em max(4em,calc((100% - 62em)/2)) 3.3em;flex-direction:column;justify-content:center;overflow:hidden}
+.slide>*{min-height:0;width:100%}
+/* a heading that spans the slide should not wrap at the column cap */
+.slide>h1,.slide>h2{max-width:none}
+/* inline-sized children must not be stretched by width:100% */
+.slide>.pill,.slide>span,.slide>button,.slide>b{width:auto;align-self:flex-start}
+.slide.center>.pill,.slide.center>span,.slide.center>button,.slide.center>b{align-self:center}
+.slide.is-current{display:flex}
+.slide.center{align-items:center;text-align:center}
+.slide.center>*{margin-left:auto;margin-right:auto}
+.slide.center .row{justify-content:center}
+.slide.center .lede{margin-left:auto;margin-right:auto}
+.slide.roomy{padding:2.6em max(4.2em,calc((100% - 62em)/2)) 2.8em}
+
+h1{font-size:4.8em;font-weight:700;letter-spacing:-.035em;line-height:1;max-width:14ch}
+h1.two{font-size:3.6em;line-height:1.02;max-width:none}
+h2{font-size:3em;font-weight:600;letter-spacing:-.03em;line-height:1.05;max-width:17ch;margin-bottom:.6em}
+h2.dm{font-size:2.2em;margin-bottom:.5em}
+h3{font-size:1.3em;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+p{font-size:1.05em;line-height:1.5;color:var(--gray);max-width:34ch;font-weight:300}
+.lede{font-size:1.95em;font-weight:400;line-height:1.2;letter-spacing:-.02em;color:var(--ink);max-width:22ch}
+.kicker{font-size:.85em;font-weight:500;color:var(--gray-2);margin-bottom:1.2em}
+.src{display:inline-block;margin-top:1.1em;font-family:var(--mono);font-size:.7em;
+  color:var(--gray-2);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:.15em}
+.src:hover{color:var(--ink);border-color:var(--gray-2)}
+.tiny{font-size:.8em;color:var(--gray-2);font-weight:300;line-height:1.45;max-width:42ch}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.cols{display:grid;gap:2.2em;align-items:center}
+.c2{grid-template-columns:1fr 1fr}
+.c2w{grid-template-columns:1.05fr .95fr}
+.c3{grid-template-columns:repeat(3,1fr)}
+.c4{grid-template-columns:repeat(4,1fr)}
+.stack{display:flex;flex-direction:column;gap:1em}
+.row{display:flex;gap:1em;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+
+.card{background:var(--surf);border-radius:var(--r-lg);padding:1.4em 1.5em;position:relative}
+.card[data-step],.slide[data-steps] [data-step]:not(.card):not(.fd-g):not(.ag-i){opacity:0;transform:translateY(.9em) scale(.99);
+  transition:opacity .42s cubic-bezier(.2,.9,.3,1),transform .42s cubic-bezier(.2,.9,.3,1)}
+.card[data-step].is-on,.slide[data-steps] [data-step]:not(.card):not(.fd-g):not(.ag-i).is-on{opacity:1;transform:none}
+.slide[data-steps] tr[data-step]{transform:none}
+@media (prefers-reduced-motion:reduce){.card[data-step]{transition-duration:.01ms}}
+.card h3{margin-bottom:.35em}
+.card p{font-size:.95em;max-width:none}
+.card.line{background:var(--bg);border:1px solid var(--line)}
+.card.gen{background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
+.card.gen::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--grad);opacity:.05;pointer-events:none}
+.card.gen>*{position:relative;z-index:1}
+
+.pill{display:inline-flex;align-items:center;gap:.45em;font-size:.72em;font-weight:500;padding:.4em .9em;border-radius:var(--pill);background:var(--surf-2);color:var(--gray)}
+.pill.g{background:var(--grad);color:#fff}
+.pill.d{background:var(--ink);color:#fff}
+.pill.b{background:var(--pri-c);color:var(--pri)}
+.dot{width:.5em;height:.5em;border-radius:50%;background:var(--grad)}
+
+ul{list-style:none}
+.bl li{font-size:1.02em;font-weight:400;color:var(--ink);margin-bottom:1em;line-height:1.35}
+.bl.g li::before{background:var(--grad)}
+.bl li span{display:block;font-size:.82em;color:var(--gray-2);font-weight:300;margin-top:.15em}
+
+pre{font-family:var(--mono);font-size:.74em;line-height:1.7;background:var(--ink);color:#D6D8DC;border-radius:var(--r-md);padding:1.2em 1.3em;overflow:auto}
+pre .k{color:#C39BE8}pre .s{color:#9DD1A0}pre .c{color:#6E7480}pre .t{color:#8AB4F8}
+code{font-family:var(--mono);font-size:.88em;background:var(--surf-2);padding:.12em .4em;border-radius:.35em}
+.stat{font-size:4.4em;font-weight:700;letter-spacing:-.05em;line-height:.9}
+
+/* ============ POLL ============ */
+.poll-opts{display:grid;gap:.7em;margin-top:1.2em}
+.poll-opts.two{grid-template-columns:1fr 1fr}
+.poll-opts.four{grid-template-columns:repeat(2,1fr)}
+.poll-opt{
+  text-align:left;padding:.92em 1.15em;border-radius:var(--r-lg);
+  background:var(--surf);border:1.5px solid transparent;transition:.2s;
+  display:flex;gap:.9em;align-items:flex-start;
+}
+.poll-opt:hover{background:var(--surf-2)}
+.poll-opt .ltr{
+  width:1.75em;height:1.75em;border-radius:50%;background:var(--bg);
+  display:grid;place-items:center;font-size:.85em;font-weight:600;flex:none;color:var(--gray)
+}
+.poll-opt b{display:block;font-size:1.02em;font-weight:500;line-height:1.25}
+.poll-opt.picked{background:var(--bg);border-color:var(--pri)}
+.poll-opt.picked .ltr{background:var(--pri);color:#fff}
+.poll-opt.right{background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border-color:transparent}
+.poll-opt.right .ltr{background:var(--grad);color:#fff}
+.poll-wrap{display:grid;grid-template-columns:1.12fr .88fr;gap:2.4em;align-items:center;margin-top:1.2em}
+.poll-wrap .poll-opts{margin-top:0}
+.poll-verdict{
+  margin-top:0;padding:1em 1.2em;border-radius:var(--r-lg);
+  background:var(--ink);color:#fff;font-size:1.02em;line-height:1.45;font-weight:300;
+  display:none;animation:pop .3s cubic-bezier(.2,.9,.3,1) both;
+}
+.poll-verdict.show{display:block}
+.poll-verdict b{font-weight:600}
+.poll-verdict .yes{color:#81C995;font-weight:600}
+.poll-verdict .no{color:#F28B82;font-weight:600}
+.poll-verdict code{background:rgba(255,255,255,.15);color:#fff}
+@keyframes pop{from{opacity:0;transform:translateY(.5em) scale(.97)}to{opacity:1;transform:none}}
+
+/* ---- flow diagram (same tokens as the a2ui deck) ---- */
+.flow-d{width:100%;height:auto;display:block;margin:.2em auto 0}
+.flow-d text{font-family:var(--sans)}
+.fd-n{fill:var(--surf)}
+.fd-n.gen{fill:var(--bg);stroke:url(#fdg);stroke-width:1.6}
+.fd-t{fill:var(--ink);font-size:17px;font-weight:600;letter-spacing:-.2px}
+.fd-s{fill:var(--gray-2);font-size:12.5px;font-weight:300}
+.fd-l{fill:var(--gray-2);font-size:11px;font-weight:500;letter-spacing:.2px}
+.fd-line{stroke:var(--line);stroke-width:2;fill:none}
+.fd-tie{stroke:var(--line);stroke-width:1.4;fill:none;stroke-dasharray:2 5}
+.fd-cat{fill:var(--bg);stroke:var(--ink);stroke-width:1.6}
+
+.srcs{display:flex;flex-direction:column;align-items:flex-start;gap:.35em;margin-top:.9em}
+.srcs .src{margin-top:0}
+
+/* ---- quiz cards ---- */
+.qz{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1em;margin-top:1.3em}
+.qz-c{background:var(--surf);border-radius:var(--r-lg);padding:1.4em 1.5em;cursor:pointer;text-align:left;
+  display:flex;flex-direction:column;gap:.7em;transition:background .2s}
+.qz-c:hover{background:var(--surf-2)}
+.qz-c b{font-size:1.12em;font-weight:600;letter-spacing:-.015em;color:var(--ink);line-height:1.25}
+.qz-c i{font-style:normal;font-size:.92em;font-weight:300;color:var(--gray);line-height:1.45;
+  opacity:0;transform:translateY(.5em);transition:opacity .34s cubic-bezier(.2,.9,.3,1),transform .34s cubic-bezier(.2,.9,.3,1)}
+.qz-c.open{background:var(--ink)}
+.qz-c.open b{color:#fff}
+.qz-c.open i{opacity:1;transform:none;color:rgba(255,255,255,.82)}
+.qz-c.open code{background:rgba(255,255,255,.15);color:#fff}
+
+/* ---- agenda: large list, upcoming parts stay grey ---- */
+.ag{display:flex;flex-direction:column;gap:.45em;margin-top:.8em}
+.ag-i{display:flex;align-items:baseline;gap:1.2em}
+.ag-i i{font-family:var(--mono);font-style:normal;font-size:.95em;font-weight:400;
+  color:var(--line);width:2.4em;flex:none;transition:color .42s cubic-bezier(.2,.9,.3,1)}
+.ag-i b{font-size:2.2em;font-weight:600;letter-spacing:-.028em;line-height:1.22;color:var(--ink)}
+.ag-i i{color:var(--gray-2)}
+/* position marker: same list, everything but the current part greyed */
+.ag.here .ag-i{position:relative;padding-left:1.5em}
+.ag.here .ag-i i{color:var(--line)}
+.ag.here .ag-i b{color:#C8CBD0}
+.ag.here .ag-i.now i{color:var(--gray-2)}
+.ag.here .ag-i.now b{color:var(--ink)}
+.ag.here .ag-i.now::before{content:"";position:absolute;left:0;top:.42em;bottom:.42em;
+  width:.2em;border-radius:var(--pill);background:var(--ink)}
+
+.stp{display:block;font-family:var(--mono);font-style:normal;font-size:.34em;font-weight:400;
+  letter-spacing:.08em;color:var(--gray-2);margin-bottom:.7em}
+h2.dm .stp{font-size:.42em}
+
+table{width:100%;border-collapse:collapse;font-size:.88em}
+th,td{text-align:left;padding:.7em .8em;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;font-size:.85em;color:var(--gray-2)}
+td{color:var(--gray);font-weight:300}
+td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
+
+.links{display:grid;grid-template-columns:1fr 1fr;gap:.1em 1.6em;font-size:.82em}
+.links a{color:var(--gray);text-decoration:none;display:flex;gap:.8em;padding:.4em .6em;border-radius:var(--r-sm);font-weight:300}
+.links a:hover{background:var(--surf)}
+.links a b{font-weight:500;color:var(--ink);min-width:9em}
+
+
+.prog{position:fixed;left:0;right:0;top:0;height:2px;z-index:30;background:var(--surf-2)}
+.prog i{display:block;height:100%;background:var(--grad);width:0;transition:width .3s}
+.hud{position:fixed;top:1em;right:1.1em;z-index:32;display:flex;gap:.4em;align-items:center;font-size:11px;font-weight:500}
+.hud button,.hud .pace{padding:.45em .8em;border-radius:var(--pill);background:var(--surf);color:var(--gray-2)}
+.hud button:hover{background:var(--surf-2);color:var(--ink)}
+.hud .pace.ahead{background:var(--pri-c);color:var(--pri)}
+.hud .pace.behind{background:#FCE8E6;color:#C5221F}
+.panel{position:fixed;z-index:36;background:var(--bg);border-radius:var(--r-lg);display:none;box-shadow:0 1.5em 4em rgba(27,27,31,.18)}
+.panel.open{display:block}
+#notes{left:4vw;right:4vw;bottom:2vh;max-height:36vh;overflow:auto;padding:1.3em 1.6em;font-size:13px;line-height:1.6;color:var(--gray);font-weight:300;border:1px solid var(--line)}
+#notes h4{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:.5em}
+#notes strong{color:var(--ink);font-weight:500}
+#notes .flag{color:#C5221F}
+#jump{inset:6vh 23vw;overflow:auto;padding:1.5em 1.7em;border:1px solid var(--line)}
+#jump h4{font-size:11px;font-weight:600;color:var(--gray-2);margin:1em 0 .35em}
+#jump h4:first-child{margin-top:0}
+#jump button{display:block;width:100%;text-align:left;padding:.4em .7em;border-radius:var(--r-sm);font-size:13px;color:var(--gray);font-weight:300}
+#jump button:hover,#jump button.on{background:var(--surf);color:var(--ink)}
+#jump button b{color:var(--gray-2);font-family:var(--mono);font-size:10px;margin-right:.9em;font-weight:400}
+.help{position:fixed;left:1.3em;bottom:1.1em;z-index:32;font-size:11px;color:var(--gray-2);font-weight:300}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-aspect-ratio:1/1){
+  body{overflow:auto}#app{height:auto;display:block}
+  .stage{width:100%;height:auto}
+  .slide{position:relative;inset:auto;min-height:100vh;font-size:3.7cqw;padding:2.5em 1.4em}
+  h1{font-size:3em}h2{font-size:2.1em}
+  .c2,.c2w,.c3,.c4,.links,.poll-opts.two,.poll-opts.four,.poll-wrap,.qz{grid-template-columns:1fr}
+  .stat{font-size:3.4em}
+  .links a{flex-direction:column;gap:.1em}
+  #jump{inset:4vh 4vw}
+  .help{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="app"><div class="stage" id="stage">
+
+<!-- 01 -->
+<section class="slide roomy" data-sec="Why agents" data-at="0" data-title="Google's Agents CLI: Build &amp; Deploy Agents in Under 20 Minutes">
+  <div class="cols c2w">
+    <div style="display:flex;flex-direction:column;gap:1.1em">
+      <div class="kicker">DevFest Baguio 2026 &middot; November 7</div>
+      <h1 class="two" style="font-size:3em">Google's Agents CLI:<br>Build &amp; Deploy Agents<br>in Under 20 Minutes</h1>
+      <p style="font-size:1.2em;max-width:30ch">Create, run, test and evaluate an ADK agent on your laptop. Then see what deploy needs.</p>
+      <a class="src" style="margin-top:0;align-self:flex-start" href="https://google.github.io/agents-cli/" target="_blank" rel="noopener">google.github.io/agents-cli</a>
+      <div style="height:1px;background:var(--line);margin:.2em 0 .2em"></div>
+      <div>
+        <p style="font-size:1.35em;font-weight:500;color:var(--ink)">Joshua M. de Guzman</p>
+        <p style="font-size:1.05em;color:var(--gray);font-weight:300;margin-top:.15em">Google Developer Expert</p>
+      </div>
+    </div>
+<pre><span class="c"># install the CLI and seven skills</span>
+<span class="t">uvx</span> google-agents-cli setup
+
+<span class="c"># create an agent</span>
+<span class="t">agents-cli</span> create ask-your-data <span class="k">--prototype --yes</span>
+<span class="k">cd</span> ask-your-data &amp;&amp; <span class="t">agents-cli</span> install
+
+<span class="c"># run it, then evaluate it</span>
+<span class="t">agents-cli</span> run <span class="s">"What is the total revenue?"</span>
+<span class="t">agents-cli</span> eval run</pre>
+  </div>
+  <div class="notes"><h4>Opening, 60 seconds</h4>
+  One line about yourself. Then say what happens: <strong>we build one agent from an empty folder, run it, test it and evaluate it, all on an AI Studio key.</strong><br>
+  Deploy needs a Google Cloud project, so we show that command and stop there.<br>
+  There are four questions for the room along the way.</div>
+</section>
+
+<!-- 02 -->
+<section class="slide" data-sec="Why agents" data-at="1">
+  <span class="pill b">Question 1 for the room</span>
+  <h2 style="margin-top:.6em;max-width:24ch">Who here has built an AI agent?</h2>
+  <div class="poll-wrap">
+    <div>
+  <div class="poll-opts four" data-poll="1">
+    <button class="poll-opt" data-verdict="<b>Good.</b> You will recognize every step. Watch the eval part closely."><span class="ltr">A</span><b>Shipped one to production</b></button>
+    <button class="poll-opt" data-verdict="<b>That's common.</b> Today covers everything up to deploy, and what deploy needs."><span class="ltr">B</span><b>Built one, never deployed it</b></button>
+    <button class="poll-opt" data-verdict="<b>This talk is for you.</b> The skills put the ADK docs where your coding agent can read them."><span class="ltr">C</span><b>Started, got lost in the docs</b></button>
+    <button class="poll-opt" data-verdict="<b>Good starting point.</b> You will see one built from an empty folder."><span class="ltr">D</span><b>Not yet</b></button>
+  </div>
+    </div>
+    <div class="poll-verdict" aria-live="polite"></div>
+  </div>
+  <div class="notes"><h4>Question 1, 60 seconds</h4>
+  Hands up for each option and count out loud. Click the biggest group and read its card.<br>
+  If most hands are D, spend 30 extra seconds on what an agent is: <strong>a model that can call tools, in a loop, until the task is done.</strong></div>
+</section>
+
+<!-- 03 -->
+<section class="slide" data-sec="Why agents" data-at="2" data-steps="2">
+  <h2 class="dm" style="margin-bottom:.2em">Why write an agent when you already have Claude or Antigravity?</h2>
+  <p style="font-size:1.05em;max-width:none">A chat session starts from zero every time. An agent keeps the instructions, tools and checks in code.</p>
+  <svg class="flow-d" viewBox="0 0 1160 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same weekly task typed into a chat session three times, compared with one agent that runs every week's file">
+    <defs><linearGradient id="fdg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4285F4"/><stop offset=".52" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs>
+    <g data-step="1">
+      <text class="fd-l" x="0" y="14">A CHAT SESSION, EVERY WEEK</text>
+      <rect class="fd-n" x="0" y="28" width="560" height="76" rx="16"/>
+      <text class="fd-t" x="22" y="56">Week 36</text><text class="fd-l" x="538" y="56" text-anchor="end">median 1,378.97 &#183; outlier found</text>
+      <text class="fd-s" x="22" y="78">Here's sales.csv. Revenue is units &#215; price. Find the median</text>
+      <text class="fd-s" x="22" y="95">and the biggest outlier. Use pandas. Round to 2 decimals.</text>
+      <rect class="fd-n" x="0" y="116" width="560" height="76" rx="16"/>
+      <text class="fd-t" x="22" y="144">Week 37</text><text class="fd-l" x="538" y="144" text-anchor="end">median 1,378.97 &#183; outlier found</text>
+      <text class="fd-s" x="22" y="166">New file attached. Same as last week, median and outliers.</text>
+      <text class="fd-s" x="22" y="183">Oh, and revenue is units &#215; price.</text>
+      <rect class="fd-n" x="0" y="204" width="560" height="76" rx="16"/>
+      <text class="fd-t" x="22" y="232">Week 38</text><text class="fd-l" x="538" y="232" text-anchor="end">median 1378.9696 &#183; no outlier</text>
+      <text class="fd-s" x="22" y="254">Can you do the revenue analysis again?</text>
+      <text class="fd-s" x="22" y="271">(the rules from week 36 aren't in this prompt)</text>
+    </g>
+    <g data-step="2">
+      <text class="fd-l" x="620" y="14">AN AGENT, WRITTEN ONCE</text>
+      <rect class="fd-n" x="620" y="36" width="150" height="44" rx="12"/><text class="fd-s" x="695" y="63" text-anchor="middle">week_36.csv</text>
+      <rect class="fd-n" x="620" y="92" width="150" height="44" rx="12"/><text class="fd-s" x="695" y="119" text-anchor="middle">week_37.csv</text>
+      <rect class="fd-n" x="620" y="148" width="150" height="44" rx="12"/><text class="fd-s" x="695" y="175" text-anchor="middle">week_38.csv</text>
+      <path class="fd-line" d="M770 58 H840 M770 114 H840 M770 170 H840"/>
+      <rect class="fd-n gen" x="840" y="28" width="320" height="170" rx="16"/>
+      <text class="fd-t" x="862" y="60">ask_your_data</text>
+      <text class="fd-s" x="862" y="88">Instruction: the rules, written once</text>
+      <text class="fd-s" x="862" y="110">Code executor: runs the pandas</text>
+      <text class="fd-s" x="862" y="132">Same steps for every file</text>
+      <text class="fd-l" x="862" y="180">app/agent.py</text>
+      <path class="fd-tie" d="M1000 198 V222"/>
+      <rect class="fd-cat" x="840" y="222" width="320" height="62" rx="16"/>
+      <text class="fd-t" x="862" y="249">agents-cli eval run</text>
+      <text class="fd-s" x="862" y="271">Same checks after every change</text>
+    </g>
+  </svg>
+  <div class="notes"><h4>90 seconds. Press &rarr; twice.</h4>
+  Left: the same weekly task typed into a chat app. <strong>You repeat the rules, you phrase them differently, and the answer drifts.</strong> In week 38 the rounding and outlier rules weren't in the prompt, so they didn't happen.<br>
+  Right: the rules live in <code>app/agent.py</code>. Every file goes through the same agent, and <code>eval run</code> tells you when a change breaks it.<br>
+  Don't knock chat apps. They're the right tool for one-off work. <strong>Write an agent when the task repeats, or when something other than you needs to run it.</strong></div>
+</section>
+
+<!-- 04 -->
+<section class="slide" data-sec="Why agents" data-at="4" data-steps="4">
+  <h2 class="dm">You need an agent that's available 24/7</h2>
+  <div class="cols c2w" style="align-items:center;gap:2.4em">
+    <div>
+      <div class="cols c2" style="align-items:stretch;gap:1em">
+        <div class="card line" data-step="1"><h3>Behind a button in your app</h3><p>Your Flutter or web app calls the agent over HTTP. Users never see a chat box.</p></div>
+        <div class="card line" data-step="2"><h3>On a schedule</h3><p>Run the weekly sales check every Monday and send the result.</p></div>
+        <div class="card line" data-step="3"><h3>Called by another agent</h3><p>Projects from <code>agents-cli create</code> include A2A, so other agents can call yours.</p></div>
+        <div class="card line" data-step="4"><h3>Inside a pipeline</h3><p>Sort logs, tickets or form submissions as they arrive.</p></div>
+      </div>
+      <p style="margin-top:1.3em;font-size:1.05em;color:var(--ink);font-weight:500;max-width:none">Every one of these starts with the same project: <code>agents-cli create</code>.</p>
+      <a class="src" href="https://google.github.io/agents-cli/guide/use-cases/" target="_blank" rel="noopener">google.github.io/agents-cli/guide/use-cases</a>
+    </div>
+    <figure style="margin:0">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITEhUSEhMVFRUXGBYWGBgXGBUXFxUVGBUXFxUYFxUYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OFxAQFysdFx0rLS0tKysrLSstLS0tLS0tLSstLS0tLS0rLS0tLS0tKystLS0rKy0tLS0tKystLSsrK//AABEIAjYCHgMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAAAgMEBQYBBwj/xABLEAABAwIEAgYHBQUGBQIHAQABAAIRAyEEEjFBUWEFBhMicYEHFDKRobHRQlKSwfAjYnLh8RUkMzSCshYXU3Oik8IlNTZDY4PiVP/EABkBAQEBAQEBAAAAAAAAAAAAAAABAgMEBf/EACcRAQEAAgECBgMAAwEAAAAAAAABAhEDITEEEhMyQVEiM1IFYXGB/9oADAMBAAIRAxEAPwDw1CEIBC7CMqDiE4yi46NJ8ASkupkWII8bfNDRKF2FxAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQuoOIQhAIQhAIQhAIQhAIQhAIQhALqE7haDnvaxokuMDzQTOheh6uJfkpiwu5x0aOf0W9w3VihQNGGiqXGC5wnYzA2UnoroxtCm1jTydbV3GfFTW47sxmc0uI0jef6LyZ8mWV1i9vHxY4zeXdaUqOXujQbCAI8E3WwzKgh7GuG+ZrT8SFQ0+nqxqHLRAEZhMm3MhXWB6SZVBEQ4GCBoCvPnx5Y9Xowzxy6aZfp3qNTeHPw/cdqG/ZdyE+yvO8RQcxxa8EOBgg7L2/E37g2Ek8OSyHXHoNr6RqsvUZJd+8zceIsuvBz3flycefw815sXnaAEFbr0V9F0XvxOKrsFRmFomqGHRzzOWeQDT8F7ngYbIUlbx/pD7elWpY3C0qrXtPZdm1tJ1J+xDoMgcF3C9RMO1mGbi8YaNfFNa6lTFIva0OjL2jswiZCDBIW66L9HbqlTG0atYUn4QMJJEsc1xd3iZGUBondGE6lYWpSxWIbjv2GHqU29oaR77HNaXODc0zLoDd0GFQvSavo7wjauHDseRSxTQcOexJe91pzNzQ1olt+cbKmw/VGgzEYijisV2ZoP7MMpU3VatYzqymDYRdBj0LdY30dPGLw2Ho1c7cSztGPew0yxg9rOwmQRwUPpzq3gqdGo/D48VKlJ2R9OpTNMvMwTSOY5gCCgyQCkNwNUsNQU3Fg1cAco81b9SOjhWxTQYLWA1HA7gECPe4e5ejV+laY/ZUWio8uLezENAIjOXCO60CL72Xr4PDTkx81uo83Nz3DLyybrxohcWx9I3RYp1W1WhobUEQLd5upjnI9yx5XDl47x5XG/Dtx5zPGZT5cQhC5thCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBCEIBdAXF1Bsuj+ozatCjX9dotFd2RjXNq/wCKB/hucAQ13iYWWxmAqUqrqL2kVGOLC2DOYGIHFXvU7pem0vwuJP8AdsQA15/6VQf4dZp2LTryW6JFPtsVWo9r0lgmBn/46rP/ALOLLftFrdfBB511i6uOwYpCtUZ2z253URJdRafZ7Q6Bx4KkT+Nxb6r3VKji97yXOcbkk7qX1c6Hfi8RTw1MgOeYk6NGpcfAIK2EQvXOkOgugMJWZgq4r1Kxyh1TM4BhdpmggDwi26q63o0a7pJuFoVw+g5na9oC1zmMBylpixdOh+CDzeEQvWh0T1d9Z9Qiv2ubsu2zuy9rOWJnLOa3sxKj9Cejmk3pV+CxOapS7F1Wm5pLC4ZgBMbiSCg8thEL2Honqr0GcU/o8mtVxAL+9LmtGWSWMgwS1vEG4SML1S6FoYodH4h1atiHmzpcxjM12MlpHejUndB5Ahab0h9XG4DGuoMcXMytezN7Qa6bE7kEFZlAIQhB1bD0ZYVrsUXuAORhIm93WH5rHraejOpFWqNywfByzye2t8fuj0LGUmAEgWGsWIA4Ki6Yw+em11FxJBmHbje/G/xV68yFmGufRqOBbLBJB5G9uK8mGOq9mecsaPo7Ddkxr25A0RMgTfUT4p1jGsc6oS3v6EAARNrDfmocmMrmOc0w5pbz0kKBi6mZzmNkZAIvqTcg81rLDzbjXnmOMqQ/pBhJE3M7Kh6TqlxIBIAB03kXlIrOumcxJTHhmPVyy5rlNMNiWZXObwJC0fULrMMFWcajDUo1WGlVYNS06Ecxf3qg6QdNV5/ePzUdet42+OO6Ew9OsaFOrialRpaxtdgDKM7g6ki11Kp9Z+jsQMHVxnbtr4RrWZabQWVxTgskn2dBK88dhqgGYscBxymPemkHoLOvFOoelalVrmvxlNraQaJDcuYAOO1iFVdD9PUqfReMwjs3a1n03MgS2GlpOZ22hWTQg3uN614d56JIz/3RsVe7wcw9y9/ZKth13wbnY8Z69A4isKjK9Jo7XIGtHZk6tkg6HdeWIQen430hUG4nAYii2q8Yem+lVFT2nNdYnOTdxF1QdP1+ieyqnDDEVK9R2Zpf3G0QTLmwPb1WPQgn9B9I+r1mVQJym40kbhegUOuOCyvrZS2qYBGXvvA07wtuvMApFfDOYGFws9udt/syR8wV6OLxGfFNRx5eDHku6sOtPTPrVbtAC1oAa0Ezpv4/RU6ELjllcrbe7rjjMZqdnELsJ/B4V1R2VgkwTwsBJWVR0LpC4gEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgF0Li6EGz6qdD0qNL+0sc39i0xQpHXFVtQAP+mNSdFe9EdY6uNJrAN9fw5c9jQABicITNTDFo9rKJAETBXm+Jx1WoGtqVHvDBlYHOJDBwaDZo8EjDYl9NwfTe5jm3DmktcDpIIuEGt6y9US3E0PV2ubQxZHY9oC3s3OMOpPnQtPvCtuiejf7F6XoNxNRhY9kmoJAYKmZkkG4gt9xWHxfTeJqgCriK1QAhwD6j3Q4aESbHmouLxdSq7NVe97oAl7i4wNBJvCD1brp6OsXiukXVqIa6hXc15qZ2RTGUB0ib6WjWQpvVangOi+lvVqdcuz0sr3PLcrK2fM1mYWFgvJaHTeJYzIzEVms0ytqPDY/hBhQXOJMkzPxQeqt9GeN/tPtIb6v2/bdrmb7GfPGWZzRZbDAdM0sR0+4UnBwpYV9MuBEF3aNcQDvEwvCT07isuT1mvl0y9rUyxwidFFwuLqUzmpvewxEscWmOEg6IPReqn/ANRv/wC9i/8AbUSum/8A6lb/AN6l/sC84ZjKgf2jXvD5Jzhzg+Tqc0zJkodjKhf2pqPNSZz5nF0jfNMyg3npz/8AmQ/7FL5vXniexWKfUdmqPc90RLnFxjYSUygEIQgFddU+khQxLHu9k9138LrT5FUq6EpOj3l9RrRJNvn4LPdJuzuLmSLaTw4A2CyvQfWQuY2jVddoAYTuBsea0weucx063LzI7cTig5v7Uhg2DG5tLAOjRONpHwvPnxJ3S866HK6N03iMO1/7rvh5o6S6Gbh8O+tUqiA2QANXH2QJ5pvEYkMcC4gNAJkrH9YusDsQGUxIpsmBxJ3PlorGbVI43Vn0Kyz6li5mUNnQOe7LmjeFVqV0fjOzJkZmuGVw0kagg7EESCtML6o4B1bK+rmotnOXy17rCCwiAJm26arYWlTFWsaYdDqYZTJORrqlMPdMGSBMRKZd0w257SqbaGnSvwzunveMKFhelXNzh4FRtSC8OJu4GQ4EaFBMwdKhVeXCmWtZSc+owEw5w2adQ023SHsp1aD6jaYpupuZ7Jdlc15IiCTcck1/bLhUa9jGNDWlgYB3S06h25nik4rpTMzs2U202khzgJJcRpJOw4ILSvhKHrVPDtpiC5pc6XSZZdoE2F54puk2g5lc9gB2JGWHPl4Li2Kl/O0Kuf0s41xXyiRBjawhNU8eQ2q2B+1ieUOzW96Cyq4Wm84Z7aJiqHZqbCblriO6XElo80rHYJhoVKmSkx7HNAFJ5d3XGIfcieYKg4bph7Oxhrf2QeB+8Hm4K7V6VHZvpMpNY18EwSTIMgyUEzpD1ejUdQNHMGiC/M7tC/L7QvliTpCXjMRSZTw2ekKk0r5i4Q3tH+yGkd7meCinp0nvGkw1cuXtDM6RJboTG6g4vGGoKYIA7NmQRuMxN/egtv7PayviGCmKgpuhpe7LTaJ1eZE2sBKddgaHaUMzWBtZjmnI5xY2pmLQ5pJnWLKC7pwudVL6bXNquDi0kiHDQgi6TVxLsQadMdnSDA4NJdlaATOp4IH6HRjcjWvH7SpWFMH7rWuyvMeNlP6Oq0hiH06dINyNqta6XZjDSDnkwZjhZVfT3SeesHMMhkBrtMzhdz45uunP+IO8XiiwPcCHOE96RBtsgkYfo9jaVJxZSeagLnGpULIbmIAYA4XtrdI9UoM9ZdAqNpmmWd6xzE2JabjbyULDdKgMbTqUm1QycmaQWyZItqJ2TJ6ROWq3KAKpaTFsuVxIgIJHSdJhpUazGBheXtc1pJbLCIIzEkSDxVSrFlbtKTKTnsphhc4F2eXZ4n2Wngo2JoBsRUY+fu57eOZoQR0IQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQg6CrTAdP1qdpzN4Ov7jqFVIQayl1tb9qkZ5O+qRX62n7FMeLjPwCy8riaXdTMf0jUrGXungNAPAKJK4hECEIQC6uIQCEIQCEIQCEIQCEIQC7K4hAIQhAIQhB1EriEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCsugOhqmLrNoUoDiC4ucYaxrRLnOPAAIK1C0PSfVxjKRrUMXRxDQ4McGZmVA505Ypvu5pg3CsG9QzmbQfi8OzFOALcO4uzS4S1rnxla8jZBjw1dLSNl6J6POjG0m42s6tTpYijSqMGdr3Owzs4a6oYBHEcUU+r+GrYPFYmrjaNSt21IesFtaGSHyCMur4F42QecoV5ierdQeqZHtqDF2pls+32vZFpncOj3qY7qXVGNdgu0ZLWOqdoJNM02sL808LQgy6FpMD1YYaLK1fF0cO2qXCmHB7nPDTDnFrR3GzudV2h1LxDsXUwcs7VlN1QEGW1Ghgc3I7cOBF/ogzSFqWdTs1R7W4mgaVJjX1q4LuypOJI7OY775FgNVD6b6uGhSZXp1mV6DyWiowOEPFy17XCWmEFEhXPQPV92IFSo6oyjRpZe0q1JytLrNa0AS5x4BSOkuqzqZoOZVp1qNdwZTqszZc8gOa9pEtcJmEGeQtofR+7tX4Y4ugMSC7LR72Z4bJHeiGuIEhpVV0T1aNSm+vWqsw9FjxTL3hziahvlaxtzA14IKGEQvR8B0KMNi8LTwha+rUovqdtWAfQqsdTJ7jNWxDhfdZzozqwa9A4t1alRpCqab3PmGGMwIa0SZmAAEGaQtD0r1Tq0qlBlJ7MQ3EAdi+nMPvBBBEtIOoUyt1JMVGUsVQrV6LXOqUWZ5Ab7YY4iHlu8IMkhaTo/qsHUWV8RiaWGZVJFLtA8uqZTBdlaLMn7SdodRsS7EVsNLM9On2oM92owxlc13AgzKDLIWoo9Ug59XLi6BoUWsdVxAzmm0vsGNES92a1lX9PdCjD9m5lelXp1A4sfTJnukBwew95hk76oKnKdUlb3ofo0VuhyHVKdJjcXL6j9Gt7LYAZnEnRoVL0p1Sq0zQ7J7cTTxBy0alLNDnAgOYQRLXAnQoM4lBh2ErV1epP8AiMpYqhWxFJrnVKLM+aGCXhjiIqEXsOBV91eoNodFPrUcbSo1KldrXVMjyQ3sXO7DNlMGb2QeawuLU4TqkDSp1cTiqOG7YZqTamcue2SA8ho7jCRYlN4bqXiXYqpgzlbVZTfU4te1rQ5pYdw4EQeE8EGaQtRT6n5qj2txVA0qTGvrVxm7Km5xIyAxL3SNtVE6c6uGhSZXp1mV6D3FoqMzCHjVrmuEtMXQUSFajoRxwfrjXAtFXsXtE5mEtzMcf3TBE8QpmH6o1njB5C0vxhf2bDILWNcWl7zs2zj4AoM8haPpPq1TZSfVo4yhX7MtFRrczHDMQ0Fof7Yk7Kv6A6GdiqhY17KYa11R76hhjKbbuJO55C5QVoC6GGJi2i0eL6rtbTbXpYulVodo2lUqAPaaLnAlpewicpANxwWq654VjaWFwjcfSpUOwoONPJUh7nBzjXMNk5jfWboPMcq4t1156rUaeKbRwj2Fz+xY2g3tM4LqbTnJcIgkz4FQqvUm1RlHFUK1ek1zqlFmfMAz28jiIeRvCDJIWnodTycMzF1MRSpUnte5pfMl7SQKbWi7nGDyCqOhOiX4ms2jTLQ503eQ1rQBLi5x2AQV66tJjuqzRRqV8PiqWJbSLRVDA9rmBxytdDh3mTaVP6L6ksNShTxOJZSqVg17aIDi8sddoLvZa52wPFBjIXFqW9Wm1X4ioHeqYWi/sy6uS5wfpkAYO++QTA2TWK6pPbVw7G1adSniSBSrNzZDfK4EESHAnRBm12FsR1CcXVKLcTQOKYHu9X72chkkgOjLmyicqkYPq1hHdF9u7E0m1DXA7Qir3B2Jd2BAEZpvKDCoWownVNppUquIxdHD9tJpNeHkvaHFudxAhjSRuqDpHBOo1X0nlpcxxaS1wc0kGJa4WIQRkIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgFf8AUk1BimmlXZQqAOyOqew90f4btu9peyoF2UHpXTVBlPDjEYvDYehiWV6JpigWg1mh01s1NpIgAWKc6T6BdiOkfX6dal6q+oyuape0dm0ZXOa5s5swyxEcF5iCiUHoeG6Vp1qnTdZpAbVpVHMBMFwNcEWO5F/NQ+qmFOI6OxmFplnbGrhqrWuc1uZje0Di0utaViCUEoPSep+MYMGX1HN7To+pWrUwSJeX0nNYG8YrZXW4JLekKY6MOLzt7c4f+zw2e9ermL+Mdk1wnmvOCUSg9G6N6NDcJhqmDo4Wq5zHOxFWuWk0qgcQW5HEZGhsEEAyrjE4xn9q1KjajIPRrsrgQGk9hAgbX2XkMolBvPR/jA7DYrCtFA1nmlUpNrgGnU7OQ5lyAHQZCb631cTTwrKNcYSkHVM/Y0AA8FrYD3FpIAOmsrDyiUG/6i4vPgsRhKbaDq/a067GVwCyq0NLHNbJAzDXzS+mq9en6nQr+qUx6w2p2NBoDqfeaM9Qglokc157KJQeh0sS3/iPPnbl9aJzSMsQb5tIUvq/h21MJi2VBSqMOKLmtrVTh2AiZcytu7QFo2XmMrRdGdZGNw7cLicM3EUmPdUZ330nsc72oezUHgQUG2wFOu3pHC1a7aNPDijWpUOyqB9JrWUnS3tJu6+/FZR1Yf2KGZhm9dJLZE5exsY4Tuq3pzp7tqdOhTpMoUKRc5lNpc853xmc97zLjYcAOCpJQeldE9LUqFHoarUcMtOriC+4JaHOiSPOfJTq5xdB9Wu1vRtKmG1C2uGtJqNcCAGBpzZnA6RrK8nzIlB6lha9TE4LCeq0sJWdRpmjVZXDDUYQ4kEZnDuEHZJw/SL/AFnG9rVoOezAOpA0e7TsBDGz7REkW4Ly8lEoNf1E7eK/q1SgXlrQ7DVgIxDJkxmtLTtMpXX7B0mNwxFKlQxLm1O3pUXAsaA5vZGASGuILpA4LHSiUG66HwXrHRBoMqMFb1rO1jnBucCnBAne6t8HjafRzOjqGIe11RmKfiaoYQ8UWOZ2bQ4i03Lo5Ly6UAoPWKvrdCpVrtb0bSpNFRzMQGtJqNcCAG5XZi9wMablZBrx/YpZIzevtMSJj1ZwmNYm0rLByJQehdOdFP6SbhsRhXUyG4elQqMdUaw0X05BzB32SCDI4qzpdKUj0jUFOo1wo9G1MP2kgB9SnQglp3GYwPBeVEolBvPR/jAcNi8K0UDWeaNSk2uAadTs82ZlyBm70hN9b62Jp4VlCsMHSzVM/Y0GgPECA95aSADpCw8ozINb1Be2qcRgXua1uKpQ0uMNbWpnPScSeeb3qZj+ke06Wptw9dtBmHy4fD1Xew0UWFrS6NnvBvp37rDSiUHpHWHBg4SvVx2HwtCuMnYPoFodWqFwzAsaSC3LJlUHUDAUKtWqKrWPqNpOdQpVHZadSrIgOd4bTdZbMUSg9N6Yc9vRWLp1hhqVQVMM4UqIY0hmZwzOykyZ2myz3pCqNNTC5SDGBwoMGYIYZB5rKZiuSg9U6WqtpdKYXpQuY7Cu9XGYOaSP2Aa7M0GRB+SXWGLoOq1mt6NpUw2oW1w1pNRrgQA3K4uLnA8F5RKJQa7rNiJ6N6NYHAwK5LQRY9oIkbWUPqHg8PWxbWYjLlyvLWudla+qG/s2OdsCVnZQCg9VIqMwOPp16eEw7jRBp0qQYHFrarZJIJkcON1MqUD/AHSsGYV+IZRpZX4iv2D84Hdz4c2OWbE6ryBjov8AqVq8X1rw9d3a4nAU6teGhzxVrU2vygNBfTaY0A0IQaTow1/V8Rgnsw7sbTxJrupYgNLajajBJpkkCbg+BUeviazMT0dRrnCMDK3aGnQAHYlzhPaOHdvEwCsN050rUxVZ9erGd5BOUQAGtDWgDgGgAeCr5Qb/AKuYhv8AxBnc5uXt8QcxIy3ZUgzpwUboDBOxPRVXD0nM7VmKbXLHPawmn2JbmGbW4WJlEoPSugKGJdhsOwNweNw4BltXKH4YlxNSmXOIc0C5kSL2WK61UaDMXXZhTmotqOFMzIyzsdwDIB4AKqLkEoOIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQuhALik4PA1KrslJjnu4NE+/grxvUbHRJpBvi4T+rrNyxx70ZpC1jPR9jiSA1hIie+N/JLb6OscTAbTn+MfGynq4f1BkELYO9HGOG1P8fKeCZp9QcYQCBTuYHf8A5Kerh/UGVQtefRzjrd2nfbOJ+Sad1Cxg2p8fb/knq8f9QZVC1g9H2Ny5iKYGl3j6Jw+jjHZS6KcW+3rPCyerx/1Bj0LYN9HGOIBile13ifknP+WXSETlpxr/AIg+ivq4f1Bi0LY0/RvjiC4ClA41APyXWejbHESBSI/7g+ieph/UGNQthiPRzjme0KX4/wCScZ6MukDMNpWGb/EGnuT1MPsYtC2A9HGOvIpiNQX3+S4PR3jYn9l/6n8k9XD7htkELY0fRvj3TDaduL4/JN/8vcbJEU7fv/yT1cP6ibZJC159HOOictONPbH0SD6PsbwpfjH0T1cPuKyaFqj1BxkgRTv++PnCT/wJjJiKf4x9E9XD7gy6FqWdQsaZ7rLGD3t/ch3ULGh2XKyf4v5J6mH2Msha5vo7xxBMU4H74+i5/wAvMds2mbTZ40T1MPsZJC1x9HeOy5stOP49PEQm2dQcaTGVmse1/JPUw+xlULYs9G+OOgpG8e2Poqnp3qxiMIA6uGiTlEOkyBN+FlZnjbqUUiFoOjuqGKr021aYZldMS6DYxoplH0e450w2nYke2NQlzxnyMmha1no9xp2pcPbH0XXejzGggHsgTYftBdT1cPuDIoWtHo8xpMRT3+2LRxslH0dY7hT/ABj6J6uH3BkELWP9H2NBginOvthA9H2NkCKcnbOJT1cPuDJoWvPo5x3Cl+MfRIZ6P8aTAFP8f8k9XD+oMmhbJno1x5ExSj+MfRcf6N8cNqWk+2NPcnqYf1BjkLXO9HeODc2WnH8f8kn/AJfY2YinP8Y+Nk9TD7gyaFr2+jnHEhoFMl2nfH0Tv/LLpC4ila/+IPonqYfYxaFsXejfHDUU/wAf8kH0b47hS/H/ACT1MPsY5C1//LnHfdp/jH0XR6OcdwpfjH0T1MPsY9C1/wDy5x0xlp8u+IPwSm+jbHnal/6g+ieph9jHIWuPo7xw+zT/ABj6Lg9HuN4UxP74+ieph9jJIWs/5e47hT/GEO9HuNESKd/3x9E9TD7GTXVrKfo8xp0FL/1Akf8AAGNkCKd/3/5K+pj9jKoWwf6OMeNW0/x/ySD6O8dEhrCBrDwnnx+xkkLQYvqbjaYk0S7+Eh0eQVE+mQSCCCNQRBHiFZZe1CEIQqBTuhujnYisyizV5idmjcnwCgrY+jWhmrVHAXbTgcsxAlY5MvLjaPQOjOjaNCkKNNsbkn2nni7e4E8lZMYbd6SGkAXFvBDHNaQBy3uQBpfiU2KxAfFpsOcjZfGudy61E2gS2HQR3mze17Smm1o1FybwTtyCbzv7PM6LtgfkUmhYhrW94gOnXdNbRKrl7jMloAa4CY3gid9E2a7s126EGDtNhEJzFO9oSDF7SSYFvBN06mZsZYJibEzwus0Sy7Sw011N9VGqlpPdHsi8AixsuAuEnQzHidI5CFCZiXt7sefJZqbTqjoLWASz2jOpUh2K+zBAAOmwHBQj3hnH2Z9+3gk0m5W75rEkG0mx+auhKp0i4ip9nUchzCnisMhL4iY0NymMHTgBpcfCdvqkEEv9uJBgcDsY8lVlPYt7Xw0QDBJ4gAaLrX/sxDLADKJgxG/nKjmoKcMJzONydPBPYmplaARptf5qqjB5LwSC6bhsacLp6qQQA0nvd2Wj7QN5TzKhyyBY/rVLxLWBrXezFrcfqriQvD4YNIa5xcYPtaTF/kopotiGkNzanf8AklCoXODiYkEAc0msx8nNcESTy2SpS3UhGp01kR4mE12TTlBudLXn6LmJrZS0ACwknbS0J/ulmab6zA/JRDdOoItmIJjw/lCZZTBJnTMY4jNaFIDe6TofZtp7kmJIbEvBBmdtwqsQ6lE94RJA02tpCZpU8pncmCdTpYRtdW1OxJlsTEgcNRdRqmW+WJBuhITUGVxJE/aOU6ujQ/BKFQwXwAXeGm3kE2ZAmDBMmd44ciuVYPtCwkT/AE5LSn8PBkE2Ii2gkph1ABwcBBMCZu0Tb5D3puo9rGe1Mm2wnQD3JzCVGkkDSNhPzU2bcxGKcy4i0BzZgwd4KVUp0nDPBBkHumDcxE8E3isPmk5dTN9YiNDzGikVsEC3uy0ZYiRIsJWmiCQG5iBBnmbcxdee+lapmpUjeTUMz/CvRezcRAMkN8M19+Fl5/6WRFGj/wBx2uvsbrv4f9kFj1HZODpFp72Vw8s5K0gJaJMC4mNgRrGyy3UuoRgWDSQQPxFaGHdnmLpJbw2XPk99ZKo4gkw0yeMR7ynqtMAknWW3Gzhrc/kmKLXEtbo0iZjhG6erPkwLTZs6eQWLEN9k4d6SQI5TOscVKFYSZtHG8mFGYS2G1HDgCeK7Ua1oIF5MeSyjjawIkuG0cRdcrO7+aJMXPIKNVwgb3p8hrP0TlGr3XBxFzAPI8VA5TeS0kiJBiD7lYYOS0CI2mbyq940Gug8ACp9Cq6ZHAwAqB5cSWhstbJG0nguNhvt2e4aa24LtGS53td3hp/WVG7xfmqAWtY3O/uTu1Im1qoDQDYWnwTgf3fZsd90zi8QCC46ERpcKNhqz3RElgvH5Jo+VliGsaGuByxaBxTbXEuzGQSNOeqbpYcF0xxcRNr8FPq1RGogC39VoQq1FwJkyNSeaaxlY5rbCLanROYgyAc02Itw2QwXgjQDz5yoyVWrtyCbEHjfaUNcHNy63vxIUWu05Q22bMbHgea5RaWmX2PAaADW6RJU2lJcZsxlwPHayVSpmJEbyE3TeH2mJvb4J3D0iRDuJJjUqt6Qazjl2cRsLQPFcxAAiJJgHj4ypGIotDoHs7+C5TZBJHsngNDsJVNI2KZlp5wYOpuRaVEcc+W50nXb6qbiWueC3W5EcGruBwxY2SLC1zfwCoYo03U2ySHAicsSSNlLpOa7vAgAi17ApnFNkZRZxI12A1CY9Rt2YGrg5172GysWFvxrtB3r6kyLc1FdVLbZzcz4wn/7PIJAADTI8f1xUinQZkMtAjlN/FDVNUoqaiLTM3tsqLrj1PZiKJfTDRVYJaRZz/wBx3xV7UYKREAAW0uSdb/BSamOAuWnWRcTO9t1vHK43can+3zm5sEgiCLeBSVa9aaIZi67RoKjviZ/NVS+nOzIW79FTgKlckxDG/wC4rCLdei6nL6947jP9xXHn/XkNzUqZ5DdD9rSL7KS0CQJJcMoI4jc/ELrMI5jMxgRuY0nguVXn2runKNba3818rHAkTK9Mw0QGCCALS7efBLolp0iYgGNkzSqmSbbwdSAP5JGJsWhomQTqf1CWFOvEObHjHDWS4JzsiQHtOUA7bhQMLSMZ3yJkXE8rJOFe9ks72U65tTfhxU10TSZiqmm41vAvzI2TNatm7rQIF5BEu9+yU6kyC0al2+3kkMw7YNhEGJ1A2ulkZ7I9DFxYNu5wngfFTC64tlEjwN7JmnTAyBtg3WYJceKmio1vdkHWDtI0WdaD1Bt9cpI1J90cEqiwkvNoFgTqdrHgowIDpcR3veI/JcGJzNiTc5RaxJMD6q443K6iiMrpc4OiYB24Enin6uMDmZ5zAyO6QRbglYnoqmxpc6XEU6rjPJlreJXnvUnpPK8UXnuv9ng1/wBCvXzeFy48Zup5tt3hXOde5YL5Z/JSqeFBdMaySL+EjySDXDSAJBsI481ztyNR58fBeVd6WVVwjQEAcOPNQsS4xMgWItefJN1mw0kyZsP6IeCWNyi3xJCVbSsoOo0Akm0mPkma7u5vckR/JS8IxzhYguGp+KjVab5zlzYvHjsEsYsIwlQkyJy2ubTtoprTEuYJmwIGw9o/ko7iCW7Og/r3p/CtgZthAjijU6F4epLbCZMAWt7+CiVmOjI4W2A/MhWFKNuekSo1eoc19R+tAjSO5pMUycuURrM7ruJgUi3UweRmN1JZTMkzB002OpTHq2adgTPMnmqK/BtLw0DTe+40nkpLaDWibh0zrAE6C2ylUKAa3MJmYHA66pnEtJzUz9qMxHK4+MKhOHxzXAF7hLLO5SbHnP5Jl2MkuFNwI0JOoEawdk6/DCzCQAYJ4OjmuvwPeDhAabDxI5bLQh1Kg9rPrEkEb7jksV6U6uahR5VHDWfsndejUaYymWgAQDDZFl596W8OGUaEACXmeMlp18l18P8Asi6qX1LIODpd24Gp0gOMrT1GA5QTJ+yG6NBvdZjqbTJwVJzRJgj/AM+C0dIukzPAiNDGick/KmjlPEAWcORHwTb6zS4Buo18AVxx7QNyakkn6lN0MOGMLyQ45jC5a6s6SMLiWPaZPeBtP5FNVajnSYJy68CEl+BIh8yDwEAJwVMwPCyFiMxrnElzRMaE8tkxTwxAa42zOsOXNTi+LC51j+aapFxOn1H0UZS2YcHXun5p2lUOa0gRY8TvJUOvVJMZjI4/BTHUpaJ27xjc+HFZIdp1ZzNFiSZv71HpgE5nSYsZ56QuYGILw2BmjmT4J3FVh7LbO3ndVSq1IWAkRte5G6Ua4ZAFjwj2vBMMxDjBIH2Qd7+SVixBGaGnYaqh3tiJsfH5BdrWaXHUwBO/gm2USTJs0Cw4qh6S6dFM2aXNYJBJjTVa4+PLK9EjRZSaYGkSI4wnsEwEuaSRl1n9aLOdW+nXYgkuaLtFRoHAyHDneFonVJcSND9NEyxuF1VMVqbbkSTf+q52sBoJsLGfDhupNINDi03JtM7xKqjhaojMJEnS8Cd1NJpZ0arQDJkmI4i9lJw9WXZZ8+Ki4KgAwxLpM+QSMS3sy1wtOyaa1YlYrDgO1O0/1TdCu0yCCBOhmTA1SDXgguJJNtbzrolVaZqDU5hy+EqyKUHCe6QR70wcTbKBJmbX8U/hzT9kHQ3A1J4JsP7ziNRNohQINQQ5zvaiyiGoXAPdOWwiIj807VxROVoEHcn5p1rZM2Ijw90qwLw7muaGmYBDh5bFdcY70EydLgX0jim6joIIdlEAERqUtrql2kfwnjZa0sFSlN3CRIkfa5KM/LJdEgbfaC7Wp1MrmQO9z28VCeHCSQbEX2jQid00tjx3rg+cbXIn2zrroFTK362/5yv/ABn5BVC+pj2jIW99FNNpfiJ+4yPxFYJbn0X1A19cn7rP9xWOb2UbnFgE995MTYG1tjxVhgH6REa8RptzUOqARmdaZ0hcpVAIE5QTI3tv4BfL6qsHvYGOmAO9eOPBOUaTmNGgzCA65tvrpZU/SfSL6b2kU3diDIqEd0+HHdSsH0z6zmeHd1tsum3BauNkXoViMY0ZWZpibCDpvKlYnENcyYdI34/qyRI2aADrYGwulY5xhrABxJhY6aZ2Yp1RAmdfySXVASQ4nl5bIxVMZRBsLzvquPMm2sCFjTGisPTAAcZE6byF0i9xvY8h+aTXqwLxItwS+ycRmG4BgqQTarhqIJiwO6YpA/sMxkl5J0AGUG3xTTKeaQIG3gI1Ud1PKCZMdnXN+OXKDyuu/hsd5xr4XXTmMacNiHsIc0YaoQRocxy6/wCleL0zERtEco0XqvT1TJ0biCP+lSpj/U91vcV5SF9LxV6xjCPTOgOlG16bXE/tG91wjgNfNWxpGC42iA0Dgd15r1a6S7CtJ9lwyO89CvUKJkTsdP3oEr5XJjqtaNMzEteQTBOVvICJKcoVbw7a1uBKlFhMOnW3lwTVankJYBMxHLzWFsAfBcANSTbxgJD6XceZBLQSBFglMa4RMWE+H1RhWwC4naOVySSVSqyniS8tiWk35n+SssOx+VriYM2btATeNgQ4t72mZuw3VhhRTc3U2giVdLMUbCV8r+8NR4yn6lTObTGxI08VAxbwamkRaAkHEd8DQEGYBvwlNGj5rGmbuzawY14BONv3oyl0wJunm0e7fWzha4I0TeHxLnTLMp0k/IJYujEVD3BYC5k++EPe4NcIJJmOPguQYIENcOczy5Jh9VznQ6Yba28KSJpx0iHOEnQgmSAOWim0C0tgtOUHMANiNAkNESbXix8EE96Q4ibRePO1oWlhxxy96CSTe5Ak6QN15/6YWnsKBNv2hF9fYW/Y6oRlIMiQOY4rz30uBwoUWu17V3O2SJXfw/7I1eyV1Df/AHSlDrXnl3itM6vAcSCRO254LH9UHxg6W8giP9SuukKNWszPSfTptZAc1xhziOCuU3nWYuG4TJTDicpNspOx1UOs17jDGgCxl3LgqfojpCq+rFRjoAygzMHiVeGTYz+ULGU8tLTjO0FMlzhEe/ioTC4NJmdLaKZiS0tAJA1Kbq1IbaCBEHksXqzepmSYM3+SVTIDTFjMk6E+aYpuJFxETruh9WYAB09yyzT7jNw23HdLZWJgZj+rQu4SGsF5dw3XSCCCABxvvwhNEdwbKpJBiLEjccwp1Ck3MS/WIhQadQzIfc3Oto2lGJJkEcrnirV2nU6rWuAAF/hzKbqsDngu9oWbwuUvDxAcJmY8VypTl4MiBcDW/NSwM1a5bTe4WyNMkGb7fNef9ZazW4epBOYRTjx3BW26acBTyiO84aaGJc4fJeb9b3js2gGc7y8nYgeC+j4XHWNpVj6PceW5L6OdTP8AC+7fivSwwACXb3heKdUqxDqjBqWhw8WmV7bhX03im9ozDI1198wHxuuXise2Su0gBLz+8AedhZJq3bAJaXFPYp7Q1wgWvl4HYBRXsIINhA20zEcfcvIqdhatSmBni8jTbwUbF0zUdLTc2j8+SQ2o9/IgBp3Kaw4yExJM3vryCJv4O18F3ozG17chpKm4R4Aa0mNTz8FzFVRcwA48NpTVPKHgP13dtyWo1D9bD02Evi5sCo2HIe7UnUW4ruIxIA7p3NtjwAULD4yHZXNykj3mELViMM2e/AIF4TNSmCIkHh4FRmt7/C0lLpPeSe7afeh3ScO0SREnbYHxKkVGBwF4AsTNh5pilRB1PkEjEFwGWDlB988lZWpehOLD22Y5sAw3Q21VdWJc20kOJJI15+UqfWrQ0GLTcAX0UUVCxhaD3TJvxV2Wx4j1sbGMrjg/8gqhW/Wsf3uvv3z8gqhfTx7RgLX+juoQ+rzDJ8MyyC2no0ZNStxyt+ZWOX2UeiVjLZuIjULjKIseIi/HZDcQzI4OJ0tqSHeHBQKnSgnJYmYaDaQRclfOmO2rErEZ+zZSzOLM0ZSZZEyRHFO4TD06IOUCdJ3jgnaZ9mbQ3km3TJiMs/orNyutM7TsPT7sxHE7X0smcRVeHiD7U7fJIkiHSY0196fw9TIHPcMxDTA5lYkRFxAmxkRqbW3TZc0FtNpJJvKk5S9ge0Wdz3Uc1wDoA76aqWIV2BJJc7nGm6kNxLT+6BYDiRsoeJrPeIyxMRxgHdKNLLlB2IuL5Z1REh1QEkguJ4aeQRTq0mPqPrd2k2mM2YzZztLbkwlQRmcdAIAOpjQpjDYAYwVGOcWgmjJAE9xwdEc16fCTfLC9ivSBVAwFaLB1ei0eAa0rywL0r0nPjB0x9/FOP4Wu/kvNWle3xPvTDsW1eh9UumTUoClmiowgDm3Yx8F54FP6Ix5o1W1BeDfm3deLPHcbem+vOY6M02+PEKXQoucReZNyZ0ULC1aboyGRMg7REq1ZUkSS0A3B4zYfmvKhsYdpJlxj7ICMUAIExoI2J4c04xsSG6RA8dzdRw7fUts0eOpRXKNbvX09kTvfUpWIxd3FoJiwA0jxTYZmnMMoEDxdsnaoFNlzJsGxeRuZWinuj+8RmHeiQNh4lcfTgd7cjzTNBrQQSZMTvfx4p6MxBdpfwBSLKewtY5j3bacYC5i6piBcRMCxlNUa7u8IzSAZOw5cVGxFUucQO6REna2wVa30ScKAWkmGzFzrf+i6KlNzSdZMWiddfcoODxD3Ah14MzyHLZdpCASPaOgsiSpL2Ax3tOIvGycoC2gB3k28QmKLHEAuiLeXFSBQBEgk28vBWNYnqlAPIkxbe0rzT0xl3Y0MwA750/hK9AqVCSMwOlgf1Zef+mV37KgB94/7Su/Bfzhb0L6l0wcFSO4kz/qKt69EOa+LzxF5+qyvQHSBpYOkTOWHDxdmMLR9G4wPYDnzEmTYq8kstrGkygwMAEXjXcwnsNVAnOTfh8ExWc119AJ967TcI8BZcaU/imh/dETIjwXMVh8pidLGEzh8QGwbz4e5dwph7s8uDr31lEN1qbntjNFz7k92jBHeg/OAo2MbeGQCmQ9om0kx/NZQqhULszjYmwKksae4YknSDMjcwhjgQQBAF4jUqRhiGtJ0jc8eA5KmiTUZ3mf1EpTmlrg2zj9nw5pj1Ue2TcnY2PJSGEEyDJjLfbwURIoud7AF5kidQdE7h6P2Tblv4JpmHex5O54nSFLdXcWuG8iDvzujUUPWZzWODc1msLnHQAuMD4BeY9Zg1rmU2nutZbnJmVuenKtN+ftJh7gywcZygcNplee9PVc2IqcA7KPBtvyX1uLHXFEtR+hK/Z4hjtpg+BXtHVasDRyEj9m8j/STmb814W+zgV6x1RxrSWk37Rg/Ez+S5c+O+O/6GwrVmhwMzc+9Nuixc4wLkfKFw4rYtHIRopDQ0MnzvfyXzl2KeKGrYz8t52KjUXltpFzPuUgTGYtgDQ2TlKm112tFvK+9uCQ0j0qxcYiQQQTwKXUi51II8BA0PFIyEOcCY+RnbzSGVX9nkDQb3Ph81VjmJl+VzW2vI58U2wDNe7gBJ48AnBg3OZmMiJIHik4ejDssaCSOHAk8VdiWaOYyRF78YSKddocTpy+STXBcSbgC0A3HikZD2gc6QPoinXYvvQBIkWA1T+JqAi4290aSmWVmOcSDl+Gm64apcbhpt891BBxLDeHWNh+fgk0BqHXiwjfxJT+IEZe60fqEPcxobbxtIK0aeJdcWxja4/fPyCpVd9c3g47EEaF5+QVIvqY+2IFreoNYtdWj7rfmVklqOo/tVf4W/MrHL7KN3hagaQD43uL7qNXwDa9UOuDoI1tvHC67Ue2GiOU8WqVhaZLmuBylukcl8+XS7T3UmsgNJOgM6pL3GLnvAbaJioSSRmMXJPPgncOwtBmOUrmzs7SOYDgO9ZLo63mIJ9yRghlkyC12o5/kpZbm9i1teSWGjWfK2RoT7lHrsgyYnY8iuYsjOBsPajRDXh1gBbnss1KTTqumZiBHx4qdTpOIaRE6+PPmo7MOC3KDEjRKY/KMs6aRrqkQ9WqtcQyXHiefBRfV6r3tbRzBpxjDULTEU2XM8pEKSCS4EbxJiLc050DjKoLQyiXMqVKrnvkBtNoJjxK9vgcd51L2U3pUrfscG3i+u/8A2j/3Lz5q23pTdfBN4UXu/E5v0WJaV38R761h2ONTjU01OtXnabLqd0oA00XCSLtO4G4+K1VA5jmiY9lu3ivLcDiTTe17dQZ8eI9y9Iw+Ma9gqtcQ0i0f7QvNyY6u0T84EZnEngDYlcyCZabkaFQKNYFxAFrePNT8OGtMwf3Rby8ly0kOVKABHeIga+SG0CbTJ5/d3XWUy7vOHdkgA8U5VYRcWaLQNVWtGH0nBpJgXt4ckum8NEAzmO+gT/dcIIAJHjB/JR8RT0B2OvkqfJzFlzSL7DwA0USq5gcYdMkmI3T4wuY3J2mb+4JeKoNuWxYaDUngmw1hnEzpMX4XOyfqACSIM/ADWyRSOVnDjxbPNJZR1DIJiJB1k6eKu1hbcSA2w47WHil4SvLrgnS+wTFItpsyuBkmDvF/5J5tUNHdIIOoPD8lF25iCDpIN/dOy839LDndhQDvvuP/AImy9GygxLb8ibzzXnXpZP7KlaJqu/2Fd/D/ALIlQ+r5D8JSadGz5GStTRoMZTa1obcZpB3OqzXVQZsNTG1596vqrRAa3+i3yXrYmy2VBNru0jZdFnQTEn+spDGNmSYj3pyk5rnXFjx2sucRMqUDfhsh9XV1nAbb6JVJxNiYH5oxrO73YF/es2GkWi6W7Xu0lNMpSR+j70yXgeyZA5WlP0ap1gAxt81LGT+HqOa8zoZiyerHOLjT5byE1WquLR8UjCP1kaW8UIliOzkC404RzSOjsMWtJdEk2hLNUAxqOATtIESQQJuAFF2e7QEtkfHbmuY/FhrDl4Hy3JUP1iNrceJlN46vDCB7T4bx7riBb4rWE81kWdlc/u0wTsC4/NeUvfJLuJJ95lem9bq2TDVI4Bo87LzFfZzmpIwZrDdbXqli/wBk0703td/pNnfMrF1Ff9Ta3fNMmzwW+/RY1vp9tPYKDpsY48zspbG53AvNtTGwCz3Rjs1Nr3EkiWnmW2j4Kyovdl3Ei4I9wC+RlNWwl0netMnKeOidyASWnSbbeSh0qQsMoMak8Y2KK7nyAIh0xZRdpj3d1uaSTGvHVNmiRAG9xyunsphpdFmkjx2ldzh7YfIIdEC1uSqo1Ws4yJuDG9ykYYnMS8eXHzVk7CU4uSCN1GxFOCIE85soaqHUpOc4ukA7D4CUigKuaC68mBy8FZ0RJmBoSPFRKbHFxcdvmtRSqQMkQDfTddbuREtsY+SUKLhBJuTsNfoE09xaJkDMVKEFzXti+vkEvtABkiztD8oTNSNLzEiOPBS6Lu6JI0seBVizq8F65D++4j+M/IKlV914/wA/iP8AuH5BUK+rj7YyFqOo3t1OEN+ay61PUR8Pq/wt+axzeyjYtZc8FLNrSOIUQV820fyTznaNI3zczwXzBJc7bjvwSntuCTMqNBjlKVTJzQEZWNMAW+yfmVLa+AANOHgmWkGGnlfn4JntIBHioprpCuQbQCdfBR3tiCZI2296ebDyTGgXHuGkjXT9bLO2S21QBJ2nxnlySahm7TF/dNr80gw4CBOtuYUnsg1hJtb3GVTSR2kC86W8tVZdWhGDB4scfeCVnsRUOV0GO6Z9y0uAblwbG8Wsb7y1v5r6P+OnXKs59mF9Kr/71Sb9ygwe8k/kscFpvSZVnpCoPutY33D+azATmv51vHtDgTgTbUtq4Vo8wrSdVcXJNAmJuwnQO3Hms01PUXlpDmmCDIPA7LOWO5oel1+6AGgZuN/O67hsQ+wPtG48NJKj9HYvtaLaxMTtP2h7UjZSKFNpcYE8Dc+PkvNZpmpNSsXQ1tgADNxHEp3DOLWmXAydR+rJFRobYm2/EQRZPtptIi0EW8fFRdl0qoc6QbgfrxTtGnN3QLmJ+Ci4NzG2s4xGuh8E8112kWiI0Mx8kWGy3WPa3103CZfSLrgxfRXFBx1Ma/1SHOBuBBM8EXyoLpLA0GBPCSotfCOgFroaCD7lPYCBE24xaeC5jGkw0EcIVi6MMaQ0SRcyJT7otmAE28Z4JTaBMQe6NZG+qR2bjGh3v+QSnYl7spDSYjQ7e5ed+l6mBSpEaGo7/aV6C+pm7zotIsvPfS4f2NITI7Q/7Cu3hv2RKY6pgeq0+N/O6tqVQbcTHiqfqpIwrCNgT5SrdrDA23vC3ye6odpvbeRf81JwzS4EKF2ZIgATKfw9QAETcrmym03kWI3ISMURBG8cUYiqcoJEnjyUOu4lwCVa7RpkTOh2/OFymyJi+6crvjSxATTfaF+ayy7SYS7W5m3KFJaCwnS4/Vl3DtI4SBmJTdWmSc0zmG2kC5VtUr1o2FhPDlqnXVjEg2kRzUasNxMQLJbTe1gIN1Aqu8yR/DePMqTWOd1EcAXH/SLfE/BIwxzW0+ikUO9VqO2a1rQOE3P5L0eFx83JC3oxfpHr5abGfeeT5NH1PwWCWp9I+IzYlrNmUx73Ek/CFlQvp8ndmdjb2qV0NiMlVruBB9xCjFcomHBc23s/Q9Qk1KbRY5ajTwD9bb3HxV/QEMDjBmwBm0HdY3qtjZbh6h4Oou8xLfiB71s6TWgROpkazEbFfP8AFY+Xk/6kNsruadBlmI38kqtWcRlYBPE6jxCRhwCS5smLcE60RL3Ah1xuY8F5yQguIEa34W0Uim90TI1OvLZMvcIAudr6+MKPiQ72psTpx4BNqtW1C8ibbiyXigA21tT4qNhMS4gSGw0XOm2nimCS4TmidL7Kt7SKNS0HU6nYAJVCo0Hu3mfAqtYHNluoOk6+afwrjTImCL+9GdrHty50Ei30VS+C8ASR8JTmIcXOzfr3JTJgkWjTT5Iu9uUMIA5znOtsPEJfZNIBB0FxMFxSMPTBbnkbyOUp2qyRDYk8L+Cq7eE9dB/fsR/GfkFSK766/wCexE/fPyCpF9XH2xl1aTqV7dTwb8ys2tT1De0Pq5m5hlEjzWOX2UjYYVgAvudeSluJEG06X28ExSfcAaR+gnajvIr5tarr2mP1fmgueeAtMpqnJtMlS6LIs4XGyjB/CmIzST9LpFZrZImM3w80qecAe/wTVVwdYbKVKaNQMaQdeXDiuMdN418Nlypex1j4J1zCNNYF+AUqHKbwBJsQCAfO6fqZXSLwACJ0NkxbkBEzz0TVYkkHb9BRdlYq1N4jb/yNlr6LP2VJvF1IfEH8liTJAE6uEjzW8pDvUR+98mH6r6/+Pn42sZ/DyHr3Xz4/EHg7L7gFRNU7rHVzYvEO41X/ADj8lBauHJ7q6zscCW1NtTjVyqnQnWpkJ1qIv+rOPyP7Nxhj+Uw7b3rdUGkP7tgWkb+Oy8raVvOr/SZqUhrmBh0bCNT4rjyz5FrWYZu0GxjnPyS3U4aAJJ3FiBPDgih33TMwYyg6/ROYctkENIJBnX4rjEgbSaJAsRrbU8JRTAb7XP5JQLrCSZ04eKDQzWIzRIte+ynyHqAzSWaCNeMaqWHNaIsLKrwdF0we7NjHyTr6rSTMw2w+p4q7blKFQZ+J2CcNZs8XCZ5TwUJ1Ie00xfXc+KU2mR3swngf1qrtNrJ+IcABIAJt7lE6RfG94i2sbpOKql4EW/JJo3IHvO/9U2b6aI9VcQ3LYHXz3PBYb0xU4o0ROlSP/C63tJrnE30jS3wWD9MTYw9Ax/8AcN/9C7+G/ZDc0idUhOFp+Dv9xVoIJkn3qt6pOPqtPcQfmptQfautcnuqU4WibEp7C0YM6cyk0MMXDN5xunnVbX8CsIdFQxBPHyUYuOh8j8l2rV+yBH5pIuY+OyiGW0yXCZNp808xt4sIEngnMPSN4vqu0uW2vC3FRAwWm5sY4JntjBAtsE66DuQBp803UE3Gigca4uMOENt704aoEcB8Y4oa2wEa6HjKUymyCBE6SVVcDT7VwNvNWPRwJpl51e4ny0ChVCMpcYtc8CVZ1AKWHk2DKZcfISvoeAw/K5MZPF+tOJ7TF1nbZi0eDbfkqwG/xXX1C4lx1JJPmZXAf1zXpvdqB8XTJTwHFNvbusVqNx1OxBdTq0xqA2q3xaZPyXoLa8tDps5ojgBFvNeVdScXkxFOdHSw+BXpvRXsFjrmi5zAOU5m/Aj3Lz+Lx3hMvpFiKzS2HWdAIjlseKDiLWkyRbgold32ojSfHknsFVY03G8fVfPImmAeGYW3jim8PVa5pzAT4bcU0WyO6SLxqD4+S5h4i8yCR57WTSpNWo0CAYBA118/FIr0m2N2gxCQ4EG8E6X18kgtuAZBF9UJUiphnN0cCPjCYovuSRpbl8UOqF4PeAixg3HDzUIPIcRmkW14qqnuLgbn4JvFuA70m/lbmnmuJgg96bT4Jp7cxvYeH5lBFc4l2UERFo+Km0a5bfKZkE6RlHzUZ2EYbTBG+hT2aq1l53Gk91WLOjxTrq6cdiDxqH5BUiuetzpxlci/fPyCpl9XHtEC1HUVs1KgGuUfNZdaXqS8h7yNQGke9Y5fZVjbNgaWO8i6dzmb3OyVi8XmqMqRNu8NikVq+Z2bYW8F82xctHsPYzF1OxbmQDcHccVVUsQQTOik1XyNdPkoyVUb3S6J3HJN5TYeZ5KQwnLAF9/BNtF/AXMqIcDJExYapNUtzCLAifBR69QiA39cU0DmME6mL6JpFkASARpOmk81HnNLbCJ/mu06vs2gC3hzXaYAbmbM3F9IlQGHpy5nN48wAtxT/wARnJr3e4BY3o1s12CTYk/DZa3EVMoqO+7RqH4H6L7PgZritc8+8eDYl+Z73cXOPvcSgJqnoE41eTLu7nGpYTYKW1YDrU60pkJxqiH2lWHQ+N7KpJPddY+HFVYKdBWbFelBxaAWkXuTzS6DnukDQjzWf6vYvPT7O2Zoi522KuaBMwCJ0seHPZeazVY0snOyDLcZYvEiPBJw9SHlwuNLD3ea6wE5pPAXOn1XGtiSD/UcQmlPPrmIiTO0T5pLqoLYO32d1wgHSTaZFoKRUOWNwf1qs6EgYdmUOByk67qOCcwm412lJZVDiRmIAvGyiVGQQWkgbzvKsVYVC6x2JsISarrZg7TgLyhhlvO0cJRVJcRIA423VVGNYggt3vPMLE+ll5NChOvaOnxymVt34IGwdB+XksR6V6jjh6IcNKroMa9wrt4f9kRH6qNJw1OJ308VbMJI5Kp6qYhzcIwbGfHVWBnRdM5+VOi0wTyCDYJurVl0RAn9FQ6FQ+z8VIm4PyWNIXVp94GbaQfgk02wN5lKqkCHalMvrwBb+qmin34lg0EEa80yxxJAnukyUhuHe5xDWknWRfylPswpaCHSAY2O3NQ1TlWpma4CLW4WXMhADdd9dE08eOsTyT7tWhokzfgB4qI43M7cQI926Htm8jW8/Bddh4mJSnFpYASQf5wUQml33Np27zmm3DU/JSvSJiezwNYj7WWmP9ThPwBXehsMDiBBnK0k8ASYHwVJ6X8VFGjSH2qjnHwaLfEr7HhMfLw2/bN7vLIRaOa6uBslWtwLrkkJROyypzo6tlcDu0hwXsODqB1Vr57tak13i5tj8D8F4xQs6OK9P6sYqcHTfvQqAH+B1jPk74KZ4+fjyxS92oDJM5bDc6acF2hSjLo6502i8p93dGazmWGWdUnEPJEjug28OOi+S30OB02aROpm1uAKGvDmxJm/6BTEw3MAJ0BSczgWgQGuvPw8lROc32o0t3uPgo2KZJEja28+Y0TziGshpiTfeVGY+JM73n4QoZO4djbiN50mVJxNFomfPgmS+8AmwvFplSA4EDNBJOh5cuKJEXtWcCI0UhtbLdpBFrJnEU4MMEzMj+abxLWBoyiHR7igXWoE1PHfQe7dPYkECHG8ZRwO0C6hUHPPevaBp8pUsNLiO0MkfDxRd9Hh/XCnlxlccHn5BUyvOu3+exH/AHD8gqNfVx9sQLTdSXQ6rxhvzWZWj6nE5qka5W/NY5fZRuKEFo15oruhsRwuu0IBy6HddI18YXzV040Wv+oUlpzCBIMcoKYfAiE5g9Tc6WRlIbYGSL7KK1zbgSDp/NdfWLTEAwfJEyRAi+ygRk0bYkGZ4lSMON7AjaL80oFom07zzXarYDY3uhQ50zcC0aJZpuyhlhI1N48FFpVYMRcaE6FS6Qlhkw4GyiJvQ9P9uN4bqrTrBVy4XGP4YcjzIP1UDq+2ajj+6AnOutSOj8YfvZGe8tn819vw01wMZe5440WSwkBLC8FdiglgpDV0LIeCcCbCWCshxpTjSmmpbUE3o/FGnUa8bHTiNwvQ2uaWtdIIMPkWkEaLzVhWv6s4iaOU3LXGN7Quec+RoaTyYBALdTMWOx8U7QqmCCRE76x4qG53dAIublLLJLXawLhctET2GZOgAAjSfqmaveNjMeWUpVer3RItrtb9QmGg6xqbR8ypoyp2k0yRBifA+9P4lrQJPmePkoztYi2mupUmnUHdFifptyTREQ1WbtgD9bKSKkXEEcEzWZ3oaJ1kfzTeLawAFoh0e7iEC61NxqQJkjy81iPTCT2GHB2ebf6StjRxDzD/ACEgm6xnpgqOdRoF0A9o6w/hK7+H/ZF30Quq7ZwtPjBj3qe55LhKgdVjOFp8g75q0ZFt10z91ZdaY5Run2AEZjE8rKM+bqXhqDnNyhpJvYXKxUFUkjuiP1qtD1a6rPrQ+sIZsN3cyovQfVis+sw1WlrAZdPAL04AAQFJ1duPD5qu9QZTblY0NA4D5qrxeDDtlo3skKuxDQrcdPZhemmPxnRgG0KsrtLTP6IWsxcHVUmMpgAyp0TLhwy7qd0mZJjWRwXRTBvqDcclX4rGGm62iKnTIbLi0WHyCvkvw82Xhtdq0fVWlPav/eDR4N/qVgPS5iZxVOnPsUwTyLjP5L03qlR/utM/f7x/1FeJ9csb22OxFTbOWjwb3R8ivtyeXixjxz3VSpJSiuFcq6acc2NdV0/zXYm8roCwGiYIK33o8rBxrYd2lRhgc4WBqBX/AFUx3ZYik/g4A+BMH5rWF6pl2ep4Op2lJkmDGV08WmPyXaYIcRNrpOHBZXqMnu/4gETIdw8/mn8Q0i4s3XndfM5cPJnY3OsDKc90aATrr4c0vQAGDt/JMYYOm1jeD87KQGOmR3p1Ow8QuRBUrtgM4e4JDsSGgbxtG6W3DTOpPLiEqpThoLrHwEaoaLAhoLtNTGq5hSS72YvN9fJD6kNBtB258E3h3vzHYnbkibPiC53emTaNhzRW5CQbT9VXlgEnMdbgfKUltZ8Q0SJuJ+ZTSypYqObJFzwBsfJTaZOUvIkkARpCZNYOIaGtk8CVIoVCGZQMxEzwhFeFddv89iP4z8gqNXnXU/37ESI75t5BUa+pj2jIWj6mO79TwHzWcWh6nE9o+OA+axy+yjZNfckWlSMPck/qVCFeTr4xopNI7zt8F89e6W1l72jUcuKl9G4Os8kU2ZgDEjRTuq3QfrDyD7Fsx4chzXo9HBMpsDGNAaLQFNbdcOPfd5hiurGIkuAbfaU0/oisGwW2HBenVcOFX4nCcE8rvODCvP6lAy2xECNE/TpcROy1D8KDrqq7F0siaL4Xr3UPYEZgLnbw3hNuaWvmZuI4cbK2Z0o0GCEz0h0tTawnK0xyCmnO+Fv2ndXG+2fJQPSHUjo5/wC/iAPc4/RTOp2J7SkH/eJKqfSfUjBYdv3qrnfBx/Nfck8vB/48N97zEJYSAlNK+bXc41dSQlLIdCWE01ONUQ6CltTRbvunGqB1q0/VSoA1/HMPksu1abqoCWVQNi0k7xDrLOfYaXCPaSS7Qix2aeSda7WIt+pTFBguI4a6AqacODfcfZBt8VyWQwa7iYPspNVzxAa2Od7BSGszAiY02vK5XGUgN5X38+Kho4RAEDN5QJRgyRd0WuYj5pFdxtBNwbnQRrKZoAhpE7X2zBNIk0Mp+0XXknaCbLtQSYgQZM7WVWQ0AROnG3jZP4es/M2RLPGAmiVIbiC2LEztqAsX6YWRh6JtJqk+WTRbkkOktbEakGw4LFemd4OHw8bPN/8A9a7eH/ZFqj6t1D6uzhB+avMOLWKz3V2p+wZ4H5q+oxPmJhdM5+VRb9B9FHEVMjQRPtHgBqV6b0b0PSoMDWNHM7nxKzno3Y0MrEC4IH5rZkrlXfjmoQxgC7CAU2HXV48XRyu+AqrE1dVaYm4VLi2rplHXBW4mVTYmqDLHWWhqU1QdM4a0rjrq3WN6b7py8NDyWa6WxsNLQdbK76fJLDxbfxWQxTHSyY71xBn+i9fFHHky1HtnVrHin0e15P8Ah0ifcF4S5xJzHU3Pib/mvS8TjcvRlRoMZmhg8yJWf6M6h4qs0PIFNp0ze0R4L6HNyYzUteDjwtt0yUJJWi6T6rVaQJBDo1EEOHOFnSucsvZq42dx+a5KUQghSskv0T2DfaeH5JpwVvhuiD6uKu5LgRyCz5pEeoYfGhzMLidczeyf4xLZ82q1EOmRPn71kepdbtcFVpfapEVG+RlaRuJztmbEA24kLz+Nx/KZfZjemjjQBF+PvncqZJDZHhEEgnyVeapAIPAR9VLw2JBEcIXj23MtCSLxabxuDwK7XeHcgLxv5qFUrARAGpNuPMpNOrGl5On61RNpjnd0/DkRomA7KO9cm/nxXXguEaxJMcVG7HNBJm++yJqpNSg27iRfbnG6aLyLQLa2SHSQZtHvSy7SRyB280Cg4gl2p+AU7CV4guEeG48VAw7SSAYPFdL7+B8iEWXTyLry6cfiSLftD8gqFXXXF042uf3z8gqVfTx7QC0fU49+pabD5rOLS9S3Q+p/CPmscvso1DBAKfw1G8yBEW4qPSkzpdbfqZ1TLx29f2fsN+9+8eS+f5tNYS29Gv6l4YMwjDu6XHzJ/JXrohM0WBrQBYAQEqobLWHV6dI+KcAFXVKyk13bKJUYmTvjNRHxADxAMFZnpAVKcipdp0dwWgxNCNDCoulcQ6IcJCxK3jlpi8dicrtd1V9L9Ifs3XvCe6zYdze+y7d+SyOLrucOS9HHjtjky09P6jY7LQa08Ck+lOp+ywbP3XO+DQs91ZxJDQOS0PXPo+viHYZtKmXAUbnYEu3Pkvpcuc9LT5cwtz6PPF1q2uC9HryJrVms5NGaPEqD0l1KrUz+zc2o38J8183cej0stb0zgXQpON6Oq0v8RsDiLj3qMCo56LCcBTYSgoJVMSB4rgTOfgnGlRDrStN1QqR2o45P/csu0rRdTz+0eP3R8/5rOXZNtex8kXBBtHMKZXAgGNBfj71R06km2gm/C/BWOcloHtfD3LiuyxVyQQYMCZ4HZczgwY/kouIY4Eg3B93mk06m5mNgLyQibTK4nuExv/VNMrDNkBH5/wBFyu0ESTqbjcJLsOR3m7+Fgqa+TlSmwWYZOs/MLjahnbQwmwDmEXMb7JTzeIgzefjCaTudoOy2AJn4rIel5/8AdqA//ITH+hbAWbmjhHGFhfSs79jS1/xD/tK68H7Iqu6vtnDUxxn5q7wtONDLiYDRx2VL1caTh6YHP5lbX0f4YOxbA64Eu4yQLLpndWrj302/Ufo11Ggc4Ic85oOsRZaB7l06ps6ryy2vZIWTZIYuuQAvXhOim67lAr05U+sCor2rVjeN0qqjYVZ0kJaZVxXN1W9ICxXGx1ea9MU4ceB1Wbw/V2vUq9xndmxNhC2fS1GSVedVcOSRm2XXHLXZxyw30M9FdXHCm0PbmghwnSRy3VpVxpZZ0haHE1w1sBZ7penmapllcruumPHMZ0U3Sjmvvvx/IrynpeiG1ngC0/O639aoRLCsP088Gu6OQ8916OCvL4jWtq1cYEuF2m2/61XevI7SZMeXwP8ANei9D4UepNnTO4HmHW+CwmEZJHv92v5L0roenODaDvnIEczf4Lx8+XYV3UdnZY40To9rmfmPzV+3AvpVXU3SA02/hN2qhqPyVKOIaLsc1x4wDf4Stz1j6Qw9arTdRdJfTIcfC7fgSunJfPw/8STqp8QMzoOgjz4KXTYQYcfCBbw5qLUfMyIgQPfqu0KsxuBN5heBdpQDSIiBxIiTuojmCTlNhtvHFcqVXHvE2i3kmnVYI1v+tVV3Emi0xLR8x4lLoVQ396dVGFW1oEamZ/qgnMLWv4SUXZ6s8EkSbc9eSabXmAZjgmntJPA/r3pdSoT5bqs7SKVbvTGUAKMaoy2m5kE+KUKrcp1nhsopp7GfpfZQ7vLetn+cr/xn5BVCt+tgjF1/4z8gqhfTx7RQtH1M9up/CPms4tL1LMOqfwt+axy+yja4HBElt7OcG+9wC9vp0gxga2waAB5LwehVyuBB0IPxn8l7pSqZmNPEA/AL5fI7cRx5XTokP1XV24+kd9I+IZuoxap0ptzV0sblVmKZZZLpymYtqtnjG2WY6RZMrlZ1bkYwsDiQd9RsUno/0eOxFW5yUdXHfwatR0d0SC6StphwGtgcF0xulyx33U+B6qYTDtDadMSBqbk81H6Qw5HskjgtA7SVAxYEK5brWMkZenjSDDlzE43goXS7++YUDt5XLembT9V7XTTeAWP24HiOCwGIphr3NGgcR5Stb0hi202ZjtoOJWOc+SSdSZW8Xk59bKCWEgLoKrgcTjU0EtpRDwV91SP7VwmJYfgQs80q46tR20H7rlnLsjZUHBpALZkC35qYyoQIzQATBsqwl9jeB8kuk9roAEAzOv6C4JtMfiRljkddTyTQ4ttxGseHJMj2o0EHS90122SBJuYttbdDaweAIN3CdOHig4rumYsdN1HovJcQ25GpNvJce2ND4qtW6ddV3aDxMbFKZWsTEk8dQmGuy3G/OxXabwD3tOWoKM7SqtWzBJm5tr5rD+lB80qcadof9pWsxJkyLAHzWO9JDIo0jOtQ+/IuvB+yA6uUXDCU3bEOj3lafqjiTTxVMxuB77LJ9XahGGZfY/NaDo/MKzDaZbZb5O9anePajquOXGG3kEOXmx7vaIS9k2ChxXtnYsDgmKrbJ4FJfolWKWsLqux4srTFC8qoxzpXJ2lZ7F0ApfRVXJok1mJFMQm1i4dVkqLinykCrCiV6+qq2sr1nxGRrnt1iywEkmTcnXmtd10xNgz7x+SyQC9vBPx2+dz3eQhdDUpoS4W8nBM6OAk8h8Hf0XpvQVE+rUoJ0OnNxXmmBsZJ1GX4yvSOinRQpXI7ot5krweIKhYikBnbrDj8VTdG49zcUynYAOI8bWV7jwM8gaj4hZbH/s8Wx/Njvirx5fjYRuqzBN5M8EmvSyxBtdP1ael/3gPnK7iqjZDBbeeMrzmjBu0Da+vBMVDaAR5qXiWllpkEKKGRqJQIZhxpoCZT76ulo2HBIrMgSB7XzTNQ6b8eCokVLRe+vgoza8ugTxnmnDUkX+kKOb93TKJ346JGakU6jTItPiiW6j4qPg4dJEQNOMlKzSA02Wmvh5d1o/zVb+L8gqpWvWdsYqsP3z8gqpfRx7RQtL1L9qqf3R81mlpupLofV/hHzWOX2UaTMCWiNXC31XuXQ4PZUwdQ1vyXiVGhLg4cV7b0Q6abD+60/BfLz+Hfh+UvcrhXQEQu+LuGhIeE6wJqqV0nY+VdjSqWpSVtjXquc1c73d8exGHEKyoOUKlSKlB0BWNFV6kDVV2Lr91dxFZV2KqWSjOdMPuszj+mMji0CVedL1iJsTqsFVfLiTuSpjNvNzZ2djuJxbqhlx8BsE2EgJQXR5LdnQuhICWFlk4ChqSEoKIU1XPVl0Yhutw4W8FTBWPQNbLXYeZHvCl7Df4GkbyIuZJNgE1TbBmTA9yKlTukXva23ApdCsMrmG/M7rghmo6DDb28J4pDacTLSP1ZKiLHhYi/knmhrWnM6ARbx5ojmeLaceZjddYZbmM8B47qPpvraVygTrNxbw96GyKtU6NExzkD9QlCu0ETEHbWJ1TdV8X42PhqSmWf4gZpYmTuDey1CJxLTz4Rp5rG+ko/sqX8f/tK1jnkE8DYaWssh6RqcUqRBnvH35V14P2RTPQMer0hxP1Wm6BpZqzJI9oR71m+rlE9jTdtfTxK2/VKj+1bYZSRHny2KvJ3rWPd6mDZJc5dbokuXDHu98dASHOSnmyjVGkL1TsQ8CkPckNK49pRUTGFVWIZKnYolQakrnXXHsr69K6jV2wptbdV2KcrC0w+qoVd5TzlCxL4C0xbtiutFQmqAdALKnAVj07UzVncoCr4Xv4+mMfOzv5U4wJwBJalhTJhMpU/ZPGPeNPmV6ZgIFFki2RtuMNXn9Gn3AvRmD9k2+jGiPILwcvWqhdItGRrgIynxsbXWR60sjs3+I911r61PM0t3WX6w05ozwI+icX0kanCVy8Zv3Wn4Irv3nWQOXmq7oYl1GmWmO6J8lOcwkQ7x5LlZ1Q+ahgSJ8fimqdWAL7xyHmlGS1uvGy4cOReRHDhzUXRurX78SY+79Fyq2Jv/RLa2DG+x5pJMGT4IzSGGYA0+fBN1DBE6yLjmP6p2mwT/FMLjhsPaGvgqEUqUOnidNylVWx58fySqNUN9oZuW48HLlSpmttBsTf3qtV5T1lH95q/xH5BVis+sv8Amqv8X5BVi+lj2ihaLqd7dQ8m/NZ1afqNTl9T+FvzWOX2UbTAMBi0fq69k6NEMbwytHwXjdBvfa3cuFucr2fBDugcAPkvmZ949HD8nZRKQ4oDguuLvo4HJnEPsudomK1SVuLMUSsyVHdSupTiU3CadoC2AoNarClVnqurXQR69RV2LxAhS66pOkXoWqvpOtY32KwLjcrXdKVwGOPL4rIBMHi571KCWEgJQWq4HAlhNhLCyha6ElKaohQUvop8VWGJhwUQKTgXRUYf3gg3ba8nSJ28UYcWM6gH4aJnt5IzAa76hPYfvTJGuv5Lgk0SKkH7siPPiu1CSIAFtf5KUS0S2x56yfFMuBta4mfJAH7IsTpPLUSm9y0+Nk494m3L4pLnxc6yBYbKMkYk7i8zr5WSey0J4D3/AJJ+o7YaGe9z4JmnUyGdTz0PiDqqsO1ae8QfeNOCxfpD/wAGl/3Cf/ErZmvJsA2dRt/JYn0gtinT/jPH7pXbg98X5TOqbf7szWb6eK23Umi7toO0FYfqy6MLTPj/ALlt+pFeapJ3PvTl71vD3R6TCbcnCE09y5Yd3ujheuELjSFx54L0StaJcUkVky9xSCU2ukfGkSo2VP4kprQLOmldjWRdU1V11d9ILOYqpBVSkVairMfUgEp51RMGnnJBNk7OOeWowmNJLy7iZTKtOlcEWOLT5FVpC9uGW48WXcoJ6m1MtCfpahXJld0G2Hkt4H3DRwF/JYXD6jxHzC27SdvovBmpTSGm+p1We6cpTTqiNASPmFoSw3B14qsxrQ4m1iC33KYd0QurLycO0Di4fFWTCZIibKn6nP8A2b2E6OHy/kr2STHnIUz6UpzD1csCLwLcENfNjudOfimnOMCDf5pdCoZMWBdBWAiobaGdJ8N0iJJjb4KdiGx7Xvn9Sq8VbSyBsFTIisY56kJTzDr+C454iSbzIhN1Kgi4g6nc62RlIGUjMQbWgfmmgyBc6/LxXKTyQeGngnKbhAnUjVVXlvWn/N1o+/8AkFUq16zOnFVifvH5BVS+lj2jQWn6jiX1P4W/NZhanqIJfUHEN+azy+yjfdDOY6vTJFw73r1zC6Lx7omkO0p96JeI969hwvsr5mU6x6OHtQWgpJCUmqj4XSPRCxCZrBBcUl7rLbUhoNTdRsJ1pTOJVbiFWcoFWpqpOKdCpsXWiVFIxVdUWPqTKm1asqlxtVK55VQdYatg3nKpFK6RxGd5OwsFFWsZqPDnd5OgpYTYSwjB0JSbCWFAsJTUgJQWULTuHPfb4j5poJdM3HiEG7qgEixnjxSibaaH57pgVLjjaPNLeTex1tO43XBlJZGY3iY5yU6+jMls8+SiUxvYzBB4QdDwUmriQZMR+fMI100QxsQXWEa7+abraW4xP+0poP7su+0ddNDolB7spAAi020JUYdqWI5QJ20v8fknWvJEkAkaSo9TMLa8PE6pLHWJOpsQOEKqdgCQJvr58lnPSa8HD4ccHkaX9k7rSMfAAi5EgrK+kiTRpEkznv8AgK78Hviw51epg4SmZggGRxuth1MYe0h2wBBCxvVZp9WZbY/7iF6L1MwxjNspy966YT8m7e+wUd1QJ1xTLwuWL3QjOioYTLwouKxEbrs3pyvXgp2kZEqnZWzOup/awISK7VdJTLikhyRVMLRpXY+obrOYtyuOlK8FZ3FVFlnKmgZUjD02jx4Jugzc2T/Z3spXh5c99Ij9K9Hiqy3taj3aLD4iiQYNiLFelU6toi4BWd6w9GyDVYNPa891048tdHGVkqYun6AuPFD2bpzDjvBei5dBc4JkvYOLm/Nbkd0TF5kD4LFdHj9qz+ILXvJdUIHL4LyZdwluKc5xdOmrTrMbBROkKZDQec8hxUw4X9oJmBc/vcBKcrkOBZGs24SNE3O67ZTobuVqzdNx7/o5XzX3mbDU8FR0P83f7TL+IH/8rQUwJAIBPknJ3ZNtE/aB30iE6PCDw1Ejce9IAbBg/BJFUA35x+a5hVRxywL+F4PBR3A5RsfmnaTXRpAM8d0l7g097hudVA2x7ffYbQnACeEzbhEbqPk7wMEt1v4JVFpzWPCOHhHFA4yieX5QnWMs0k2B8+SabUJtreDy4J4gHfUbW3uVYPK+tJ/vdb+M/IKpVt1paBi6wGgefkFUr6ePaNBafqQe9V8G/NZhafqSe9VtMtA+Kzy+yj0vq3Q7SowkeyZ/mvTcNZoC856oM708B+S9EoP7oXzLer1cM6HnOUeoU4aii4mqNAukejGFarlY8E2xy443Wo3oEqNiHp2oVCxNSyu1kRMQ5UGOq3Ks8ZiFnMbWJKm2bTdStCg1KOeRfyXXkuMBTRhyLCxEA+axlXm5uTU1O7Pu6ts+88eQXKnVXhVtzC1DCLtP80lzABw8eKeevJbWS/4YfMNqNPvST1YriQMpjmte2kAZPwSqtnFw4+8J6lTdYt/V7EjVnxCad0VXGtN3ldbyuSO9E+cx4pQaGjN9748U89NvPzg6g1Y4eRSTScNWuHkV6O6gIzB0zp7rFNYlsN3cIkz8VfMrzwBLC20NLZDJuTcDcaJfqtIwCwTbYJ5gmhTBAuRI/IJVNhbPnvZBuZ04HhFkiCOHlx5LnUPMdJN41nnZIDw4QfEAbDgmX3EydD4ap6hVb93QTIUqAslsAWAm6ao1jIb4zFj5rtc3sCBOkaocwe1u7T9cFEO0ntIyjmddTHFK7IDf+ZIUei4Q4wYAtfc2gJVIkQDM6Rz2JKQiSHNbBg2F+XBZb0l1CaNIbZyfE5TstVTYLTBGvGZWW9JzAKdONO0PlDLrvwfsjUSOp1A1MPTY03M7aXXrHV7Bdi0NNzuVhvRT0fmw9N8cb+ZXp1KjCzzXeVj1cOPTZxxSXcU3Wsmu0smM6PVDVUqtxjZ0U+s2VHqlaVVtbBlKFYruKqgeKi0XmbrQsc4UPH17QEjEYnKIVJjcYSDdEtRcdXnVR8NSzGdvmmpLjCsGAC19NtYGnxWa8vNya6I7WA2JIPBSDRLYcL8uBSqbLiTcz7+CeZTeAJFpKjyyI7gRpafmlYWmSSDcEEHwOqcd3XAc/wCq6+wzC0fnupdppi+mOjOyeNmO0OsclBoU+8Fucfhm1RkO953BixWQdSLHljtQf0V2wy3NNLLols1mDmte7CkDNMkkxCyfQjJrNtOvyWtIsATFrX1K55d0N4yw1zC3u3CYZUkd0GxMGY1R67mBDhYggTr4FcYABcWGiXol6KbGMyYukTuSPxf1VwdSTp9N1W9ZBBpVB95vlwVqGWJHC4lMuuqpksnQk7fndJa0nuwNxsnX35CxkWhIq2vG1rXn6LKEsa9pE2tcbE7eCRXJOpJJ24FdLzly2njeyTnsBF+ag66m4NAAJcT7gmqbYfJGk3G2368E86qBAJIsLgpbSdI4EnczMIGaVERl0Ea+Op8dU9RqOJ/djzjZJaDFxodBrqlEGxjQC/KdDsg8t60/5ut/GfkFUq361n+91p++fkFUL6ePaNBa30fU81So3iGj4lZJb70Q0M2JqcmtP/ksc3sqybr1zqz0Z2Qk7rSuEBRcDTAAT+JcvmY9er3YY6hivUgKuLySpbjITLWLpHc6x0BAcDdNPqJp74XRHcRWACpcbiTdP4nERIWd6RxR4qFpOJxaqq9STA3Sqj91GomXHwWa48meptJDco03uprhsN/nKjUXTE+fJPNkHym024LLw27TSxuj9T77JitJ5QYnVFOpOuwzfkk1A/uFrm63B0jcpJtdbLd7JngSPIwo736Ai1lOcBLg6R7uO4UOrUAflJtE+WyljNmjj3Og+NuEJ2nTOhHCJTfaloESRO+knS6RVrXaNb3PDiE0ndJrFo9o6i0ceBUJuLJBDgIcCAL2/qpZw7ntyxuST4KPghIggB0m/LbzWoupAwAC400S6szLfcOfFNuJBIGkGJ5bKQ1gyB8wdCOfFZQyacDcj5IEg93nKQ7e8N4brmewm9/cmjTpfl004ESCTyRVeBcb2Iggabrtc3EiSON0NozqQLX3jxTQS5neuZ0ET+aVVaCZcDYQOA4JNJvetfmbe5JDSMxJJE2bHzOyyhfZZR4xIB/UJbRo3UkxPCT/ADSIHs+8zvP6CW+xjSwJA+qBeFEAgazodtll/SY4GnS45z4GWrUtpAkCdYuLbrJekcRSpC3tE89Cu3B+yK9M9FbI6NoEbh/+8rXh0BZb0WD/AOF4fwd/vK0dZyzlPzv/AF9Hin4w3Wem6GqRJJUuiwNF9VqOlukd7tVBxNcBSMZWhZ3H4pEJqVczk9VfAUKi5N4+vA1W0tROksYqk4gnXRIxVeSmqILnBoWXPLLonYRoudzonqU5wZ1F004WhuoOikUnXIHDzBUeK5bu0mkQXXMCSn31DJFoI4+9Q2Uz3gJi2qfYDlM8j5bqEpIyyGB0Hn9U5UpktIvsOVimA5jntGS7b5tpJUxoEPcDAmOJPitaasmkI0xmtr81D6b6PFSnIEVBJB2I4KVXnOHA6jThO6H1AYHOJPhwWZdVz2pOgQ5tUFwIMHURrb6rS4hmZoEXzWTNSi5wk8bfQe5S2YktiABeZ5LVvVUTCMaQRBkGBwMbhLfLTAi/wKcqNEgi06/ULlR1joRx5/VZt2luzGJ6PFeiQXZHAgg8bocBIvtBtrZLcTY6HXlHFdeybkGeOxHFAxT3A325Ljqnd1F78wna0CDqIPw4pme8I01hRSmM1Bkn4DxXK4EiIDfnzTlEQbg96+vvA5JTm5bEC+0++EqUy1wkEbWGh8wUy8wN7k6731+accw6CL2idBxI4rhZ7Nt4B4wDtzUD2WxEGbGRw/kkMcAYncDcC+hS2vdMCbyDxG4RTp5YIIAc4W8NUHlfWlsYusD98/IKpVt1pP8Ae6/8ZVSvp49oroW+9DGKa3H9m4gdqxzRO7hDgPmsAn8HiX03tqMcWvaQ5pGoIUyx80sXG6u31jIBgLmJcFh+pfpEw+Ka1ld7aNcWIcYY88Wk6TGi2VWo11w5pHIg/JfOvHcbrT6OOWN7G3BR69SEqrUhQ5JO6sla2kME3UXGVoCltkBZ3pfEG4WzaLjekNlSYqrK5VqSVFr1FGLXH1bKTQw+USddVAoSTPBWRtEST+gsV5ebP4dEkhwt8PepNFxJ5n5DZN4guhoHibXuhgIOYTrfw8FlwPl+VouJSGUe9mJBvAP8knFQWzBECRHGRM84RTMeYmyTZtLqVS1rgdTeRvwChnvPEiABc/kkvrkxPIeUJyhEGRYq6L1MMcTE+73KQ1jZAHtAzOw8U09jg4ERBHy4hLw0WMcz8k0iS7OCLmNr8UitDTmdIERbjxUh0CWyZ1na2gASPVySLkg3A5Re6aXW0eo46WNwR/NAkEEeHInWyXUolryLT8LJuvIy6xMD5lNGh2QncSd7wdwkOAlwNrn+SkNI4RBnyTRoB2xzTE7JQ2w3J30G/inWt7ojXex+PJLdTyjug5rePkksrEExIaRPiolIqtEa8JGx8P5JuxMGItNzbeJ52TjyRcTBmw1BK5TpGwcAbybag6WUI5R9ol3h79D80uu6wIJMgX4cx8kdmBGs5p00m+idw1IWgSJNjN7poKoOi5IMG3KdbfRZH0jumlT5PPj7J1WsbLRpcHSOKyfpIvSpE65yCY1sV14J+cHpnoxf/wDDMOOTv95V9Ves16Mif7Ow/g7/AHlaGpJ2Kuc/KvpcftgpG6kueorGxsUjFV4G6SLVf0lioVFWqyVJ6RqlzlWVnq6TzHqlYDRVePxEpx9QqBiSjNqK9ym9H0zrxMclCYwkwrZtgGxaw851Urz8uXTRx4iSAeW6BTM5v6rkX7oPH809iGuJbH2RcLLz6OYa8DkT5zuu4iqGho48U0xkXi83F0vFOOUkiTA23mbeSmgunliQIM3HJLxDwBDTAcL8iVFY7SAdL7iU1UzBuaOB9y0u0iizvA8BAkpo90gcb+B3ScHiM0kAz8k4+pYlwuDrHFNVNHWEkzsIVjkJBBgi+8STwVXTkSYtPw+qdfWechAJaLaXTSpNYOiMoyxeOItCafQyhtiAL2A14c0o1XAubHCPHVdxNV1QNAFxrwhJF6E1GuAI0kXHAC+q5Qc0xImQR4HVJY9xPdFj8tD4LlaIywe7byOqaQp4aTDhI04eJldoUQO9AM6cRE7e5N9vaMsA7i8EaeSVRBPEG55e5ZoZqTB0HA/rRddUDrHSP6pw0zeGnWQeJ5hMVqcNGp2PHWVErjaQsSROjTw8eSdpuAFtiYmDBJG6KTBmzHS8Hf3J0Ug7ntGnmOaaJDbXH3knwHPeNU5Vc0DvHSTwy2FymsQ5gzFxa0ATmc6J5LFdaOtLXNdRoGQYBePugRDfHcrphx3KjLdM4ntK9Sp957j43soS6VxfQUIQhB1PU8U8WD3Dwc4fIphCCT6/V/6j/wATvqu+v1f+o/8AE76qKhF2lf2hV/6tT8bvqkHF1D9t/wCJ31TCEN096w/77veVw4h/3ne8ppCJs6MQ/wC873ld9Zf9934j9U0uJoPetP8Avu/Efqj1p/33fiP1TKE1A960/wC+78Tvqj1l/wB93vP1TKE1A96y/wC873n6o9af9934j9UyhNQPetP++78R+qBin/fd7z9UyhNQP+tP++78TvqgYyp9934nfVMITUD/AK0/77vxO+qPW3/fd+J31TCE1A/60/77vxH6o9bf9934nfVMITUD/rdT77/xO+q560/77vxH6plCaD/rb/vu/EfquetP++78TvqmUJqB71p/33fiP1XfW6n33fid9UwhNQPnF1Pvu/E76pL67nWc4kcyT800hBJp42o0Q2o8AaAOcB7gV3+0a3/Vqfjd9VGQmjaT/aFb/q1Pxu+q4cfV/wCo/wDE76qMhF2fOMqfff8Aid9UetP++78R+qYXUTZ31l/33e8rnrD/ALzveU0hDZ0V3fed7yu+sv8Avu95TKED3rT/AL7vxH6rvrT/AL7vxH6phCaD/rdT77vxO+qPW6n33fid9UwhA8MU/wC+78R+qDin/fd+I/VMoQPDEv2e73n6oOJf9934j9UyhA/60/77vxH6oGLqfff+J31TCED/AK3U++/8TvqgYyps9/4nfVMIQPjF1Pvu/E76o9af9934nfVMIQPetP8Avu/EfqujGVPvv/E76phCaD/rlT77/wATvquetP8Avu/E76plCage9af9934j9V31p/33fiP1TCEC31CdST4klIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhAIQhALoXF0IJmOwXZtpOme0Zn00uRHwSKOAqvaXtpvc0akNJHO6uMb0dVq0sOabC4CkAYIscxtcqX0bhi12GcQ54bEvL4ZROYhzIG4PvlBm8NgalSezY58a5QTHipGF6Iq1Kb6jWuIZAjKZdJgx4bq4wtNzgWGnnYKzyHU35X0jmgkjhFwVHoUS5uMpsd2ji5hBkS8Ne4udrc3lBRUqLnODWglxsABJJ4Ql18I9jsr2Oa46Aggnw4q06tuaHVWkS51NzWjNlLjIzNDtiRIVlh6op1MOx7BSDS8tzPzOaXNgSPsiYN0FMOiXNp1H1GvY5gYWhwjMHOg6j5JxnQrnucKQeQ2nn7zCCXQDlAHGbKUcPVp4fECqSJLCASCXHNdwvpzUlwzYiq0EEuwoa0SBLuyZAHO3wQZ6l0fVcXBtN7i32gGkweB4JGHwj3nKxjnO3ABJEa2C0OFpTQYwUnPex9TO1r8jmvJblcRva07QjEPdWbiG0wO1NRjnNa4HOwCDDvt969uKCn6RwPZilrL2FzgRoc7mxHknqPR1IMY+tULDUktDW5oaDGZ17CUvp/MBhw4y4UoN5gh7rE8U9icI6vToOpDNlpik8AjuFrjc8AQZlBHb0OBUqMqOytptz5miZbaCBzlRMZRpCBSe5/GW5Y8OKu69eo6tUGHc0kU2M1GZ2WJNPiQQu1jW/u4LoxQc6CS0PDI7udx03idkFVhcBT7MVazyxriWtDW5nOj2jE6DRM9JYLsngSHNLQ9rvvMdoY46jyVi/Dvr0KbaYzPpuqNe0ET3nZg6NxqJCeq4ijTqU21DLqNFrZaA8CrLnHcSG5uOoQV3SPRRpU2PJ7ziQ5seyQAQCeMEKtV/0iaRwrCKjnHtKhEtAJcYmb23VPTrtDHNLAXEgh95aBqAOaB/o7Ah4e97stNkZiBJJcYa1o3JUh/RbCabmVB2TyW53DKWOaASHDjBBHGV3osdpQq0R7Zcx7RIGfLIcBO8GYT78Jlo08M9zWVH1XVDmI7gyZWhxGhJQRa+ApGk+pSqOdkLQ4Obl9okAiDyUfozA9q50uysa0vc6Jho5bmbK1rUntwr2V2hmXJ2cQC92aDMHv93cpvo7CuZ2tBxaHVaQLO82CZDgJ0BMHVBExXR7Oz7Wk8vbmyuDm5XNcRbeCCnMbgKFMuaazs4AtktJAMTPNPmg6jhnMqd19SoyGmJDW3LiNhKsKTsRnqHEEdgWOm7eyPd7pYBqZjS6DOdHYTtXhkhupJOwAJPjopWJ6OYafaUXueA8MIc0NMuBLSL3BhN4foiq802gD9oC5veb7IMEm9tNNVaY+g6gym0McKTKjXveYBqPBgGJkCJgaoIVfo2izMx1aKjRJGXuZonLmmZVQVsn1Kna1HPIOFc151b2ZBaS3KJ9vMRzWNCAC2mG6p4NuGw9fFY00DXa57Wii58ND8syCsniKzXZMrA3K0NMT3zeXGd16l1Uf0qaeCdRq4c4ZoDXljqXcoh8uZic97CbIM/1W6iU8a3EupYm1J4ZTOT/ABS5rnN1PdnKmeo3UQ48VXOq9iKbsg7ubM/KXFuuwaVq6PS1CgzpPEYYt7NmOwj2Buha1x7TKOBlyvsP2OGxuGw1J7ctWpjcY4giMtSk9tJpPIO+CDw/ozAiq8080HK4ttqWiY84RgsFnbVcTlFNmbjLiYa3z/JNYbEGnUa8atdPuNwrrp0MpUyxhBFaoatiLUwO4PeT7kFTiMJ3mNph7i5rTBbBJP3RuOabqYCq0lrqbwQMxBaZDePhzWkpVG9qBYudhGtaM2Ul0glodsS0OHmkMr9m6hSfT7NpNQEF4c4MqANMj7LZg35oM36u6GnKYcYaYMOOkDinaXR1ZxIbTeS2zoae6eB5rSUAzMKLiP7tkebiCWtcaseZb7lG6NL6rBmZnaarn5mPyvpPdElw2G4J4IM24QkqT0gIqPAdnGd3e+93j3vNRkAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEAhCEHZQuIQdJRK4hB1EriEHZQVxCDqFxCBUrkriEHZRK4hB1EriEHSuIQg6iVxCDsoXEIOyiVxCDqAVxCDsriEIOhEriECpXFxCBUrkriEHZRK4hB2ULiEHSuIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIT+Cwrqr202CXOMBAwuwtPXp4HDHs3sOIqD2jmIaDuBBum/7UwBscHA5PM/NUZtCv+luiaRpesYZxdTmHNPtUzz5KgUAhCWKZgmDA1MGB4lAhCdo4dz/Za538IJ+SS5hBggzw3nwQIQn6mEqNEuY5o4lpA95CYQCEIQCEIQCE7h6DnuDWAlxsAN1a9MdXKtBrXuEtIGYj7DuB+qClQrvo7oihUYHPxVOm4k912ohd6Q6ADKZq0qzKzGmHZdWzxCCjQulcQCEssIEwYOh2Pnul08O912tcRxAJ+SBlCedhngwWOk6CDJjWAkspE2AJPK6BtC6VxAIQhAIQugIOIWlZ0Lh6LGuxdRzXvEhjBLgOacHVilUirRrjsbl7nWcyLwQgyyFqafROBqns6Vd4qGzS8Q1x4ArOYzDOpvdTcIc0wUDKF0J5mEeW5gx5HENJHvhAwhLZTJMNBJ4ASfcEqpQc0w5paeDgR80DSEtzCNRG97W4oqMIsQR4iLIEIQhAIQhALq4r7oDBUeyq4iu0vbTygMBIlzrXI8UFFCIWj/tbA/8A+IfjP1T+Ar4GvUbR9VLC85Q4PMg7HVBlEKRjsP2dR7NcriJ4wVHQCEprCdBMXPIcTyXEHEJ92EqBuYseG8S1wHvhN5DEwY0nadYnigQhLNMxMGNJ2nxSEAhCEAhCEAhdWg6s9Xu3Oep3aQMToXn7rfqgzyFddYugjh3S3vUie67h+67gVSoBCEIBaLqNHrPPI8N/i2WdT2FxDqbg9hhzTIPNAmuCHEOmZMzxm6QtQ7E4LFEOq56NYwHFglrjpMbEpzE9U203kvqhlAR3nRmda8BBG6sT6vjJ9jsj4ZodHnos2r/pbpan2Xq2GaW0plzj7VQ8TyVCgeweGdUe1jBLiYHDmTwC0FWuz1XEUqd2U+xGb77i85n+FrclRYHGvpEuYRJBaZAcIOogq0odYHClVa4MzOyZYp0wLOObN3eGiCXk7PDUB25oNe1z3FocXPcXECQ2DlaAN9024vbjaTqv7acpaWD/ABGwQHRud78FEp4qjVpsZWc5jqeYNc1ocHMcc0EbEEmPFOjptgxFN7Wns6bOyAMZi3KQXcnXlUWAp1GtxDjV9YaWuGVri4gn7T2n2cvJZBX2ExOGoFz6b31HFrmtaW5YzCO8d4VCgEIQoBCEIJvRnST6Di6nElpbJExO44FabrF0vVpNpBpkVKADs15J38VjFsek+i6mLpYepQAeG0gx1xIcNQQgx60fQX+Sxn+j81X9IdB16AD6zIaTGouYJi3IFazoujhH4eqWONOm8M7RpN2FuvvQefp3DuaHAubmbN2zEjhI0T/StSk6o40WljNgTJ8VDQaDpyvnw2HcGhgmoA1ugAIjxULoWpXc9tGlUewOOziAOLiByTvrLH08PR7xLXuzRqQ5w9k8U/Qr0cPiKuUktDHsYdSHOAFzyuqJ2A6QNXG02guLGCoxkklzv2bgXEnUuN1GxOHdhaAyQX1CWVKjT/hxfsm8DuSqzoLFtpV21HzADtNZLHAfEpzojHtZnp1ZNKoO9Fy1wu145gqCrcuJT9TGiSgEIQgE5QdDgeBB9xlNoQaPrtTPbNqi7KjGlp2sLhUTa7g1zQ45XRI2MaSrzofpGnUp+q4n2Nab96bvomcV1YxDagptbnDvZc32SOM7IIPQuHdUr02s1zA+QMlSuttYOxdUt0kCeJa0NJ94VnWq08CwspuD8S4Q5wu2mOA5rLPdN0AFouj+kq1bE0uzLmMbkBYCcjWNjOSNDN9eKzrVo/WsIKXZMqVGB0ZyGS6oeBdPs8ggS2sGUcRWo90urdmxwsWsMv7vCyabWdVwdXtCXOpOYWucZID+65sm8JnB4uk0VaDi40XkFrwBma5ujsvMWIXMXi6TaJoUS52Zwc97hlnL7LQOG6C/q9HZnsrOAeWYekWUpvUc1gk/wjXnCyOOxT6ry95lx+HIDYclYY/pWatKrSJBp06bb/eaIdbgfzUbpirSfUz0gQHCS0/ZefaA5SggIXSuIBCEIOhaHo3/AOXYr+On/uYs6tT1fwj62CxFNglzn04vAsWk/AFBlyrTqt/m6H8YVmejcFQtiKhqvNstPRnMkaqX0T0C0V6VfD1W1aQeCdA5o5hBm+nf8xV/jd81BCndO/5ir/G75qAg0fQ2KaaNdjKYaRQeXOklziC2NdBc2VDh6mVzXQDBBg6GDMHkpnROLbTFYOnv0nMEfeJET7k6+jRZSoVIcXFxzscRDmg6ti4GyC16HxVWo6pWfU7QFtSaAdLjwimbBo48k10Vgu1wYa5wYwYiXuOjW5APMym8PicJSqdtTdUJEltMtjKSCIL9wJUB+OacMaV85rGoeEZY+aod6xVnh/YZezZSOVrJn/UT9onWVUK0x2PZVoszz2zO7MWfT2k8QqpAIQhQCEIQdC0nQfSlSricMxx7rDAAEDQ3I4pHVfDCpTxTcoc/su4Ikzf2VD6Mo4ijVbVFCoS0yAWPg/BA90j0pUY7EUAe457rETHevHBUhVjisFiKlRz+wqAuJMZHxJPMKf1yotZUptDQ0im3MAI72880GeQhCAQhCBVN8EEagg+5SMdj6lZ2ao4uPPQeA2UVCDpXEIQC6uIQdXEIQCEIQCEIQCEIQCcZVI0JHgSE2hA4+s46uJ8ST80kOSUIOlcQhB2UEriEAhCEAhCEAhCEAhCEHZU/D9M12UzSZUcGHUTp4cFXoQdJXEIQC6uIQCEIQC6uIQCEIQCEIQCl4bpGoxjqbHFrXGTFibRrwURCDpKewmLfScH03FrhuDCYQgdxNcvcXuuXGT4ppCEHQiVxCDq4hCAXVxCAQhCAXQuIQPYbEupuD2OLXDQjVWP/ABNi/wDrO9zfoqhCC3/4mxf/AFne5v0VZWqlzi5xJJ1JuSm0KgQhCgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQgEIQg//2Q==" alt="X post by @cormachayden_ captioned software engineers before vs after agents: a laptop held wide open, then nearly closed." style="display:block;width:auto;max-width:100%;max-height:24em;margin:0 auto;border-radius:var(--r-md)">
+      <figcaption class="tiny" style="text-align:center;margin:.8em auto 0">@cormachayden_ on X</figcaption>
+    </figure>
+  </div>
+  <div class="notes"><h4>One minute. Four presses.</h4>
+  Let the image land first. <strong>Coding agents let you close the laptop sooner. An agent you deploy keeps working after you close it.</strong><br>
+  For the Flutter devs: <strong>your app calls the agent like any other backend.</strong> The generated <code>app/fast_api_app.py</code> is that HTTP server.<br>
+  A2A is on by default in the scaffold, so another agent can call this one without extra code.<br>
+  Scheduling and pipelines need the agent deployed somewhere. That's the last part of the talk.<br>
+  If someone asks about cost: <strong>available 24/7 doesn't mean running 24/7.</strong> Since Agents CLI 1.4.1, deploys default to <code>--min-instances 0</code>, so an idle agent scales to zero.</div>
+</section>
+
+<!-- 05 -->
+<section class="slide" data-sec="Agents CLI" data-at="5">
+  <h2>ADK is Google's framework for building agents</h2>
+  <p style="font-size:1.08em;max-width:56ch;margin-top:-.2em">Agent Development Kit. Open source, code-first, Apache 2.0. Agents CLI creates ADK projects.</p>
+  <div class="cols c3" style="align-items:stretch;gap:1.1em;margin-top:1.6em">
+    <div class="card"><h3>Languages</h3><p>Python, Go, Java, TypeScript, Kotlin.</p></div>
+    <div class="card"><h3>Models</h3><p>Gemini by default. Claude, Ollama and others through LiteLLM.</p><a class="src" href="https://adk.dev/agents/models/litellm/" target="_blank" rel="noopener">adk.dev/agents/models/litellm</a></div>
+    <div class="card"><h3>Protocols</h3><p>MCP for tools. A2A for talking to other agents.</p></div>
+  </div>
+  <div class="srcs">
+    <a class="src" href="https://adk.dev/" target="_blank" rel="noopener">adk.dev</a>
+    <a class="src" href="https://adk.dev/2.0/" target="_blank" rel="noopener">adk.dev/2.0 &middot; what changed in ADK 2.0</a>
+  </div>
+  <div class="notes"><h4>30 seconds</h4>
+  Quick show of hands: <strong>who has heard of ADK? Who has shipped with it?</strong><br>
+  The ADK version installed in the demo is 2.9.0. ADK 2.0 came out on May 19, 2026.<br>
+  Open adk.dev only if someone asks. Don't tour it.</div>
+</section>
+
+<!-- 06 -->
+<section class="slide" data-sec="Agents CLI" data-at="6">
+  <h2 class="dm">Before Agents CLI, you learn ADK from its docs</h2>
+  <p style="font-size:1.08em;max-width:60ch">Setup, deployment and every new release have their own pages. You read them before you write the agent.</p>
+  <div class="cols c3" style="align-items:stretch;gap:1.1em;margin-top:1.5em">
+    <div class="card line"><h3>Setup</h3><p>Install ADK, create an agent, pick a model, run it locally.</p><a class="src" href="https://adk.dev/get-started/python/" target="_blank" rel="noopener">adk.dev/get-started/python</a></div>
+    <div class="card line"><h3>Deploy</h3><p>Agent Runtime, Cloud Run and GKE, each with its own steps.</p><a class="src" href="https://adk.dev/deploy/" target="_blank" rel="noopener">adk.dev/deploy</a></div>
+    <div class="card line"><h3>Changelog</h3><p>Every release can change the API. ADK 2.0 added graph workflows.</p><a class="src" href="https://github.com/google/adk-python/blob/main/CHANGELOG.md" target="_blank" rel="noopener">github.com/google/adk-python &middot; CHANGELOG.md</a></div>
+  </div>
+  <p style="margin-top:1.5em;font-size:1.08em;color:var(--ink);font-weight:500;max-width:none">Agents CLI puts that reading into skills your coding agent loads.</p>
+  <div class="notes"><h4>90 seconds. Click one link live.</h4>
+  Open the changelog and scroll for five seconds, then come back. That is the reading you would otherwise keep up with.<br>
+  The point: <strong>ADK has a large API surface to learn before you write code.</strong> Agents CLI doesn't remove it. It packages it as skills that a coding agent reads for you.<br>
+  If someone asks about LangChain: Agents CLI also has a first-party LangChain template, <code>agents-cli create my-agent --agent google/agents-cli/extensions/langchain/template@v1.13.0</code>. It is experimental: deploy works on Cloud Run and GKE, and <code>publish gemini</code> does not. ADK is the default and best-supported path. Docs: google.github.io/agents-cli/guide/extensions/first-party<br>
+  Ask: "who has lost a weekend to a framework upgrade?"</div>
+</section>
+
+<!-- 07 -->
+<section class="slide roomy" data-sec="Agents CLI" data-at="8">
+  <div class="cols c2w">
+    <div>
+      <h2 class="dm">Agents CLI is a command-line tool plus seven skills</h2>
+      <p style="font-size:1.12em;color:var(--ink);font-weight:400;max-width:34ch">It creates, runs, evaluates and deploys ADK agents. The skills teach coding agents like Claude Code, Antigravity and Cursor how to use it.</p>
+      <div class="row" style="gap:.5em;margin-top:1.5em">
+        <span class="pill d">Not a coding agent</span>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card gen">
+        <span class="pill g">google.github.io/agents-cli</span>
+        <h3 style="margin-top:.7em;font-size:1.6em;letter-spacing:-.025em">Agents CLI in Gemini platform</h3>
+        <p style="margin-top:.3em">CLI and skills for building agents on Google Cloud. Works with your coding agent.</p>
+        <a class="src" href="https://google.github.io/agents-cli/" target="_blank" rel="noopener">open the docs</a>
+      </div>
+      <div class="card line"><h3>Version 1.13.0</h3><p>Released November 4, 2026. Generally available since v1.0 on June 30, 2026. Announced April 22, 2026.</p>
+        <div class="srcs">
+          <a class="src" href="https://github.com/google/agents-cli" target="_blank" rel="noopener">github.com/google/agents-cli</a>
+          <a class="src" href="https://github.com/google/agents-cli/blob/main/RELEASE_NOTES.md" target="_blank" rel="noopener">release notes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><h4>One minute</h4>
+  Say it plainly: <strong>it's a tool for coding agents, not a coding agent.</strong> Every command also works without one.<br>
+  Click the docs card to open google.github.io/agents-cli live. Show the sidebar (Guide, CLI reference, Skills) for ten seconds, then come back.<br>
+  <span class="flag">Verify the morning of:</span> the version number. 1.13.0 was current on November 6.</div>
+</section>
+
+<!-- 08 -->
+<section class="slide" data-sec="Agents CLI" data-at="9">
+  <span class="pill b">Question 2 for the room</span>
+  <h2 style="margin-top:.6em;max-width:24ch">Why not just ask your coding agent to write the ADK code?</h2>
+  <div class="poll-wrap">
+    <div>
+  <div class="poll-opts" data-poll="2">
+    <button class="poll-opt" data-verdict="<span class='no'>No.</span> It writes Python fine. The question is which version of the ADK API it writes."><span class="ltr">A</span><b>It can't write Python well enough</b></button>
+    <button class="poll-opt" data-right="1" data-verdict="<span class='yes'>Yes.</span> ADK 2.0 came out on May 19, 2026. A model trained before that can write the old API without any warning."><span class="ltr">B</span><b>It may use an ADK API that changed after it was trained</b></button>
+    <button class="poll-opt" data-verdict="<span class='no'>No.</span> Everything in today's demo runs on an AI Studio key."><span class="ltr">C</span><b>It needs a Google Cloud account first</b></button>
+    <button class="poll-opt" data-verdict="<span class='no'>No.</span> Speed isn't the problem. Wrong code that looks right is."><span class="ltr">D</span><b>It's too slow</b></button>
+  </div>
+    </div>
+    <div class="poll-verdict" aria-live="polite"></div>
+  </div>
+  <div class="notes"><h4>Question 2, 60 seconds</h4>
+  Most rooms pick B. If anyone picks C, click it first: <strong>many beginners think they need a billing account to try this.</strong><br>
+  Then click B. That's why the skills exist: they carry the current API.</div>
+</section>
+
+<!-- 09 -->
+<section class="slide" data-sec="Agents CLI" data-at="10" data-steps="2">
+  <h2 class="dm">The CLI runs commands. The skills tell your coding agent how to use them.</h2>
+  <div class="cols c2" style="align-items:stretch;gap:1.1em;margin-top:.4em">
+    <div class="card" data-step="1">
+      <span class="pill">The CLI</span>
+      <h3 style="margin-top:.7em">Commands you can run yourself</h3>
+      <p style="margin-top:.3em"><code>setup</code>, <code>create</code>, <code>install</code>, <code>run</code>, <code>eval</code>, <code>lint</code>, <code>deploy</code>.</p>
+      <a class="src" href="https://google.github.io/agents-cli/cli/" target="_blank" rel="noopener">google.github.io/agents-cli/cli</a>
+    </div>
+    <div class="card gen" data-step="2">
+      <span class="pill g">The skills</span>
+      <h3 style="margin-top:.7em">Instructions your coding agent loads</h3>
+      <p style="margin-top:.3em">Seven <code>SKILL.md</code> files in <code>~/.agents/skills</code>. They cover the current ADK API, project layout, evals and deployment.</p>
+      <a class="src" href="https://google.github.io/agents-cli/reference/skills/" target="_blank" rel="noopener">google.github.io/agents-cli/reference/skills</a>
+    </div>
+  </div>
+  <div class="notes"><h4>Two presses</h4>
+  First card: <strong>every command works by hand.</strong> That's what you'll do on stage, because it's predictable.<br>
+  Second card: this is what <code>setup</code> adds for Claude Code, Antigravity, Cursor, Codex and others.<br>
+  Click the command reference link if someone wants the full list.</div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-sec="Agents CLI" data-at="11">
+  <div class="cols c2w">
+    <div>
+      <h2>The seven skills</h2>
+      <p style="font-size:1.08em"><code>setup</code> installs them into <code>~/.agents/skills</code>. Each name starts with <code>google-agents-cli-</code>.</p>
+      <div class="srcs">
+        <a class="src" href="https://google.github.io/agents-cli/reference/skills/" target="_blank" rel="noopener">google.github.io/agents-cli/reference/skills</a>
+        <a class="src" href="https://github.com/google/agents-cli/tree/main/skills" target="_blank" rel="noopener">github.com/google/agents-cli/tree/main/skills</a>
+      </div>
+    </div>
+    <table>
+      <tr><th>Skill</th><th>What it covers</th></tr>
+      <tr><td>workflow</td><td>The development lifecycle, from scaffold to deploy</td></tr>
+      <tr><td>adk-code</td><td>ADK Python and Go APIs: agents, tools, callbacks, state</td></tr>
+      <tr><td>scaffold</td><td>Create, enhance and upgrade projects</td></tr>
+      <tr><td>eval</td><td>Datasets, metrics and the eval-fix loop</td></tr>
+      <tr><td>deploy</td><td>Agent Runtime, Cloud Run, GKE, CI/CD</td></tr>
+      <tr><td>publish</td><td>Register agents in the Gemini app</td></tr>
+      <tr><td>observability</td><td>Cloud Trace, logging, BigQuery Agent Analytics</td></tr>
+    </table>
+  </div>
+  <div class="notes"><h4>Don't read all seven</h4>
+  Point at two: <strong>adk-code</strong>, because it holds the current API, and <strong>eval</strong>, because it teaches the eval loop you'll run later.<br>
+  Click the GitHub link to show that a skill is just a markdown file.</div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-sec="Agents CLI" data-at="12" data-steps="4">
+  <h2 class="dm">So far</h2>
+  <div class="cols c2" style="align-items:stretch;gap:1em;margin-top:.2em">
+    <div class="card line" data-step="1">
+      <span class="pill">ADK</span>
+      <h3 style="margin-top:.7em">Google's Agent Development Kit</h3>
+      <p>An open-source framework for writing AI agents in code: instructions, tools and state.</p>
+    </div>
+    <div class="card gen" data-step="2">
+      <span class="pill g">Agents CLI</span>
+      <h3 style="margin-top:.7em">Makes building ADK agents simpler</h3>
+      <p>One tool to create, run, test, evaluate and deploy them.</p>
+    </div>
+    <div class="card gen" data-step="3">
+      <span class="pill g">Agents CLI</span>
+      <h3 style="margin-top:.7em">Agents CLI works with your coding agents</h3>
+      <p>Antigravity CLI, Claude Code, Codex or any other coding agent in your terminal. Or no coding agent at all.</p>
+    </div>
+    <div class="card gen" data-step="4">
+      <span class="pill g">Agents CLI</span>
+      <h3 style="margin-top:.7em">Agents CLI comes with skills</h3>
+      <p>Seven skills show your coding agent how to evaluate your agent with <code>eval run</code> and deploy it to Agent Runtime, Cloud Run or GKE.</p>
+    </div>
+  </div>
+  <div class="notes"><h4>One minute. Four presses.</h4>
+  Read the four boxes as the summary of everything so far. <strong>If anyone is lost, re-explain here, before the build starts.</strong><br>
+  Stress the second box: Agents CLI doesn't replace ADK. It makes building ADK agents simpler.<br>
+  Then: "now let's build one."</div>
+</section>
+
+<!-- 12 -->
+<section class="slide roomy" data-sec="Create an agent" data-at="13" data-title="Agenda: create an agent">
+  <div class="ag here">
+      <div class="ag-i"><i>01</i><b>What Agents CLI is</b></div>
+      <div class="ag-i now"><i>02</i><b>Create an agent</b></div>
+      <div class="ag-i"><i>03</i><b>Run and test it</b></div>
+      <div class="ag-i"><i>04</i><b>Evaluate it</b></div>
+      <div class="ag-i"><i>05</i><b>Before you deploy</b></div>
+  </div>
+  <div class="notes"><h4>20 seconds. Clock check: about 13 minutes.</h4>
+  Read the five parts once. The next section is the build.</div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-sec="Create an agent" data-at="13">
+  <div class="cols c2">
+    <div>
+      <h2 class="dm">The demo: ask your data</h2>
+      <ul class="bl" style="margin-top:1.1em">
+        <li>A CSV of sales<span>48 rows: month, quarter, region, product, units, price</span></li>
+        <li>The agent writes pandas<span>Gemini runs the code and the agent answers with the computed numbers</span></li>
+        <li>An AI Studio key<span>No Google Cloud project</span></li>
+      </ul>
+    </div>
+<pre>month,quarter,region,product,units,price
+Jan,Q1,North,Widget,120,9.99
+Jan,Q1,South,Widget,95,9.99
+Jan,Q1,North,Gadget,48,19.99
+<span class="c">...</span>
+May,Q2,South,Gadget,310,19.99   <span class="c"># planted outlier</span>
+<span class="c">...</span>
+Dec,Q4,South,Gadget,104,19.99</pre>
+  </div>
+  <div class="notes"><h4>30 seconds</h4>
+  Say the outlier is planted on purpose, <strong>so there is one right answer we can check later.</strong></div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-sec="Create an agent" data-at="14">
+  <div class="cols c2">
+    <div>
+      <h2><i class="stp">STEP 1</i>Install the CLI and skills</h2>
+      <p style="font-size:1.08em">It installs <code>agents-cli</code> with uv, then adds the seven skills for every coding agent it finds.</p>
+      <p class="tiny" style="margin-top:1em">17 seconds. The very first <code>uvx</code> run also downloads the CLI, about 2 minutes.</p>
+      <div class="srcs">
+        <a class="src" href="https://google.github.io/agents-cli/cli/#setup" target="_blank" rel="noopener">google.github.io/agents-cli/cli/#setup</a>
+        <a class="src" href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener">docs.astral.sh/uv &middot; install uv</a>
+      </div>
+    </div>
+<pre><span class="t">uvx</span> google-agents-cli setup
+
+<span class="c"># what it runs</span>
+<span class="t">uv</span> tool install google-agents-cli
+<span class="t">npx</span> -y skills@1.5.9 add \
+  https://github.com/google/agents-cli -y -g
+
+<span class="c"># result</span>
+<span class="c"># Installed 7 skills to ~/.agents/skills</span>
+<span class="c"># symlinked: Claude Code</span></pre>
+  </div>
+  <div class="notes"><h4>Run it before the talk</h4>
+  Run <code>uvx google-agents-cli setup</code> once before going live, so the download is cached. On stage, show the output and move on.<br>
+  Prerequisites: uv and Node. <code>setup --dry-run</code> shows what it will change without changing anything.</div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-sec="Create an agent" data-at="15">
+  <h2 class="dm"><i class="stp">STEP 2</i>Create the project</h2>
+  <div class="cols c2" style="align-items:start">
+<pre><span class="t">agents-cli</span> create ask-your-data <span class="k">--prototype --yes</span>
+
+ask-your-data/
+  app/agent.py          <span class="c"># your agent</span>
+  app/__init__.py       <span class="c"># exports app</span>
+  app/fast_api_app.py
+  tests/unit/
+  tests/integration/
+  tests/eval/datasets/basic-dataset.json
+  tests/eval/eval_config.yaml
+  agents-cli-manifest.yaml
+  GEMINI.md  Dockerfile  .env</pre>
+    <div>
+      <ul class="bl">
+        <li><code>--prototype</code><span>No Terraform, no CI/CD. Deployment target: none.</span></li>
+        <li><code>--yes</code><span>Use the defaults: the ADK template, no prompts.</span></li>
+        <li>It warns that gcloud isn't signed in<span>Then it continues. Add <code>--skip-checks</code> to hide the warning.</span></li>
+      </ul>
+      <p class="tiny">4.5 seconds.</p>
+      <div class="srcs">
+        <a class="src" href="https://google.github.io/agents-cli/cli/#create" target="_blank" rel="noopener">google.github.io/agents-cli/cli/#create</a>
+        <a class="src" href="https://google.github.io/agents-cli/guide/project-structure/" target="_blank" rel="noopener">google.github.io/agents-cli/guide/project-structure</a>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><h4>One minute</h4>
+  Point at <code>tests/eval</code>: <strong>the project comes with an eval dataset and config.</strong> We use them in part 04.<br>
+  Don't open every file. <code>app/agent.py</code> is the one we change.</div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-sec="Create an agent" data-at="16">
+  <h2 class="dm"><i class="stp">STEP 3</i>Install dependencies and add your key</h2>
+  <div class="cols c2" style="align-items:start">
+    <div class="stack">
+<pre><span class="k">cd</span> ask-your-data
+<span class="t">agents-cli</span> install      <span class="c"># uv sync, 28 seconds</span></pre>
+<pre><span class="c"># .env: comment out the Gemini platform lines</span>
+<span class="c"># GOOGLE_GENAI_USE_ENTERPRISE=true</span>
+<span class="c"># GOOGLE_CLOUD_PROJECT=your-gcp-project-id</span>
+<span class="c"># GOOGLE_CLOUD_LOCATION=global</span>
+GEMINI_API_KEY=<span class="s">your-key</span></pre>
+<pre><span class="c"># app/fast_api_app.py, no gcloud login</span>
+otel_to_cloud = <span class="k">False</span></pre>
+    </div>
+    <div class="card">
+      <h3>An AI Studio key covers local development</h3>
+      <p><code>run</code> and <code>eval run</code> with local metrics use it. Without a gcloud login, also turn off Cloud telemetry in <code>app/fast_api_app.py</code>. Deploy needs a Google Cloud project.</p>
+      <div class="srcs">
+        <a class="src" href="https://google.github.io/agents-cli/guide/authentication/#option-a-gemini-api-key-google-ai-studio" target="_blank" rel="noopener">google.github.io/agents-cli/guide/authentication</a>
+        <a class="src" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><h4>One minute</h4>
+  <span class="flag">Never show your real key on screen.</span> Paste it into <code>.env</code> before the talk.<br>
+  The generated <code>.env</code> defaults to Gemini platform (formerly Vertex AI). For AI Studio you comment out those three lines and set <code>GEMINI_API_KEY</code>. <code>.env</code> is already in <code>.gitignore</code>.<br>
+  <span class="flag">Gotcha in 1.13.0:</span> prototype projects hardcode <code>otel_to_cloud = True</code>, so <code>run</code> and <code>eval run</code> crash with <code>DefaultCredentialsError</code> on a laptop with no gcloud login. The playground is fine. Set it to <code>False</code>.</div>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-sec="Create an agent" data-at="17">
+  <h2 class="dm"><i class="stp">STEP 4</i>Write the agent</h2>
+  <div class="cols c2" style="align-items:start">
+    <div>
+      <p style="font-size:1.05em;max-width:none">Ask your coding agent, or edit <code>app/agent.py</code> yourself.</p>
+<pre style="margin-top:.8em;white-space:pre-wrap"><span class="c"># example prompt, with the skills installed</span>
+<span class="s">Turn app/agent.py into a data analyst for app/data/sales.csv. Write pandas, run it with BuiltInCodeExecutor, and answer with the computed numbers.</span></pre>
+      <p class="tiny" style="margin-top:.9em"><code>BuiltInCodeExecutor</code> runs the code inside Gemini, not on your laptop. It has to be the agent's only tool.</p>
+      <div class="srcs">
+        <a class="src" href="https://adk.dev/integrations/code-execution/" target="_blank" rel="noopener">adk.dev/integrations/code-execution</a>
+        <a class="src" href="https://google.github.io/agents-cli/guide/development/#with-a-coding-agent" target="_blank" rel="noopener">google.github.io/agents-cli/guide/development</a>
+      </div>
+    </div>
+<pre><span class="k">async def</span> load_dataset(callback_context):
+    state = callback_context.state
+    state[<span class="s">"dataset_csv"</span>] = DATASET.read_text()
+
+root_agent = <span class="t">Agent</span>(
+    name=<span class="s">"ask_your_data"</span>,
+    model=<span class="t">Gemini</span>(model=<span class="s">"gemini-3.8-flash"</span>),
+    instruction=<span class="s">"""Write pandas and run it.
+Answer with the computed numbers.
+{dataset_csv}"""</span>,
+    code_executor=<span class="t">BuiltInCodeExecutor</span>(),
+    before_agent_callback=load_dataset,
+)
+
+app = <span class="t">App</span>(root_agent=root_agent, name=<span class="s">"app"</span>)</pre>
+  </div>
+  <div class="notes"><h4>Two minutes</h4>
+  The right side is a shortened <code>app/agent.py</code>. The callback puts the CSV into session state, and <code>{dataset_csv}</code> in the instruction reads it.<br>
+  One rule from the eval skill: <strong><code>App(name="app")</code> must match the folder name,</strong> or you get "Session not found" errors.<br>
+  If you use the prompt live, read the diff before you run it.</div>
+</section>
+
+<!-- 18 -->
+<section class="slide roomy" data-sec="Run and test" data-at="19" data-title="Agenda: run and test it">
+  <div class="ag here">
+      <div class="ag-i"><i>01</i><b>What Agents CLI is</b></div>
+      <div class="ag-i"><i>02</i><b>Create an agent</b></div>
+      <div class="ag-i now"><i>03</i><b>Run and test it</b></div>
+      <div class="ag-i"><i>04</i><b>Evaluate it</b></div>
+      <div class="ag-i"><i>05</i><b>Before you deploy</b></div>
+  </div>
+  <div class="notes"><h4>Clock check: about 19 minutes</h4>
+  The project exists. Now we check that it works.</div>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-sec="Run and test" data-at="19">
+  <h2 class="dm"><i class="stp">STEP 5</i>Run it</h2>
+  <div class="cols c2" style="align-items:start">
+<pre><span class="c"># one prompt from the terminal</span>
+<span class="t">agents-cli</span> run <span class="s">"What's the median revenue per order,
+  and which row is the biggest outlier
+  above the mean?"</span>
+
+<span class="c"># change app/agent.py, then run it again</span>
+<span class="t">agents-cli</span> run <span class="s">"What is the total revenue?"</span></pre>
+    <div>
+      <div class="card gen">
+        <span class="pill g">Expected answer</span>
+        <h3 style="margin-top:.7em">Median revenue per order: 1,378.97</h3>
+        <p style="margin-top:.3em">Biggest outlier: May, South, Gadget at 6,196.90, which is 4,696.77 above the mean.</p>
+      </div>
+      <p class="tiny" style="margin-top:.9em">Computed from the CSV with a script, not by a model.</p>
+      <div class="srcs">
+        <a class="src" href="https://google.github.io/agents-cli/cli/#run" target="_blank" rel="noopener">google.github.io/agents-cli/cli/#run</a>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><h4>DEMO 1, three minutes</h4>
+  Run the question with <code>agents-cli run</code> in the terminal. <strong>Compare the numbers in the answer with the card.</strong><br>
+  Then change one line of the instruction in <code>app/agent.py</code> and run it again. Each plain <code>run</code> starts a fresh local server, so it picks up the change.<br>
+  <span class="flag">Not rehearsed with a key yet.</span> Run it once before the talk and note how long a response takes.</div>
+</section>
+
+<!-- 20 -->
+<section class="slide" data-sec="Run and test" data-at="22">
+  <h2 class="dm"><i class="stp">STEP 6</i>Test it</h2>
+  <div class="cols c2" style="align-items:start">
+<pre><span class="c"># your own code, offline</span>
+<span class="t">uv</span> run pytest tests/unit
+<span class="c"># 5 passed in 0.01s</span>
+
+<span class="c"># the agent responds, calls Gemini</span>
+<span class="t">uv</span> run pytest tests/integration
+
+<span class="c"># ruff, codespell, ty</span>
+<span class="t">agents-cli</span> lint</pre>
+    <div>
+      <ul class="bl">
+        <li>Unit tests<span>The eval metric and the ground-truth script. No API key.</span></li>
+        <li>Integration tests<span>The agent returns a response. Don't assert on the model's exact words.</span></li>
+        <li>Answer quality<span>That goes in evals, next.</span></li>
+      </ul>
+      <a class="src" href="https://google.github.io/agents-cli/guide/development/#code-quality" target="_blank" rel="noopener">google.github.io/agents-cli/guide/development</a>
+    </div>
+  </div>
+  <div class="notes"><h4>One minute</h4>
+  The scaffold skill says it directly: <strong>don't write pytest assertions on LLM wording. That belongs in evals.</strong><br>
+  There is no <code>agents-cli test</code> command. Tests run with pytest through uv.</div>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-sec="Run and test" data-at="23">
+  <span class="pill b">Question 3 for the room</span>
+  <h2 style="margin-top:.6em;max-width:24ch">Who should write the expected answers for your evals?</h2>
+  <div class="poll-wrap">
+    <div>
+  <div class="poll-opts" data-poll="3">
+    <button class="poll-opt" data-verdict="<span class='no'>No.</span> It can repeat its own mistake. A wrong median would pass."><span class="ltr">A</span><b>The coding agent that wrote the agent</b></button>
+    <button class="poll-opt" data-right="1" data-verdict="<span class='yes'>Yes.</span> <code>build_dataset.py</code> reads the CSV and writes the answers. No model is involved."><span class="ltr">B</span><b>A script that computes them from the data</b></button>
+    <button class="poll-opt" data-verdict="<span class='no'>Not alone.</span> A judge can score clarity. It can't confirm a number it never computed."><span class="ltr">C</span><b>An LLM judge, with no expected answers</b></button>
+    <button class="poll-opt" data-verdict="<span class='no'>Not for long.</span> It works on day one. It won't catch a regression after tomorrow's prompt change."><span class="ltr">D</span><b>Nobody. Check the answers by hand</b></button>
+  </div>
+    </div>
+    <div class="poll-verdict" aria-live="polite"></div>
+  </div>
+  <div class="notes"><h4>Question 3, 90 seconds</h4>
+  Most rooms split between A and C. Click A first, then C, then B.<br>
+  <strong>The coding agent can draft the questions. A script computes the answers.</strong></div>
+</section>
+
+<!-- 22 -->
+<section class="slide roomy" data-sec="Evaluate" data-at="25" data-title="Agenda: evaluate it">
+  <div class="ag here">
+      <div class="ag-i"><i>01</i><b>What Agents CLI is</b></div>
+      <div class="ag-i"><i>02</i><b>Create an agent</b></div>
+      <div class="ag-i"><i>03</i><b>Run and test it</b></div>
+      <div class="ag-i now"><i>04</i><b>Evaluate it</b></div>
+      <div class="ag-i"><i>05</i><b>Before you deploy</b></div>
+  </div>
+  <div class="notes"><h4>Clock check: about 25 minutes</h4>
+  If you're behind, skip the holdout part of step 9.</div>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-sec="Evaluate" data-at="25">
+  <h2 class="dm"><i class="stp">STEP 7</i>Write the eval cases</h2>
+  <div class="cols c2" style="align-items:start">
+    <div>
+      <p style="font-size:1.05em;max-width:none">Each case is a prompt and a reference answer. The reference numbers come from the CSV.</p>
+<pre style="margin-top:.8em"><span class="t">uv</span> run python tests/eval/build_dataset.py
+<span class="c"># wrote 6 cases to basic-dataset.json</span>
+<span class="c"># wrote 3 cases to holdout-dataset.json</span></pre>
+      <p class="tiny" style="margin-top:.9em">Keep the holdout cases out of your fix loop. Grade them when you think you're done.</p>
+      <a class="src" href="https://google.github.io/agents-cli/guide/evaluation/#writing-eval-cases-and-choosing-metrics" target="_blank" rel="noopener">google.github.io/agents-cli/guide/evaluation</a>
+    </div>
+<pre>{
+  <span class="s">"eval_case_id"</span>: <span class="s">"total_revenue"</span>,
+  <span class="s">"prompt"</span>: {
+    <span class="s">"role"</span>: <span class="s">"user"</span>,
+    <span class="s">"parts"</span>: [{ <span class="s">"text"</span>:
+      <span class="s">"What is the total revenue for the year?"</span> }]
+  },
+  <span class="s">"reference"</span>: {
+    <span class="s">"response"</span>: {
+      <span class="s">"role"</span>: <span class="s">"model"</span>,
+      <span class="s">"parts"</span>: [{ <span class="s">"text"</span>:
+        <span class="s">"Total revenue for the year is 72,006.26."</span> }]
+    }
+  }
+}</pre>
+  </div>
+  <div class="notes"><h4>Two minutes</h4>
+  The file lives at <code>tests/eval/datasets/basic-dataset.json</code>, which is the path <code>eval run</code> uses by default.<br>
+  With the eval skill installed, your coding agent can draft the questions. <strong>Compute the answers with a script.</strong></div>
+</section>
+
+<!-- 24 -->
+<section class="slide" data-sec="Evaluate" data-at="27">
+  <h2 class="dm"><i class="stp">STEP 8</i>Pick metrics that run on your machine</h2>
+  <div class="cols c2" style="align-items:start">
+<pre><span class="c"># tests/eval/eval_config.yaml</span>
+metrics_to_run:
+  - <span class="s">answer_matches_truth</span>
+  - <span class="s">custom_response_quality</span>
+
+custom_metrics:
+  - name: <span class="s">answer_matches_truth</span>
+    custom_function_file: <span class="s">answer_match.py</span>
+  - name: <span class="s">custom_response_quality</span>
+    custom_function_file: <span class="s">response_quality.py</span></pre>
+    <div class="stack">
+      <div class="card line"><h3>answer_matches_truth</h3><p>Python. Checks that the expected numbers appear in the answer. No model call.</p></div>
+      <div class="card line"><h3>custom_response_quality</h3><p>The scaffold's LLM judge. Scores 1 to 5 using your <code>GEMINI_API_KEY</code>.</p></div>
+      <div class="card"><h3>Built-in metrics need Google Cloud</h3><p><code>final_response_quality</code>, <code>hallucination</code> and <code>safety</code> call the Eval Service in Gemini platform.</p><a class="src" href="https://google.github.io/agents-cli/guide/evaluation/#available-metrics-reference" target="_blank" rel="noopener">google.github.io/agents-cli/guide/evaluation</a></div>
+    </div>
+  </div>
+  <div class="notes"><h4>90 seconds</h4>
+  This is the part people get wrong: <strong>custom Python metrics run locally, built-in metrics need a project.</strong> The scaffold's default judge is local, so <code>eval run</code> works on an AI Studio key out of the box.<br>
+  <code>BuiltInCodeExecutor</code> runs inside Gemini, so the code never shows up as a tool call in the trace. That's why we check the numbers in the answer instead.</div>
+</section>
+
+<!-- 25 -->
+<section class="slide" data-sec="Evaluate" data-at="28">
+  <h2 class="dm"><i class="stp">STEP 9</i>Run the evals</h2>
+  <div class="cols c2" style="align-items:start">
+<pre><span class="t">agents-cli</span> eval run
+<span class="c"># runs the agent on each case, then grades it</span>
+<span class="c"># artifacts/grade_results/results_&lt;time&gt;.html</span>
+
+<span class="c"># change the instruction, then</span>
+<span class="t">agents-cli</span> eval run
+<span class="t">agents-cli</span> eval compare old.json new.json
+
+<span class="c"># when you think you're done</span>
+<span class="t">agents-cli</span> eval run <span class="k">--dataset</span> \
+  tests/eval/datasets/holdout-dataset.json</pre>
+    <div>
+      <ul class="bl">
+        <li>Run<span><code>eval run</code> is <code>eval generate</code> plus <code>eval grade</code></span></li>
+        <li>Read the failures<span>Open the HTML report. Every score has an explanation.</span></li>
+        <li>Fix the agent, not the dataset<span>Change the instruction, run again, compare</span></li>
+      </ul>
+      <div class="srcs">
+        <a class="src" href="https://google.github.io/agents-cli/guide/evaluation/#the-eval-fix-loop" target="_blank" rel="noopener">google.github.io/agents-cli/guide/evaluation &middot; eval-fix loop</a>
+        <a class="src" href="https://google.github.io/agents-cli/cli/#compare" target="_blank" rel="noopener">google.github.io/agents-cli/cli/#compare</a>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><h4>DEMO 2, four minutes</h4>
+  Run <code>agents-cli eval run</code> and open the HTML report. If a case fails, read its explanation out loud.<br>
+  Change one thing in the instruction, run again, and use <code>eval compare</code> on the two results files.<br>
+  <code>eval run</code> exits 0 whatever the scores are. <strong>The scores are the gate, not the exit code.</strong><br>
+  <span class="flag">Not rehearsed with a key yet.</span> Run it once before the talk and note the time.</div>
+</section>
+
+<!-- 26 -->
+<section class="slide roomy" data-sec="Before you deploy" data-at="31" data-title="Agenda: before you deploy">
+  <div class="ag here">
+      <div class="ag-i"><i>01</i><b>What Agents CLI is</b></div>
+      <div class="ag-i"><i>02</i><b>Create an agent</b></div>
+      <div class="ag-i"><i>03</i><b>Run and test it</b></div>
+      <div class="ag-i"><i>04</i><b>Evaluate it</b></div>
+      <div class="ag-i now"><i>05</i><b>Before you deploy</b></div>
+  </div>
+  <div class="notes"><h4>Clock check: about 31 minutes</h4>
+  The demo stops here. The rest is what you need to know before you deploy.</div>
+</section>
+
+<!-- 27 -->
+<section class="slide" data-sec="Before you deploy" data-at="31">
+  <h2 class="dm">What runs locally, and what needs Google Cloud</h2>
+  <div class="cols c2w" style="align-items:start">
+    <table>
+      <tr><th>Command</th><th>What it needs</th></tr>
+      <tr><td>setup, create, install, lint</td><td>Nothing else</td></tr>
+      <tr><td>run</td><td>An AI Studio key</td></tr>
+      <tr><td>eval run, custom metrics</td><td>An AI Studio key</td></tr>
+      <tr><td>eval run, built-in metrics</td><td>A Google Cloud project</td></tr>
+      <tr><td>deploy, infra</td><td>A Google Cloud project</td></tr>
+      <tr><td>publish gemini</td><td>A deployed agent and Gemini Enterprise</td></tr>
+    </table>
+    <div>
+<pre><span class="c"># when you have a project</span>
+<span class="t">agents-cli</span> scaffold enhance . \
+  <span class="k">--deployment-target</span> cloud_run
+<span class="t">agents-cli</span> deploy</pre>
+      <p class="tiny" style="margin-top:.9em">Targets: Agent Runtime, Cloud Run, GKE. Since 1.4.1, deploy defaults to <code>--min-instances 0</code>, so an idle agent scales to zero.</p>
+      <div class="srcs">
+        <a class="src" href="https://google.github.io/agents-cli/guide/deployment/" target="_blank" rel="noopener">google.github.io/agents-cli/guide/deployment</a>
+        <a class="src" href="https://google.github.io/agents-cli/cli/#deploy" target="_blank" rel="noopener">google.github.io/agents-cli/cli/#deploy</a>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><h4>Two minutes. This is where the demo stops.</h4>
+  Say what deploy needs: <strong>a Google Cloud project with billing and gcloud signed in.</strong><br>
+  <code>scaffold enhance</code> adds the deployment files to the prototype you already have. Nothing we built today is thrown away.</div>
+</section>
+
+<!-- 28 -->
+<section class="slide" data-sec="Before you deploy" data-at="33">
+  <span class="pill b">Question 4 for the room</span>
+  <h2 style="margin-top:.6em;max-width:24ch">Which coding agent do you need for this?</h2>
+  <div class="poll-wrap">
+    <div>
+  <div class="poll-opts four" data-poll="4">
+    <button class="poll-opt" data-verdict="<span class='no'>Not required.</span> It's supported. <code>setup</code> installs the skills for every coding agent it finds."><span class="ltr">A</span><b>Antigravity CLI</b></button>
+    <button class="poll-opt" data-verdict="<span class='no'>No.</span> Google replaced Gemini CLI with Antigravity CLI for most individual users on June 18, 2026. Older posts still mention it."><span class="ltr">B</span><b>Gemini CLI</b></button>
+    <button class="poll-opt" data-right="1" data-verdict="<span class='yes'>Yes.</span> Claude Code, Codex, Cursor and others read the same skills."><span class="ltr">C</span><b>Whatever you already use</b></button>
+    <button class="poll-opt" data-right="1" data-verdict="<span class='yes'>Also yes.</span> Every command works by hand. That's what you just watched."><span class="ltr">D</span><b>None at all</b></button>
+  </div>
+    </div>
+    <div class="poll-verdict" aria-live="polite"></div>
+  </div>
+  <div class="notes"><h4>Question 4, 60 seconds. Two right answers.</h4>
+  Click B if anyone picks it: old blog posts are why people are confused.<br>
+  Then C and D.</div>
+</section>
+
+<!-- 29 -->
+<section class="slide" data-sec="Before you deploy" data-at="34" data-steps="4">
+  <h2 class="dm">What Agents CLI doesn't do for you</h2>
+  <div class="cols c2" style="align-items:stretch;gap:1em">
+    <div class="card line" data-step="1"><h3>Decide if you need an agent</h3><p>It scaffolds whatever you ask for, even when a script or a cron job would do.</p></div>
+    <div class="card line" data-step="2"><h3>Review the code</h3><p>Generated code varies between runs. You still read it before you ship it.</p></div>
+    <div class="card line" data-step="3"><h3>Design state</h3><p>ADK gives you session state. What each step should remember is your decision.</p></div>
+    <div class="card line" data-step="4"><h3>Keep the skills current</h3><p>Skills go out of date like docs do. Run <code>agents-cli update</code>.</p></div>
+  </div>
+  <div class="notes"><h4>Two minutes. Four presses.</h4>
+  Don't skip this when running late. <strong>It's what makes the rest believable.</strong><br>
+  <code>agents-cli update</code> reinstalls the skills for every coding agent it finds.</div>
+</section>
+
+<!-- DevFest Baguio: codelab QR -->
+<section class="slide" data-sec="Try it yourself" data-at="35" data-title="Try it yourself">
+  <div class="cols c2w">
+    <div style="display:flex;flex-direction:column;gap:1em">
+      <span class="pill b" style="align-self:flex-start">Codelab &middot; about 45 minutes</span>
+      <h2 style="margin-bottom:0">Try it yourself</h2>
+      <p class="lede">Build a root cause agent that reads a log and explains what broke.</p>
+      <p style="font-size:1.1em;max-width:36ch">A Gemini API key from AI Studio is all you need. No Google Cloud project, no billing.</p>
+      <p class="grad-text" style="font-size:1.45em;font-weight:600;letter-spacing:-.02em;max-width:none;margin-top:.4em;overflow-wrap:anywhere">joshuamdeguzman.com/<wbr>devfest_baguio/<wbr>codelab</p>
+    </div>
+    <div class="card line" style="padding:1.6em;display:grid;place-items:center;min-width:0">
+      <img src="../assets/qr-codelab.svg" alt="QR code for joshuamdeguzman.com/devfest_baguio/codelab" style="width:100%;max-width:17em;aspect-ratio:1;display:block;image-rendering:pixelated">
+    </div>
+  </div>
+  <div class="notes"><h4>Thirty seconds. Leave it up.</h4>
+  Say the URL out loud once. <strong>Phones up, scan now.</strong> The codelab is the afternoon session.<br>
+  It builds a different agent from the demo: a root cause agent with two tools, <code>read_log</code> and <code>find_errors</code>, on a planted failure.</div>
+</section>
+
+<!-- 30 -->
+<section class="slide" data-sec="Wrap up" data-at="36">
+  <h2 class="dm">Three questions before we finish</h2>
+  <p>Click a card for the answer.</p>
+  <div class="qz">
+    <button class="qz-c" aria-expanded="false"><b>Do I need a Google Cloud project to build and evaluate an agent?</b><i>No. An AI Studio key covers <code>run</code> and evals with custom metrics. Deploy needs a project.</i></button>
+    <button class="qz-c" aria-expanded="false"><b>What does <code>agents-cli setup</code> install?</b><i>The CLI, with <code>uv tool install</code>, and seven skills into <code>~/.agents/skills</code>.</i></button>
+    <button class="qz-c" aria-expanded="false"><b>Which eval metrics run without Google Cloud?</b><i>Custom Python metrics, like <code>answer_match.py</code> and the scaffold's LLM judge. Built-in metrics call the Gemini platform Eval Service.</i></button>
+  </div>
+  <div class="notes"><h4>Ask each one out loud. Wait. Then click.</h4>
+  Give people four seconds to unmute before you click.</div>
+</section>
+
+<!-- 31 -->
+<section class="slide" data-sec="Wrap up" data-at="37" data-steps="3">
+  <div class="stack" style="gap:1.1em">
+    <div class="card" data-step="1"><h3 style="font-size:1.95em;font-weight:600;letter-spacing:-.025em">setup, create, install</h3><p style="margin-top:.3em">The CLI, seven skills, and a project with tests and evals.</p></div>
+    <div class="card" data-step="2"><h3 style="font-size:1.95em;font-weight:600;letter-spacing:-.025em">run, pytest</h3><p style="margin-top:.3em">Check that the agent works, on an AI Studio key.</p></div>
+    <div class="card gen" data-step="3"><h3 style="font-size:1.95em;font-weight:600;letter-spacing:-.025em">eval run, eval compare</h3><p style="margin-top:.3em">Grade against answers you computed. Compare after every change.</p></div>
+  </div>
+  <p style="margin-top:1.6em;max-width:none;font-size:1.02em">Next: a Google Cloud project, <code>agents-cli scaffold enhance</code>, then <code>agents-cli deploy</code>.</p>
+  <div class="notes"><h4>Three presses, then stop</h4>
+  Read the three commands. Don't recap the rest of the deck.<br>
+  Then go to the links and leave them up through Q&amp;A.</div>
+</section>
+
+<!-- 32 -->
+<section class="slide" data-sec="Wrap up" data-at="38">
+  <h2 style="font-size:2.1em;margin-bottom:.6em">Links</h2>
+  <div class="links">
+    <a href="https://google.github.io/agents-cli/" target="_blank" rel="noopener"><b>Agents CLI docs</b>google.github.io/agents-cli</a>
+    <a href="https://google.github.io/agents-cli/cli/" target="_blank" rel="noopener"><b>Command reference</b>google.github.io/agents-cli/cli</a>
+    <a href="https://google.github.io/agents-cli/guide/evaluation/" target="_blank" rel="noopener"><b>Evaluation guide</b>google.github.io/agents-cli/guide/evaluation</a>
+    <a href="https://google.github.io/agents-cli/reference/skills/" target="_blank" rel="noopener"><b>Skills reference</b>google.github.io/agents-cli/reference/skills</a>
+    <a href="https://github.com/google/agents-cli" target="_blank" rel="noopener"><b>Source</b>github.com/google/agents-cli</a>
+    <a href="../codelab/"><b>This talk's codelab</b>joshuamdeguzman.com/devfest_baguio/codelab</a>
+    <a href="https://codelabs.developers.google.com/agents-cli-adk-lifecycle" target="_blank" rel="noopener"><b>Google codelab</b>Vibe Coding AI Agents with Agents CLI and ADK 2.0</a>
+    <a href="https://adk.dev/" target="_blank" rel="noopener"><b>ADK docs</b>adk.dev</a>
+    <a href="https://adk.dev/integrations/code-execution/" target="_blank" rel="noopener"><b>Code execution</b>adk.dev/integrations/code-execution</a>
+    <a href="https://adk.dev/get-started/python/" target="_blank" rel="noopener"><b>ADK setup</b>adk.dev/get-started/python</a>
+    <a href="https://adk.dev/deploy/" target="_blank" rel="noopener"><b>ADK deploy</b>adk.dev/deploy</a>
+    <a href="https://github.com/google/adk-python/blob/main/CHANGELOG.md" target="_blank" rel="noopener"><b>ADK changelog</b>github.com/google/adk-python</a>
+    <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener"><b>Gemini API key</b>aistudio.google.com/apikey</a>
+    <a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener"><b>Install uv</b>docs.astral.sh/uv</a>
+  </div>
+  <p class="grad-text" style="margin-top:1.6em;font-size:1.5em;font-weight:600;letter-spacing:-.02em;max-width:none">joshuamdeguzman.com/devfest_baguio</p>
+  <div class="notes"><h4>Leave this up through Q&amp;A</h4>
+  <span class="flag">Re-check every link the morning of the talk.</span><br>
+  <strong>Do I need Gemini Enterprise?</strong> Only for <code>publish</code>.<br>
+  <strong>Does it cost anything?</strong> Local work runs on an AI Studio key. Deploy needs a billed project. Idle deployments scale to zero by default.<br>
+  <strong>Does it work with LangChain?</strong> Yes, through an experimental first-party template. ADK is the default path, and publishing to Gemini Enterprise is ADK only.<br>
+  <strong>Can I use Claude?</strong> Claude Code can drive Agents CLI through the skills. The agent itself can run on Claude through LiteLLM.<br>
+  <strong>Is it production ready?</strong> 1.0 has been generally available since June 30, 2026. Pin your versions.</div>
+</section>
+
+</div></div>
+
+<div class="prog"><i id="progBar"></i></div>
+<div class="hud">
+  <span class="pace" id="pace">00:00</span>
+  <button id="btnTimer">timer</button>
+  <button id="btnNotes">notes</button><button id="btnJump">jump</button>
+</div>
+<div class="help">← → move · N notes · T timer · J jump · F fullscreen</div>
+<div class="panel" id="notes"></div>
+<div class="panel" id="jump"></div>
+
+<script>
+(function(){
+"use strict";
+var slides=[].slice.call(document.querySelectorAll('.slide')),idx=0,step=0;
+slides.forEach(function(s,i){
+  var h=s.querySelector('h1,h2,h3');
+  if(!s.dataset.title)s.dataset.title=h?h.textContent.replace(/^STEP \d+/,'').replace(/\s+/g,' ').trim():('Slide '+(i+1));
+  var n=s.querySelector('.notes'); if(n){s.dataset.notes=n.innerHTML;n.remove();}
+});
+var progBar=document.getElementById('progBar');
+
+function render(){
+  slides.forEach(function(s,i){s.classList.toggle('is-current',i===idx);});
+  progBar.style.width=((idx+1)/slides.length*100)+'%';
+  applySteps();
+  document.getElementById('notes').innerHTML=slides[idx].dataset.notes||'<h4>No notes</h4>';
+  [].slice.call(document.querySelectorAll('#jump button')).forEach(function(b){b.classList.toggle('on',+b.dataset.i===idx);});
+  try{history.replaceState(null,'','#'+(idx+1));}catch(e){/* sandboxed iframe */}
+  updatePace();
+}
+
+function applySteps(){
+  var s=slides[idx];
+  var t=+(s.dataset.steps||0); if(!t)return;
+  [].slice.call(s.querySelectorAll('[data-step]')).forEach(function(el){
+    el.classList.toggle('is-on',+el.dataset.step<=step);});
+}
+function go(i){idx=Math.max(0,Math.min(slides.length-1,i));step=+(slides[idx].dataset.steps||0);render();}
+function next(){var t=+(slides[idx].dataset.steps||0);
+  if(t&&step<t){step++;applySteps();return;}
+  if(idx<slides.length-1){idx++;step=0;render();}}
+function prev(){var t=+(slides[idx].dataset.steps||0);
+  if(t&&step>0){step--;applySteps();return;}
+  if(idx>0){idx--;step=+(slides[idx].dataset.steps||0);render();}}
+
+document.addEventListener('keydown',function(e){
+  if(e.target.tagName==='INPUT')return;
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  var k=e.key;
+  /* let a focused poll option, quiz card or link handle its own activation */
+  if((k===' '||k==='Enter')&&e.target.closest&&e.target.closest('button,a'))return;
+  if(k==='ArrowRight'||k==='PageDown'||k===' '){e.preventDefault();next();}
+  else if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();prev();}
+  else if(k==='Home')go(0); else if(k==='End')go(slides.length-1);
+  else if(k==='n'||k==='N')toggle('notes'); else if(k==='j'||k==='J')toggle('jump');
+  else if(k==='t'||k==='T')toggleTimer();
+  else if(k==='f'||k==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();}
+  else if(k==='Escape'){closeAll();}
+});
+var tx=0,ty=0;
+document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();}},{passive:true});
+
+function toggle(id){var p=document.getElementById(id),w=p.classList.contains('open');closeAll();if(!w)p.classList.add('open');}
+function closeAll(){document.getElementById('notes').classList.remove('open');document.getElementById('jump').classList.remove('open');}
+document.getElementById('btnNotes').onclick=function(){toggle('notes');};
+document.getElementById('btnJump').onclick=function(){toggle('jump');};
+
+var jump=document.getElementById('jump'),lastSec=null;
+slides.forEach(function(s,i){
+  if(s.dataset.sec!==lastSec){lastSec=s.dataset.sec;
+    var h=document.createElement('h4');h.textContent=lastSec;jump.appendChild(h);}
+  var b=document.createElement('button');b.dataset.i=i;
+  b.innerHTML='<b>'+String(i+1).padStart(2,'0')+' · '+String(s.dataset.at||0).padStart(2,'0')+"'</b>"+s.dataset.title;
+  b.onclick=function(){go(i);closeAll();};jump.appendChild(b);
+});
+
+var t0=null,tick=null,paceEl=document.getElementById('pace');
+function toggleTimer(){
+  if(t0){t0=null;clearInterval(tick);tick=null;paceEl.className='pace';paceEl.textContent='00:00';}
+  else{t0=Date.now();tick=setInterval(updatePace,1000);updatePace();}}
+document.getElementById('btnTimer').onclick=toggleTimer;
+function updatePace(){
+  if(!t0)return;
+  var el=Math.floor((Date.now()-t0)/1000);
+  var mm=String(Math.floor(el/60)).padStart(2,'0'),ss=String(el%60).padStart(2,'0');
+  var d=Math.round(el/60-(+(slides[idx].dataset.at||0)));
+  paceEl.className='pace'+(d<=-2?' ahead':d>=2?' behind':'');
+  paceEl.textContent=mm+':'+ss+(d===0?' on time':(d>0?' +'+d:' '+d));}
+
+/* ---------- POLLS ---------- */
+[].slice.call(document.querySelectorAll('[data-poll]')).forEach(function(poll){
+  var verdict=poll.closest('section').querySelector('.poll-verdict');
+  var opts=[].slice.call(poll.children);
+  opts.forEach(function(opt){
+    opt.setAttribute('aria-pressed','false');
+    opt.onclick=function(){
+      var was=opt.getAttribute('aria-pressed')==='true';
+      opts.forEach(function(o){o.classList.remove('picked','right');o.setAttribute('aria-pressed','false');});
+      /* clicking the selected option again clears it */
+      if(was){verdict.classList.remove('show');verdict.innerHTML='';return;}
+      opt.classList.add(opt.dataset.right?'right':'picked');
+      opt.setAttribute('aria-pressed','true');
+      verdict.innerHTML=opt.dataset.verdict;
+      verdict.classList.add('show');
+    };
+  });
+});
+
+/* ---------- QUIZ CARDS ---------- */
+[].slice.call(document.querySelectorAll('.qz-c')).forEach(function(c){
+  c.onclick=function(){c.setAttribute('aria-expanded',String(c.classList.toggle('open')));};
+});
+
+/* ---------- DEEP LINKS: #12 jumps to slide 12, also mid-talk ---------- */
+function hashSlide(){var h=NaN; try{h=parseInt((location.hash||'').replace('#',''),10);}catch(e){} return h;}
+window.addEventListener('hashchange',function(){var h=hashSlide(); if(!isNaN(h)&&h-1!==idx)go(h-1);});
+var h=hashSlide();
+go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>

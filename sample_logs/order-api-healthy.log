@@ -1,0 +1,15 @@
+2026-11-06T08:58:00.902Z INFO  order-api  pid=3988 Starting order-api v2.4.0 (build 71ab09d)
+2026-11-06T08:58:00.940Z INFO  order-api  config loaded from /etc/order-api/config.yaml
+2026-11-06T08:58:00.941Z INFO  order-api  config PAYMENT_GATEWAY_URL=https://pay.example.com/v1
+2026-11-06T08:58:00.941Z INFO  order-api  config PAYMENT_TIMEOUT_MS=3000
+2026-11-06T08:58:00.941Z INFO  order-api  config DB_POOL_SIZE=20
+2026-11-06T08:58:01.201Z INFO  db         connected to postgres://orders-db:5432/orders pool=20
+2026-11-06T08:58:01.415Z INFO  http       listening on :8080
+2026-11-06T09:00:02.880Z INFO  http       GET /menu?store=baguio-session-rd 200 39ms
+2026-11-06T09:00:04.117Z WARN  cache      miss key=menu:baguio-session-rd, loading from db
+2026-11-06T09:00:06.540Z INFO  http       POST /orders 201 61ms user=u_1530 order=o_98870
+2026-11-06T09:00:06.541Z INFO  payment    charge start order=o_98870 amount=15.20 USD
+2026-11-06T09:00:06.968Z INFO  payment    charge ok order=o_98870 gateway_ms=427
+2026-11-06T09:00:06.970Z INFO  http       POST /orders/o_98870/pay 200 431ms user=u_1530
+2026-11-06T09:00:30.002Z INFO  gateway    pay.example.com status check ok p50=405ms p95=772ms
+2026-11-06T09:01:02.118Z INFO  http       GET /health 200 2ms

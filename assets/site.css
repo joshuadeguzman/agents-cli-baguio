@@ -1,0 +1,33 @@
+/* Shared by the landing page and the codelab.
+   Tokens are copied as-is from the /agents-cli deck (slides/index.html). */
+:root{
+  --bg:#FFFFFF; --surf:#F7F8F9; --surf-2:#EFF0F2; --line:#E3E3E6;
+  --ink:#1B1B1F; --gray:#5F6368; --gray-2:#9AA0A6;
+  --pri:#0B57D0; --pri-c:#D3E3FD;
+  --grad:linear-gradient(115deg,#4285F4 0%,#9B72CB 52%,#D96570 100%);
+  --r-xl:2.2em; --r-lg:1.5em; --r-md:1em; --r-sm:.65em; --pill:999px;
+  --sans:"Google Sans Flex","Google Sans","Poppins",system-ui,-apple-system,sans-serif;
+  --mono:"Google Sans Code",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:var(--pri)}
+:focus-visible{outline:2px solid var(--pri);outline-offset:3px}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kicker{font-size:.9rem;font-weight:500;color:var(--gray-2)}
+.pill{display:inline-flex;align-items:center;gap:.45em;font-size:.8rem;font-weight:500;padding:.4em .9em;border-radius:var(--pill);background:var(--surf-2);color:var(--gray)}
+.pill.b{background:var(--pri-c);color:var(--pri)}
+.pill.d{background:var(--ink);color:#fff}
+.card{background:var(--surf);border-radius:var(--r-lg);padding:1.3rem 1.4rem}
+.card.line{background:var(--bg);border:1px solid var(--line)}
+.card.gen{background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
+.btn{display:inline-flex;align-items:center;gap:.5em;padding:.75em 1.3em;border-radius:var(--pill);font-weight:500;text-decoration:none;background:var(--surf-2);color:var(--ink);transition:background .2s}
+.btn:hover{background:var(--line)}
+.btn.d{background:var(--ink);color:#fff}
+.btn.d:hover{background:#000}
+code{font-family:var(--mono);font-size:.9em;background:var(--surf-2);padding:.1em .38em;border-radius:.35em}
+pre{font-family:var(--mono);font-size:.85rem;line-height:1.65;background:var(--ink);color:#D6D8DC;border-radius:var(--r-md);padding:1rem 1.15rem;overflow:auto}
+pre code{background:none;padding:0;font-size:inherit;color:inherit}
+pre .k{color:#C39BE8}pre .s{color:#9DD1A0}pre .c{color:#6E7480}pre .t{color:#8AB4F8}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

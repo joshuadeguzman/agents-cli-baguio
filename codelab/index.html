@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Codelab: Build a root cause agent with Agents CLI · DevFest Baguio 2026</title>
+<meta name="description" content="Build an ADK agent that reads a log file and explains what broke. Agents CLI, a Gemini API key, about 45 minutes.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&family=Google+Sans+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+body{font-size:16px}
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:1rem;padding:.8rem 1.4rem}
+.top a.home{font-weight:600;letter-spacing:-.01em;color:var(--ink);text-decoration:none;white-space:nowrap}
+.top .ttl{color:var(--gray);font-weight:300;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.top .toc-btn{display:none;padding:.45em .9em;border-radius:var(--pill);background:var(--surf-2);font-size:.85rem;font-weight:500;white-space:nowrap}
+.prog{height:2px;background:var(--surf-2);position:sticky;top:0}
+.prog i{display:block;height:100%;background:var(--grad);width:0;transition:width .3s}
+.layout{display:grid;grid-template-columns:19rem 1fr;max-width:84rem;margin:0 auto}
+nav.toc{position:sticky;top:3.4rem;align-self:start;max-height:calc(100vh - 3.4rem);overflow:auto;padding:1.4rem 1rem 2rem 1.2rem;border-right:1px solid var(--line)}
+nav.toc ol{list-style:none;counter-reset:s}
+nav.toc li{counter-increment:s}
+nav.toc a{display:grid;grid-template-columns:1.9rem 1fr auto;gap:.6rem;align-items:center;padding:.5rem .6rem;border-radius:var(--r-sm);color:var(--gray);text-decoration:none;font-size:.92rem;line-height:1.3}
+nav.toc a::before{content:counter(s);width:1.6rem;height:1.6rem;border-radius:50%;display:grid;place-items:center;background:var(--surf-2);font-size:.78rem;font-weight:600;color:var(--gray)}
+nav.toc a .min{font-family:var(--mono);font-size:.72rem;color:var(--gray-2)}
+nav.toc a:hover{background:var(--surf)}
+nav.toc a.done::before{content:"\2713";background:var(--pri-c);color:var(--pri)}
+nav.toc a.on{background:var(--surf);color:var(--ink);font-weight:500}
+nav.toc a.on::before{background:var(--ink);color:#fff;content:counter(s)}
+nav.toc .total{margin:1.2rem .6rem 0;font-size:.8rem;color:var(--gray-2)}
+main{padding:2.2rem 3rem 4rem;min-width:0}
+.step{display:none;max-width:46rem}
+.step.on{display:block}
+.meta{font-family:var(--mono);font-size:.78rem;color:var(--gray-2);letter-spacing:.04em}
+.step h2{font-size:2.1rem;font-weight:650;letter-spacing:-.03em;line-height:1.1;margin:.4rem 0 1.2rem}
+.step h3{font-size:1.15rem;font-weight:600;letter-spacing:-.01em;margin:1.8rem 0 .5rem}
+.step p,.step li{color:#3C4043;font-weight:400;margin:.6rem 0}
+.step ul,.step ol{padding-left:1.3rem}
+.step li{margin:.35rem 0}
+.step pre{margin:.8rem 0}
+.step table{width:100%;border-collapse:collapse;font-size:.92rem;margin:.8rem 0}
+.step th,.step td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+.step th{font-weight:600;font-size:.82rem;color:var(--gray-2)}
+.step td:first-child{white-space:nowrap;font-weight:500}
+.code{position:relative}
+.code button{position:absolute;top:.5rem;right:.5rem;font-size:.75rem;font-weight:500;padding:.3em .8em;border-radius:var(--pill);background:rgba(255,255,255,.12);color:#fff}
+.code button:hover{background:rgba(255,255,255,.22)}
+.code pre{padding-right:4.8rem}
+.note{border-radius:var(--r-md);padding:.9rem 1.1rem;margin:1rem 0;background:var(--surf);font-size:.95rem}
+.note.warn{background:#FCE8E6;color:#8C1D18}
+.note.warn code{background:rgba(255,255,255,.6)}
+.note b{font-weight:600}
+.see{margin:1.8rem 0 .5rem;padding:1.1rem 1.3rem;border-radius:var(--r-lg);background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
+.see h4{font-size:.8rem;font-weight:600;letter-spacing:.04em;color:var(--gray-2);text-transform:uppercase;margin-bottom:.3rem}
+.see p,.see li{margin:.35rem 0}
+.pager{display:flex;justify-content:space-between;gap:1rem;margin-top:2.6rem;max-width:46rem}
+.pager .btn[hidden]{display:none}
+.pager .btn.d{margin-left:auto}
+@media (max-width:860px){
+  .top{padding:.7rem 1rem}
+  .top .ttl{display:none}
+  .top .toc-btn{display:inline-block;margin-left:auto}
+  .layout{grid-template-columns:1fr}
+  nav.toc{display:none;position:fixed;inset:3.2rem 0 0 0;max-height:none;z-index:30;background:var(--bg);border-right:none;padding:1rem}
+  nav.toc.open{display:block}
+  main{padding:1.4rem 1.1rem 3rem}
+  .step h2{font-size:1.65rem}
+  .step pre{font-size:.78rem}
+  .pager .btn{flex:1;justify-content:center}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="home" href="../">DevFest Baguio 2026</a>
+  <span class="ttl">Build a root cause agent with Agents CLI</span>
+  <button class="toc-btn" id="tocBtn" aria-expanded="false" aria-controls="toc">Steps</button>
+</header>
+<div class="prog"><i id="bar"></i></div>
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Codelab steps"><ol id="tocList"></ol><p class="total">About 45 minutes, plus 15 if you deploy.</p></nav>
+<main id="main">
+
+<!-- ====================================================== 1 -->
+<section class="step" data-min="2" data-title="Overview">
+<h2>Overview</h2>
+<p>You will build a <b>root cause agent</b>. It reads a log file from a service that broke, finds the failure, and tells you why in plain words.</p>
+<p>The agent runs on your laptop. It uses <a href="https://adk.dev/" target="_blank" rel="noopener">ADK</a>, Google's open source framework for agents, and <a href="https://google.github.io/agents-cli/" target="_blank" rel="noopener">Agents CLI</a>, which creates, runs and evaluates ADK projects for you.</p>
+<h3>What you'll build</h3>
+<ul>
+<li>An ADK agent with two tools: <code>read_log</code> and <code>find_errors</code>.</li>
+<li>A log file with one planted failure for it to find.</li>
+<li>A small eval dataset that checks the agent finds it.</li>
+</ul>
+<h3>What you'll learn</h3>
+<ul>
+<li>How to install Agents CLI and its skills.</li>
+<li>How a Python function becomes a tool, and why the docstring matters.</li>
+<li>How to watch tool calls in the ADK playground.</li>
+<li>How to ask a coding agent to do the same work, and what to check after.</li>
+<li>How to evaluate an agent with <code>agents-cli eval run</code>.</li>
+</ul>
+<h3>What you need</h3>
+<ul>
+<li>A laptop with macOS, Linux, or Windows with WSL 2.</li>
+<li>A Google account, for a Gemini API key.</li>
+<li>About 45 minutes.</li>
+</ul>
+<p>Mobile developers: think of the agent as a backend your Flutter or web app can call over HTTP. This codelab stays in the terminal.</p>
+<div class="see"><h4>You should see</h4><p>The list of 12 steps on the left (tap <b>Steps</b> on a phone). Your place is saved in the page address, so you can reload or share the link.</p></div>
+</section>
+
+<!-- ====================================================== 2 -->
+<section class="step" data-min="5" data-title="Before you begin">
+<h2>Before you begin</h2>
+<div class="note"><b>No Google Cloud project or billing is needed</b> for steps 1 to 10. You only need one for the optional deploy in step 11.</div>
+<h3>Versions this codelab was tested with</h3>
+<table>
+<tr><th>Tool</th><th>Version</th><th>Notes</th></tr>
+<tr><td>Agents CLI</td><td><code>google-agents-cli</code> 1.13.0</td><td>Released November 4, 2026. Pinned in step 3.</td></tr>
+<tr><td>ADK</td><td><code>google-adk</code> 2.13.0</td><td>Installed by the project in step 4.</td></tr>
+<tr><td>Python</td><td>3.11 to 3.13</td><td>uv downloads it if you don't have it.</td></tr>
+<tr><td>uv</td><td>0.13.7</td><td>Any recent version works.</td></tr>
+<tr><td>Node.js</td><td>18 or later</td><td>Optional. Setup uses it to install the skills.</td></tr>
+<tr><td>Model</td><td><code>gemini-3.8-flash</code></td><td>The project's default.</td></tr>
+</table>
+<h3>1. Install uv</h3>
+<p>uv installs Python packages and Python itself. On macOS, Linux or WSL:</p>
+<pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+<p>Open a new terminal so the <code>uv</code> command is found. Other install options: <a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener">docs.astral.sh/uv</a>.</p>
+<pre><code>uv --version</code></pre>
+<h3>2. Get a Gemini API key</h3>
+<ol>
+<li>Go to <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in.</li>
+<li>Click <b>Create API key</b>. Creating a key is free and needs no billing.</li>
+<li>Copy the key somewhere private. You will paste it into a file in step 4.</li>
+</ol>
+<div class="note warn"><b>Treat the key like a password.</b> Don't paste it into a chat, a slide, a screenshot or a git commit.</div>
+<div class="see"><h4>You should see</h4><p><code>uv --version</code> prints a version, such as <code>uv 0.13.7</code>. You have an API key copied.</p></div>
+</section>
+
+<!-- ====================================================== 3 -->
+<section class="step" data-min="4" data-title="Install Agents CLI and its skills">
+<h2>Install Agents CLI and its skills</h2>
+<p>One command installs the <code>agents-cli</code> command and seven <b>skills</b>. A skill is a markdown file that teaches a coding agent, like Claude Code or Antigravity, how to build ADK agents with the current API.</p>
+<pre><code>uvx google-agents-cli@1.13.0 setup</code></pre>
+<p>The <code>@1.13.0</code> pins the version so your output matches this codelab. The first run downloads the CLI and takes a minute or two.</p>
+<p>Setup installs the skills for every coding agent it finds. If you have none, that's fine. You need the skills only in step 9.</p>
+<p>Check the install:</p>
+<pre><code>agents-cli --version</code></pre>
+<div class="note">If you see <code>agents-cli: command not found</code>, run <code>uv tool update-shell</code>, then open a new terminal.</div>
+<div class="see"><h4>You should see</h4>
+<p>A summary at the end of setup:</p>
+<pre><code>Auth:   Not authenticated
+CLI:    agents-cli installed
+Skills: Installed</code></pre>
+<p>"Not authenticated" refers to Google Cloud. You don't need it. Then <code>agents-cli --version</code> prints <code>agents-cli, version 1.13.0</code>.</p></div>
+</section>
+
+<!-- ====================================================== 4 -->
+<section class="step" data-min="5" data-title="Create the project">
+<h2>Create the project</h2>
+<pre><code>agents-cli create root-cause-agent --prototype --yes
+cd root-cause-agent
+agents-cli install</code></pre>
+<ul>
+<li><code>--prototype</code> skips deployment files, Terraform and CI/CD. You get the agent code, tests and evals.</li>
+<li><code>--yes</code> accepts the defaults: the <code>adk_python</code> template, no prompts.</li>
+<li><code>agents-cli install</code> installs the dependencies with uv. It takes about 20 seconds.</li>
+</ul>
+<p><code>create</code> warns that you're not signed in to Google Cloud and tells you to set a GCP project. Ignore both. You use an API key instead.</p>
+<h3>The files that matter</h3>
+<pre><code>root-cause-agent/
+  app/agent.py               <span class="c"># your agent: model, instruction, tools</span>
+  app/fast_api_app.py        <span class="c"># the local server</span>
+  tests/eval/                <span class="c"># eval datasets and metrics</span>
+  .env                       <span class="c"># settings, including your key</span>
+  agents-cli-manifest.yaml   <span class="c"># project settings for agents-cli</span></code></pre>
+<h3>Add your API key</h3>
+<p>Open <code>.env</code>. Comment out the three Google Cloud lines and set your key:</p>
+<pre><code><span class="c"># GOOGLE_GENAI_USE_ENTERPRISE=true</span>
+<span class="c"># GOOGLE_CLOUD_PROJECT=your-gcp-project-id</span>
+<span class="c"># GOOGLE_CLOUD_LOCATION=global</span>
+GEMINI_API_KEY=your-api-key-here</code></pre>
+<p>Replace <code>your-api-key-here</code> with your key. <code>.env</code> is already in <code>.gitignore</code>, so git won't commit it.</p>
+<h3>Turn off Cloud telemetry</h3>
+<p>Open <code>app/fast_api_app.py</code> and find this line:</p>
+<pre><code>otel_to_cloud = True</code></pre>
+<p>Change it to:</p>
+<pre><code>otel_to_cloud = False</code></pre>
+<p>Why: in Agents CLI 1.13.0, prototype projects send traces to Google Cloud by default. On a laptop with no gcloud login, <code>agents-cli run</code> and <code>agents-cli eval run</code> then fail with <code>DefaultCredentialsError</code>. If you already use gcloud, the change is still safe.</p>
+<div class="see"><h4>You should see</h4><p><code>create</code> ends with <code>Success! Your agent project is ready.</code> <code>install</code> ends with a list of packages, including <code>google-adk</code>. Your <code>.env</code> has one active line: <code>GEMINI_API_KEY=...</code>.</p></div>
+</section>
+
+<!-- ====================================================== 5 -->
+<section class="step" data-min="2" data-title="Add the sample logs">
+<h2>Add the sample logs</h2>
+<p>The agent needs something to read. Download two log files from a made-up food ordering API:</p>
+<ul>
+<li><code>order-api.log</code>: the service right after a deploy. Something broke.</li>
+<li><code>order-api-healthy.log</code>: the same service the day before. Use it to compare.</li>
+</ul>
+<p>From inside <code>root-cause-agent</code>:</p>
+<pre><code>curl -LO https://joshuamdeguzman.com/devfest_baguio/sample_logs.zip
+unzip sample_logs.zip
+rm sample_logs.zip</code></pre>
+<p>No <code>curl</code> or <code>unzip</code>? <a href="../sample_logs.zip" download>Download sample_logs.zip</a> and unzip it into the project folder. You can also <a href="../sample_logs/order-api.log" target="_blank">read order-api.log</a> in the browser.</p>
+<p>Don't look for the bug yet. Let the agent find it.</p>
+<div class="see"><h4>You should see</h4>
+<pre><code>root-cause-agent/
+  app/
+  sample_logs/
+    order-api.log
+    order-api-healthy.log
+    README.md</code></pre>
+<p><code>sample_logs</code> sits next to <code>app</code>, not inside it.</p></div>
+</section>
+
+<!-- ====================================================== 6 -->
+<section class="step" data-min="8" data-title="Add two tools">
+<h2>Add two tools: <code>read_log</code> and <code>find_errors</code></h2>
+<p>In ADK, a tool is a plain Python function. You list it in the agent's <code>tools</code>, and the model can call it.</p>
+<p><b>The docstring is what the model reads.</b> ADK sends the function name, the argument types and the docstring to the model. The model never sees your function body. A vague docstring means the model calls the tool at the wrong time, or not at all.</p>
+<p>Replace everything in <code>app/agent.py</code> with this:</p>
+<pre><code>from pathlib import Path
+
+from google.adk.agents import Agent
+from google.adk.apps import App
+from google.adk.models import Gemini
+from google.genai import types
+
+MODEL = "gemini-3.8-flash"
+
+# sample_logs/ sits next to the app/ folder.
+LOG_DIR = Path(__file__).resolve().parent.parent / "sample_logs"
+
+
+def _log_path(file_name: str) -&gt; Path | None:
+    """Return the path for a file inside sample_logs/, or None."""
+    path = (LOG_DIR / file_name).resolve()
+    if path.parent != LOG_DIR.resolve() or not path.is_file():
+        return None
+    return path
+
+
+def read_log(file_name: str) -&gt; dict:
+    """Read a whole log file from the sample_logs folder.
+
+    Use this when you need the full context around an error, such as the
+    config values printed at startup or what happened before a failure.
+
+    Args:
+        file_name: The log file name, for example "order-api.log".
+
+    Returns:
+        A dict with "status" and either "content" or "error_message".
+    """
+    path = _log_path(file_name)
+    if path is None:
+        available = sorted(p.name for p in LOG_DIR.glob("*.log"))
+        return {
+            "status": "error",
+            "error_message": f"No log named {file_name!r}. Available: {available}",
+        }
+    return {"status": "success", "content": path.read_text()}
+
+
+def find_errors(file_name: str) -&gt; dict:
+    """Find the ERROR and WARN lines in a log file, with line numbers.
+
+    Use this first to locate problems quickly. Then call read_log if you
+    need the lines around them.
+
+    Args:
+        file_name: The log file name, for example "order-api.log".
+
+    Returns:
+        A dict with "status", "count" and "lines" (each "line_number: text").
+    """
+    path = _log_path(file_name)
+    if path is None:
+        return {"status": "error", "error_message": f"No log named {file_name!r}."}
+    hits = [
+        f"{number}: {line}"
+        for number, line in enumerate(path.read_text().splitlines(), start=1)
+        if " ERROR " in line or " WARN " in line
+    ]
+    return {"status": "success", "count": len(hits), "lines": hits}
+
+
+root_agent = Agent(
+    name="root_cause_agent",
+    model=Gemini(
+        model=MODEL,
+        retry_options=types.HttpRetryOptions(attempts=3),
+    ),
+    instruction=(
+        "You are an on-call engineer. When asked about a log, call find_errors "
+        "first, then read_log for context. Explain the root cause in plain "
+        "words, point to the log lines that prove it, and suggest one fix. "
+        "If no file name is given, use order-api.log."
+    ),
+    tools=[read_log, find_errors],
+)
+
+app = App(
+    root_agent=root_agent,
+    name="app",
+)</code></pre>
+<h3>What changed</h3>
+<ul>
+<li><b>Two tools.</b> <code>find_errors</code> returns the ERROR and WARN lines with line numbers. <code>read_log</code> returns the whole file, for context.</li>
+<li><b>Docstrings say when to use each tool.</b> "Use this first" and "Use this when you need the full context" steer the model's choice.</li>
+<li><b>Tools return a dict with a <code>status</code>.</b> The model can tell a result from an error and react to it.</li>
+<li><b><code>_log_path</code> only allows files inside <code>sample_logs/</code>.</b> The model can't ask for <code>../.env</code> and read your key. Its name starts with <code>_</code> and it isn't in <code>tools</code>, so the model never sees it.</li>
+<li><b>The instruction</b> tells the agent its job and the order to use the tools in.</li>
+</ul>
+<p>Check that the tools work before you involve the model:</p>
+<pre><code>uv run python -c "from app.agent import find_errors; print(find_errors('order-api.log')['count'])"</code></pre>
+<div class="see"><h4>You should see</h4><p>The number <code>15</code>. That's how many ERROR and WARN lines the failing log has.</p></div>
+</section>
+
+<!-- ====================================================== 7 -->
+<section class="step" data-min="5" data-title="Run the playground">
+<h2>Run the playground</h2>
+<p>The playground is the ADK web UI. You chat with the agent and see every step it takes.</p>
+<pre><code>agents-cli playground</code></pre>
+<p>Open the address it prints: <a href="http://127.0.0.1:8080/dev-ui/?app=app" target="_blank" rel="noopener">http://127.0.0.1:8080/dev-ui/?app=app</a>. Keep the terminal open.</p>
+<h3>Ask the question</h3>
+<p>Type this in the chat:</p>
+<pre><code>What went wrong in this log?</code></pre>
+<p>You didn't name a file. The instruction tells the agent to use <code>order-api.log</code> by default.</p>
+<h3>Find the tool call</h3>
+<ol>
+<li>In the chat, above the answer, you'll see a small entry for each tool call, such as <code>find_errors</code> and then <code>read_log</code>.</li>
+<li>Click <code>find_errors</code>. The side panel shows that event: the <b>function call</b>, with the argument the model chose (<code>file_name: "order-api.log"</code>), and the <b>function response</b> your Python returned.</li>
+<li>Open the <b>Events</b> tab to see every event in order: your message, each tool call, each response, and the final answer.</li>
+</ol>
+<p>This is how you debug an agent. If the answer is wrong, check here whether the model called the right tool with the right argument, before you change any prompt.</p>
+<p>The same works in the terminal, without the browser. Open a second terminal in the project folder:</p>
+<pre><code>agents-cli run "What went wrong in order-api.log?"</code></pre>
+<div class="note"><code>API key not valid</code> means the key in <code>.env</code> is wrong, or one of the <code>GOOGLE_*</code> lines is still active. A <code>429</code> means you hit the free rate limit. Wait a minute and try again.</div>
+<div class="see"><h4>You should see</h4><p>An answer that says payments fail because the new deploy (v2.4.1) set <code>PAYMENT_TIMEOUT_MS=30</code>, 30 milliseconds, while the gateway needs about 400 ms. Every charge times out and <code>/pay</code> returns 502. The fix is to set it back to 3000. Your wording will differ. The cache miss warning is not the cause.</p></div>
+</section>
+
+<!-- ====================================================== 8 -->
+<section class="step" data-min="3" data-title="Change the instruction">
+<h2>Change the instruction, see hot reload</h2>
+<p>Leave the playground running. In <code>app/agent.py</code>, change the instruction to ask for a fixed format:</p>
+<pre><code>    instruction=(
+        "You are an on-call engineer. When asked about a log, call find_errors "
+        "first, then read_log for context. Answer in three short bullet "
+        "points: Root cause, Evidence (quote the log lines), Fix. "
+        "If no file name is given, use order-api.log."
+    ),</code></pre>
+<p>Save the file. You don't restart anything. The playground watches <code>app/</code> and reloads the agent on save.</p>
+<p>In the playground, start a new session and ask again:</p>
+<pre><code>What went wrong in this log?</code></pre>
+<p>Try one more: <code>Is anything broken in order-api-healthy.log?</code></p>
+<div class="see"><h4>You should see</h4><p>The terminal running the playground prints <code>Change detected in agents directory</code> when you save. The new answer comes as three bullets: Root cause, Evidence, Fix. For the healthy log, the agent says nothing is broken.</p></div>
+</section>
+
+<!-- ====================================================== 9 -->
+<section class="step" data-min="5" data-title="Do it with a coding agent">
+<h2>Do it with a coding agent instead</h2>
+<p>You typed every change so far. Now let a coding agent do the same work. The skills from step 3 tell it how Agents CLI and the current ADK API work, so it doesn't guess from old blog posts.</p>
+<p>This works with <a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener">Claude Code</a>, <a href="https://antigravity.google/" target="_blank" rel="noopener">Antigravity</a>, Codex or any coding agent that reads skills. Skip this step if you don't have one.</p>
+<h3>1. Check the skills are loaded</h3>
+<p>Open a new terminal in an empty folder, start your coding agent, and list its skills. In Claude Code, type <code>/skills</code>.</p>
+<h3>2. Give it this prompt</h3>
+<pre><code>Use agents-cli to build a root cause agent in a new prototype project called log-agent.
+Copy ../root-cause-agent/sample_logs into log-agent/sample_logs.
+Give the agent two tools:
+- read_log(file_name) returns the text of one file in sample_logs.
+- find_errors(file_name) returns its ERROR and WARN lines with line numbers.
+Refuse any file outside sample_logs.
+The agent names the root cause, quotes the log lines that prove it, and suggests one fix.
+Use a Gemini API key, not Google Cloud. I will put the key in .env myself.
+Add three eval cases and run them. Don't deploy anything.</code></pre>
+<p>Adjust the <code>../root-cause-agent</code> path if your folders differ. When it asks for the key, add it to <code>log-agent/.env</code> yourself. Don't paste it into the chat.</p>
+<h3>3. Review what it wrote</h3>
+<p>Generated code changes from run to run. Read it before you trust it:</p>
+<ul>
+<li><b>Docstrings.</b> Does each one say what the tool does and when to use it?</li>
+<li><b>The path check.</b> In the playground, ask it to read <code>../.env</code>. It must refuse.</li>
+<li><b>The key.</b> It should be only in <code>.env</code>, not in <code>agent.py</code>, a test, or a README.</li>
+<li><b>The model name.</b> Did it keep <code>gemini-3.8-flash</code>, or switch to a model your key can't use?</li>
+<li><b>Telemetry.</b> Did it handle <code>otel_to_cloud</code> in <code>app/fast_api_app.py</code>, as in step 4?</li>
+<li><b>Eval references.</b> Do the expected answers match the log: 30 ms timeout, 502s, back to 3000?</li>
+<li><b>Commands it ran.</b> Scroll back. Nothing should touch <code>gcloud</code> or <code>deploy</code>.</li>
+</ul>
+<div class="see"><h4>You should see</h4><p>A <code>log-agent</code> folder with an <code>app/agent.py</code> that has two tools, an eval dataset under <code>tests/eval/datasets/</code>, and an eval run at the end. The code won't match step 6 line by line. It should do the same job.</p></div>
+</section>
+
+<!-- ====================================================== 10 -->
+<section class="step" data-min="5" data-title="Evaluate the agent">
+<h2>Evaluate the agent</h2>
+<p>The playground tells you the agent works once. An eval tells you it still works after your next change.</p>
+<p>Back in <code>root-cause-agent</code>, stop the playground with <code>Ctrl+C</code>.</p>
+<h3>1. Write the eval cases</h3>
+<p>Create <code>tests/eval/datasets/root-cause.json</code>:</p>
+<pre><code>{
+  "eval_cases": [
+    {
+      "eval_case_id": "finds_timeout_root_cause",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "What went wrong in order-api.log?"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "Payments fail because v2.4.1 set PAYMENT_TIMEOUT_MS=30 (30ms). The gateway needs about 400ms, so every charge times out and /pay returns 502. Set the timeout back to 3000ms."}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "healthy_log_has_no_failure",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Is anything broken in order-api-healthy.log?"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "No. Payments succeed. The only warning is a cache miss, which is normal."}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "missing_file",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Check payments.log for errors."}]
+      }
+    }
+  ]
+}</code></pre>
+<p>Each case is a prompt and, optionally, a reference answer. The third case checks that the agent handles a file that doesn't exist.</p>
+<h3>2. Pick the metrics</h3>
+<p>Replace <code>tests/eval/eval_config.yaml</code> with:</p>
+<pre><code>metrics_to_run:
+  - custom_response_quality
+  - names_the_timeout
+
+thresholds:
+  names_the_timeout: 1.0
+  custom_response_quality: 3  # the judge scores 1-5
+
+custom_metrics:
+  # Local LLM judge from the template. Uses your GEMINI_API_KEY.
+  - name: custom_response_quality
+    custom_function_file: response_quality.py
+  # Plain Python check. Passes when the answer names the bad setting.
+  - name: names_the_timeout
+    custom_function: |
+      def evaluate(instance):
+          prompt = str(instance.get("prompt", ""))
+          if "order-api.log" not in prompt or "healthy" in prompt:
+              return {"score": 1.0, "explanation": "Not the failing log, skipped."}
+          text = str(instance.get("response", "")).lower()
+          hit = "payment_timeout_ms" in text or "30ms" in text or "30 ms" in text
+          return {"score": 1.0 if hit else 0.0,
+                  "explanation": "Names the timeout." if hit else "Misses the timeout."}</code></pre>
+<ul>
+<li><code>custom_response_quality</code> is the project's LLM judge. It scores 1 to 5 using your <code>GEMINI_API_KEY</code>.</li>
+<li><code>names_the_timeout</code> is plain Python. It checks that the answer names the bad setting. No model call.</li>
+<li><code>thresholds</code> make the run fail when a mean score drops below the bar.</li>
+</ul>
+<p>Both run on your laptop. Built-in metrics such as <code>tool_use_quality</code> call the Eval Service in Gemini platform and need a Google Cloud project.</p>
+<h3>3. Run it</h3>
+<pre><code>agents-cli eval run --dataset tests/eval/datasets/root-cause.json</code></pre>
+<p>It runs the agent on each case, then grades the answers. Open the HTML report in <code>artifacts/grade_results/</code> to read why each case scored what it did.</p>
+<p>Now break it on purpose. Remove <code>"Use this first to locate problems quickly."</code> from the <code>find_errors</code> docstring, or tell the agent to answer in one word. Run the eval again and compare.</p>
+<div class="see"><h4>You should see</h4><p>Two stages, <code>Step 1/2: eval generate</code> and then the grading. The output ends with <code>RESULT: PASS</code>, or <code>RESULT: FAIL (...)</code> with the failing metrics and cases listed above it. A results file appears in <code>artifacts/grade_results/</code>.</p></div>
+</section>
+
+<!-- ====================================================== 11 -->
+<section class="step" data-min="15" data-title="Optional: deploy to Cloud Run" data-optional="1">
+<h2>Optional: deploy to Cloud Run</h2>
+<div class="note warn"><b>This step needs a Google Cloud project with billing enabled.</b> Cloud Run, Cloud Build and Artifact Registry can charge you. Use a sandbox project, and delete what you create at the end of this step.</div>
+<p>You also need the <a href="https://cloud.google.com/sdk/docs/install" target="_blank" rel="noopener">Google Cloud SDK</a> (<code>gcloud</code>).</p>
+<h3>1. Sign in and pick the project</h3>
+<pre><code>agents-cli login -i
+gcloud config set project YOUR_PROJECT_ID</code></pre>
+<p>In the <code>login</code> menu, pick Google Cloud (ADC). It signs in both gcloud and Application Default Credentials.</p>
+<h3>2. Add Cloud Run to the project</h3>
+<pre><code>agents-cli scaffold enhance -d cloud_run --yes
+agents-cli install</code></pre>
+<p>This adds deployment files and keeps your <code>agent.py</code>.</p>
+<h3>3. Ship the logs with the agent</h3>
+<p>The <code>Dockerfile</code> copies only <code>app/</code>. Add this line right after <code>COPY ./app ./app</code>:</p>
+<pre><code>COPY ./sample_logs ./sample_logs</code></pre>
+<h3>4. Take the key out of <code>.env</code></h3>
+<p><code>agents-cli deploy</code> copies every line of <code>.env</code> into the service. Delete the <code>GEMINI_API_KEY</code> line and turn the Google Cloud lines back on:</p>
+<pre><code>GOOGLE_GENAI_USE_ENTERPRISE=true
+GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
+GOOGLE_CLOUD_LOCATION=global</code></pre>
+<p>The deployed agent calls Gemini through your project, not your API key. To get Cloud Trace, set <code>otel_to_cloud = True</code> again in <code>app/fast_api_app.py</code>.</p>
+<h3>5. Deploy and test</h3>
+<pre><code>agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
+<p>The service is private. <code>agents-cli run</code> adds your identity token for you:</p>
+<pre><code>agents-cli run "What went wrong in order-api.log?" --url SERVICE_URL --mode a2a</code></pre>
+<p>Use the service URL that <code>deploy</code> prints.</p>
+<h3>6. Delete it</h3>
+<pre><code>gcloud run services delete root-cause-agent --region us-east1 --project YOUR_PROJECT_ID
+gcloud artifacts repositories delete cloud-run-source-deploy --location us-east1 --project YOUR_PROJECT_ID</code></pre>
+<p>The second command removes the container images from the source build. If you made a project only for this codelab, delete the whole project instead:</p>
+<pre><code>gcloud projects delete YOUR_PROJECT_ID</code></pre>
+<div class="see"><h4>You should see</h4><p><code>deploy</code> ends with the service URL and how to call it. <code>agents-cli run --url ...</code> returns the same root cause as on your laptop. After the delete commands, <code>gcloud run services list --region us-east1</code> no longer shows <code>root-cause-agent</code>.</p></div>
+</section>
+
+<!-- ====================================================== 12 -->
+<section class="step" data-min="1" data-title="Clean up and next steps">
+<h2>Clean up and next steps</h2>
+<h3>Clean up</h3>
+<p>Everything from steps 1 to 10 is on your laptop. Stop the playground with <code>Ctrl+C</code>. To remove the project:</p>
+<pre><code>cd ..
+rm -rf root-cause-agent log-agent</code></pre>
+<p>If you don't need the key any more, delete it at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. If you did step 11, run its delete commands.</p>
+<h3>What you did</h3>
+<ul>
+<li>Installed Agents CLI 1.13.0 and its seven skills.</li>
+<li>Created an ADK project and added two tools with clear docstrings.</li>
+<li>Watched the model call your tools in the playground.</li>
+<li>Changed the instruction and saw hot reload.</li>
+<li>Asked a coding agent to build the same thing, and reviewed it.</li>
+<li>Wrote an eval that fails when the agent stops finding the bug.</li>
+</ul>
+<h3>Next steps</h3>
+<ul>
+<li><a href="https://codelabs.developers.google.com/agents-cli-adk-lifecycle" target="_blank" rel="noopener">Google codelab: Vibe Coding AI Agents with Agents CLI and ADK 2.0</a></li>
+<li><a href="https://google.github.io/agents-cli/" target="_blank" rel="noopener">Agents CLI docs</a> and the <a href="https://google.github.io/agents-cli/guide/evaluation/" target="_blank" rel="noopener">evaluation guide</a></li>
+<li><a href="https://adk.dev/" target="_blank" rel="noopener">ADK docs</a> and <a href="https://adk.dev/tools-custom/" target="_blank" rel="noopener">custom tools</a></li>
+<li><a href="https://github.com/google/agents-cli" target="_blank" rel="noopener">github.com/google/agents-cli</a></li>
+<li><a href="../slides/">The slides from this talk</a></li>
+</ul>
+<div class="see"><h4>You should see</h4><p>No <code>root-cause-agent</code> folder left, unless you want to keep building. Thanks for joining DevFest Baguio 2026.</p></div>
+</section>
+
+<div class="pager">
+  <a class="btn" id="prevBtn" href="#">&larr; Back</a>
+  <a class="btn d" id="nextBtn" href="#">Next &rarr;</a>
+</div>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var steps=[].slice.call(document.querySelectorAll('.step'));
+var list=document.getElementById('tocList'),bar=document.getElementById('bar');
+var prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn');
+var toc=document.getElementById('toc'),tocBtn=document.getElementById('tocBtn');
+var links=[];
+
+steps.forEach(function(s,i){
+  var n=i+1;
+  var meta=document.createElement('div');meta.className='meta';
+  meta.textContent='STEP '+n+' OF '+steps.length+' · '+s.dataset.min+' MIN'+(s.dataset.optional?' · OPTIONAL':'');
+  s.insertBefore(meta,s.firstChild);
+  var li=document.createElement('li'),a=document.createElement('a');
+  a.href='#'+n;
+  var t=document.createElement('span');t.textContent=s.dataset.title;
+  var m=document.createElement('span');m.className='min';m.textContent=s.dataset.min+' min';
+  a.appendChild(t);a.appendChild(m);li.appendChild(a);list.appendChild(li);links.push(a);
+});
+
+/* copy button on every code block */
+[].slice.call(document.querySelectorAll('main pre')).forEach(function(pre){
+  var wrap=document.createElement('div');wrap.className='code';
+  pre.parentNode.insertBefore(wrap,pre);wrap.appendChild(pre);
+  var b=document.createElement('button');b.type='button';b.textContent='Copy';
+  b.setAttribute('aria-label','Copy code');
+  b.onclick=function(){
+    var text=pre.innerText.replace(/\n$/,'');
+    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);};
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(done,fallback);}else{fallback();}
+    function fallback(){var ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');
+      ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+      try{document.execCommand('copy');done();}catch(e){b.textContent='Select and copy';}document.body.removeChild(ta);}
+  };
+  wrap.appendChild(b);
+});
+
+function current(){var n=parseInt((location.hash||'').replace('#',''),10);
+  return (n>=1&&n<=steps.length)?n:1;}
+
+function render(){
+  var n=current();
+  steps.forEach(function(s,i){s.classList.toggle('on',i===n-1);});
+  links.forEach(function(a,i){a.classList.toggle('on',i===n-1);a.classList.toggle('done',i<n-1);
+    if(i===n-1)a.setAttribute('aria-current','step');else a.removeAttribute('aria-current');});
+  bar.style.width=(n/steps.length*100)+'%';
+  prevBtn.hidden=n===1;prevBtn.href='#'+(n-1);
+  if(n===steps.length){nextBtn.textContent='Back to the talk page';nextBtn.href='../';}
+  else{nextBtn.innerHTML='Next: '+steps[n].dataset.title.replace(/&/g,'&amp;').replace(/</g,'&lt;')+' &rarr;';nextBtn.href='#'+(n+1);}
+  document.title=steps[n-1].dataset.title+' · Codelab · DevFest Baguio 2026';
+  toc.classList.remove('open');tocBtn.setAttribute('aria-expanded','false');
+  tocBtn.textContent='Step '+n+' of '+steps.length;
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',render);
+tocBtn.onclick=function(){var o=toc.classList.toggle('open');tocBtn.setAttribute('aria-expanded',String(o));};
+document.addEventListener('keydown',function(e){
+  if(e.metaKey||e.ctrlKey||e.altKey||/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  var n=current();
+  if(e.key==='ArrowRight'&&n<steps.length)location.hash='#'+(n+1);
+  else if(e.key==='ArrowLeft'&&n>1)location.hash='#'+(n-1);
+});
+if(!location.hash){try{history.replaceState(null,'','#1');}catch(e){}}
+render();
+})();
+</script>
+</body>
+</html>
