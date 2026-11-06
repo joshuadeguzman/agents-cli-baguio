@@ -291,28 +291,19 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 
 <!-- 01 -->
 <section class="slide roomy" data-sec="Why agents" data-at="0" data-title="Google's Agents CLI: Build &amp; Deploy Agents in Under 20 Minutes">
-  <div class="cols c2w">
-    <div style="display:flex;flex-direction:column;gap:1.1em">
-      <div class="kicker">DevFest Baguio 2026 &middot; November 7</div>
-      <h1 class="two" style="font-size:3em">Google's Agents CLI:<br>Build &amp; Deploy Agents<br>in Under 20 Minutes</h1>
-      <p style="font-size:1.2em;max-width:30ch">Create, run, test and evaluate an ADK agent on your laptop. Then see what deploy needs.</p>
-      <a class="src" style="margin-top:0;align-self:flex-start" href="https://google.github.io/agents-cli/" target="_blank" rel="noopener">google.github.io/agents-cli</a>
-      <div style="height:1px;background:var(--line);margin:.2em 0 .2em"></div>
-      <div>
-        <p style="font-size:1.35em;font-weight:500;color:var(--ink)">Joshua M. de Guzman</p>
-        <p style="font-size:1.05em;color:var(--gray);font-weight:300;margin-top:.15em">Google Developer Expert</p>
+  <div class="cols c2w" style="grid-template-columns:1.3fr .7fr;gap:3em">
+    <div style="display:flex;flex-direction:column;gap:1.3em">
+      <div class="kicker" style="margin:0">DevFest Baguio 2026 &middot; November 7</div>
+      <h1 class="two" style="font-size:3.1em;letter-spacing:-.018em;line-height:1.1">Google's Agents CLI:<br>Build &amp; Deploy Agents<br><span class="grad-text">in Under 20 Minutes</span></h1>
+      <div style="margin-top:.6em">
+        <p style="font-size:1.3em;font-weight:500;color:var(--ink)">Joshua M. de Guzman</p>
+        <p style="font-size:1em;color:var(--gray);font-weight:300;margin-top:.15em">Google Developer Expert</p>
       </div>
     </div>
-<pre><span class="c"># install the CLI and seven skills</span>
-<span class="t">uvx</span> google-agents-cli setup
-
-<span class="c"># create an agent</span>
-<span class="t">agents-cli</span> create ask-your-data <span class="k">--prototype --yes</span>
-<span class="k">cd</span> ask-your-data &amp;&amp; <span class="t">agents-cli</span> install
-
-<span class="c"># run it, then evaluate it</span>
-<span class="t">agents-cli</span> run <span class="s">"What is the total revenue?"</span>
-<span class="t">agents-cli</span> eval run</pre>
+    <div style="text-align:center">
+      <img src="../assets/qr-codelab.svg" alt="QR code for the codelab" style="width:100%;max-width:13em;aspect-ratio:1;display:block;margin:0 auto;image-rendering:pixelated">
+      <p style="margin:.9em auto 0;font-size:.85em;color:var(--gray-2);max-width:none">Scan for the codelab</p>
+    </div>
   </div>
   <div class="notes"><h4>Opening, 60 seconds</h4>
   One line about yourself. Then say what happens: <strong>we build one agent from an empty folder, run it, test it and evaluate it, all on an AI Studio key.</strong><br>

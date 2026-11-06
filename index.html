@@ -4,73 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agents CLI talk and codelab · DevFest Baguio 2026</title>
-<meta name="description" content="Slides and a hands-on codelab for building an ADK agent with Google's Agents CLI. DevFest Baguio 2026, November 7.">
+<meta name="description" content="Slides, a live demo and a hands-on codelab for building an ADK agent with Google's Agents CLI. DevFest Baguio 2026, November 7.">
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&family=Google+Sans+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="assets/site.css">
 <style>
-.wrap{max-width:68rem;margin:0 auto;padding:4.5rem 2rem 3rem;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
-.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:3.5rem;align-items:center;flex:1}
-h1{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:700;letter-spacing:-.018em;word-spacing:.04em;line-height:1.12;margin:1.1rem 0 1.4rem;text-wrap:balance;max-width:16ch}
+html,body{height:100%}
+body{display:flex;flex-direction:column}
+nav.top{display:flex;justify-content:flex-end;gap:.4rem;padding:1.1rem 1.4rem}
+nav.top a{padding:.5em 1em;border-radius:var(--pill);font-size:.9rem;font-weight:500;color:var(--gray);text-decoration:none}
+nav.top a:hover{background:var(--surf);color:var(--ink)}
+nav.top a.d{background:var(--ink);color:#fff}
+main{flex:1;display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center;max-width:68rem;width:100%;margin:0 auto;padding:1rem 2rem 4rem}
+h1{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:700;letter-spacing:-.018em;word-spacing:.04em;line-height:1.12;margin-top:1.1rem;text-wrap:balance;max-width:16ch}
 h1 .grad-text{white-space:nowrap}
-.lede{font-size:1.25rem;font-weight:400;line-height:1.55;color:var(--gray);max-width:34ch;text-wrap:pretty}
-.who{margin-top:2rem;padding-top:1.3rem;border-top:1px solid var(--line)}
-.who b{display:block;font-size:1.1rem;font-weight:500}
-.who span{color:var(--gray);font-weight:300}
-.actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:2rem}
 .qr{text-align:center}
-.qr img{width:100%;max-width:15rem;aspect-ratio:1;display:block;margin:0 auto;image-rendering:pixelated}
-.qr p{margin-top:.9rem;font-size:.95rem;color:var(--gray)}
-.qr .url{font-family:var(--mono);font-size:.8rem;color:var(--gray-2);margin-top:.2rem;overflow-wrap:anywhere}
-.more{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:3.5rem}
-.more a{text-decoration:none;color:inherit}
-.more h3{font-size:1rem;font-weight:600}
-.more p{font-size:.9rem;color:var(--gray);font-weight:300;margin-top:.2rem}
-footer{margin-top:2.5rem;font-size:.85rem;color:var(--gray-2)}
-footer a{color:var(--gray)}
-@media (max-width:1000px){.more{grid-template-columns:repeat(2,1fr)}}
+.qr img{width:15rem;aspect-ratio:1;display:block;image-rendering:pixelated}
+.qr p{margin-top:.9rem;font-size:.9rem;color:var(--gray-2)}
 @media (max-width:760px){
-  .wrap{padding:2.2rem 1.25rem 2rem}
-  .hero{grid-template-columns:1fr;gap:2.2rem}
-  .more{grid-template-columns:1fr}
-  .actions{flex-direction:column}
-  .actions .btn{justify-content:center;white-space:nowrap}
-  .qr img{max-width:12rem}
+  nav.top{justify-content:center;padding:.9rem}
+  main{grid-template-columns:1fr;align-content:center;gap:2.4rem;padding:1.5rem 1.25rem 3rem;text-align:center}
+  h1{margin-left:auto;margin-right:auto}
+  .qr img{width:12rem;margin:0 auto}
 }
 </style>
 </head>
 <body>
-<main class="wrap">
-  <div class="hero">
-    <div>
-      <span class="pill b">DevFest Baguio 2026 &middot; Saturday, November 7</span>
-      <h1>Google's Agents CLI: Build &amp; Deploy Agents <span class="grad-text">in Under 20 Minutes</span></h1>
-      <p class="lede">Create, run, test and evaluate an ADK agent on your laptop. Then build your own in the codelab.</p>
-      <div class="actions">
-        <a class="btn d" href="codelab/">Start the codelab</a>
-        <a class="btn" href="demo/">Watch the demo</a>
-        <a class="btn" href="slides/">Open the slides</a>
-      </div>
-      <div class="who">
-        <b>Joshua M. de Guzman</b>
-        <span>Google Developer Expert</span>
-      </div>
-    </div>
-    <div class="card line qr">
-      <img src="assets/qr-codelab.svg" alt="QR code that opens the codelab">
-      <p>Scan to open the codelab</p>
-      <p class="url">joshuamdeguzman.com/<wbr>devfest_baguio/<wbr>codelab</p>
-    </div>
+<nav class="top" aria-label="Talk pages">
+  <a href="slides/">Slides</a>
+  <a href="demo/">Demo</a>
+  <a class="d" href="codelab/">Codelab</a>
+</nav>
+<main>
+  <div>
+    <span class="pill b">DevFest Baguio 2026 &middot; November 7</span>
+    <h1>Google's Agents CLI: Build &amp; Deploy Agents <span class="grad-text">in Under 20 Minutes</span></h1>
   </div>
-  <div class="more">
-    <a class="card" href="codelab/"><h3>Codelab</h3><p>12 steps, about 45 minutes. A Gemini API key is all you need.</p></a>
-    <a class="card" href="demo/"><h3>Live demo</h3><p>Click through a recorded run, from install to eval.</p></a>
-    <a class="card" href="slides/"><h3>Slides</h3><p>Use the arrow keys. Press N for notes, J to jump.</p></a>
-    <a class="card" href="sample_logs.zip" download><h3>Sample logs</h3><p>The log files the codelab agent reads. <code>sample_logs.zip</code></p></a>
+  <div class="qr">
+    <img src="assets/qr-codelab.svg" alt="QR code that opens the codelab">
+    <p>Scan for the codelab</p>
   </div>
-  <footer>Built on <a href="https://google.github.io/agents-cli/" target="_blank" rel="noopener">Agents CLI</a> and <a href="https://adk.dev/" target="_blank" rel="noopener">ADK</a>. Not an official Google page.</footer>
 </main>
 </body>
 </html>
