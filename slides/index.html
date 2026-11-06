@@ -435,31 +435,29 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- DevFest Baguio: inspiration, poteto and pstack -->
-<section class="slide" data-sec="Why agents" data-at="2" data-steps="3" data-title="One engineer, 2,500 pull requests">
-  <div class="insp">
-    <div class="insp-l">
-      <span class="pill">One engineer &middot; one month</span>
-      <div class="insp-stat">2,500</div>
-      <p class="insp-unit">pull requests, shipped with a team of agents</p>
-      <p class="insp-who"><b>Lauren Tan (poteto)</b>, React core team, creator of pstack. &ldquo;Shipping 1,000&rsquo;s of PR&rsquo;s a month at SpaceX.&rdquo;</p>
+<section class="slide roomy" data-sec="Why agents" data-at="2" data-steps="1" data-title="One engineer, 2,500 pull requests">
+  <div class="qt">
+    <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spp1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spp1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg>
+    <blockquote>&ldquo;Throughput without quality is not a goal I aspire to. If you want to go fast, go deep first.&rdquo;</blockquote>
+    <p class="qt-who"><b>Lauren Tan (poteto)</b>, React core team, creator of pstack &middot; &ldquo;Shipping 1,000&rsquo;s of PR&rsquo;s a month at SpaceX&rdquo;</p>
+    <div class="qt-stats" data-step="1">
+      <div class="hi"><b>2,500</b><span>pull requests in one month, one engineer with agents</span></div>
+      <div><b>10+</b><span>coordinator agents keeping work moving, around the clock</span></div>
+      <div><b>Run it</b><span>agents launch the app and check the result, not just the tests</span></div>
+      <div><b>Verified</b><span>only verified work merges, she reviews samples after</span></div>
     </div>
-    <div class="insp-r">
-      <div class="card line" data-step="1"><h3>Agents check their own work</h3><p>They launch the app, use it like a person would, and judge the result. Passing tests isn&rsquo;t enough.</p></div>
-      <div class="card line" data-step="2"><h3>Coordinators run around the clock</h3><p>More than ten coordinator agents keep work moving, fed by feedback from Slack, Linear and email.</p></div>
-      <div class="card gen" data-step="3"><h3>Only verified work merges</h3><p>Agents merge after verification. She reviews samples afterward.</p></div>
+    <div class="srcs" style="flex-direction:row;gap:1.4em;margin-top:1.2em;flex-wrap:wrap">
+      <a class="src" href="https://www.youtube.com/watch?v=MN9dGgmLyso" target="_blank" rel="noopener">youtube.com &middot; Matt Pocock live, Oct 2, 2026</a>
+      <a class="src" href="https://atlasnote.ai/en/articles/poteto-pstack-ai-agent-verification" target="_blank" rel="noopener">atlasnote.ai &middot; Oct 4, 2026</a>
+      <a class="src" href="https://github.com/cursor/plugins/blob/main/pstack/README.md" target="_blank" rel="noopener">github.com/cursor/plugins &middot; pstack</a>
     </div>
   </div>
-  <p class="insight" style="margin-top:1.2em"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spp1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spp1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>The trick isn&rsquo;t more agents. It&rsquo;s agents that can prove their work is right. That&rsquo;s what evals are for.</span></p>
-  <div class="srcs" style="flex-direction:row;gap:1.4em;flex-wrap:wrap">
-    <a class="src" href="https://www.youtube.com/watch?v=MN9dGgmLyso" target="_blank" rel="noopener">youtube.com &middot; Matt Pocock live, Oct 2, 2026</a>
-    <a class="src" href="https://atlasnote.ai/en/articles/poteto-pstack-ai-agent-verification" target="_blank" rel="noopener">atlasnote.ai &middot; Oct 4, 2026</a>
-    <a class="src" href="https://github.com/cursor/plugins/blob/main/pstack/README.md" target="_blank" rel="noopener">github.com/cursor/plugins &middot; pstack</a>
-  </div>
-  <div class="notes"><h4>One minute. Three presses.</h4>
-  Pichai talked about Google. This is one person. Lauren Tan, known as poteto, is on the React core team and built pstack, a set of skills for coding agents.<br>
-  In a livestream with Matt Pocock titled &ldquo;shipping 1,000&rsquo;s of PR&rsquo;s a month at SpaceX&rdquo;, she described about 2,500 pull requests in one month.<br>
+  <div class="notes"><h4>One minute. One press.</h4>
+  Pichai talked about Google. This is one person. Read the quote, then press &rarr; for the numbers.<br>
+  Lauren Tan, known as poteto, is on the React core team and built pstack, a set of skills for coding agents. In a livestream with Matt Pocock titled &ldquo;shipping 1,000&rsquo;s of PR&rsquo;s a month at SpaceX&rdquo;, she described about 2,500 pull requests in one month.<br>
   <span class="flag">Be precise:</span> the number is self-reported, and the write-up says it includes a lot of maintenance and refactoring, &ldquo;not 2,500 new features.&rdquo;<br>
-  <strong>The point to land:</strong> the volume only works because every agent verifies its own change, and only verified work merges. That's our eval chapter later today.</div>
+  <strong>The point to land:</strong> the volume only works because every agent verifies its own change. The trick isn't more agents, it's agents that can prove their work is right. That's what evals are for, later today.<br>
+  The quote is from the pstack README, written in lowercase there.</div>
 </section>
 
 
