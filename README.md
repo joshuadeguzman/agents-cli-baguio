@@ -10,6 +10,7 @@ each repo with Pages turned on serves at `/<repo-name>/`.
 | `slides/index.html` | Copy of the `/agents-cli` deck, retargeted to DevFest Baguio |
 | `codelab/index.html` | 12-step codelab: build a root cause agent |
 | `sample_logs/`, `sample_logs.zip` | Log files the codelab agent reads. One planted failure. |
+| `examples/index.html` | Example agents for developers: code reviewer, design reviewer, release notes writer. Tools tested, agents load with ADK 2.13.0 |
 | `demo/index.html` | Click-through replay of a recorded agents-cli session. `?embed=1` for a compact view |
 | `assets/demo-data.js` | The recorded terminal output. Generated, see below |
 | `assets/terminal.js` | Replays `demo-data.js` in the demo page and the codelab's "Show output" buttons |

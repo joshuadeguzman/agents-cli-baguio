@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Example agents for developers · DevFest Baguio 2026</title>
+<meta name="description" content="ADK agents developers can build with one prompt and deploy to Google Cloud: code reviewer, design reviewer, release notes writer, root cause agent.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&family=Google+Sans+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:1rem;padding:.8rem 1.4rem}
+.top a.home{font-weight:600;color:var(--ink);text-decoration:none;white-space:nowrap}
+.top nav{margin-left:auto;display:flex;gap:.3rem}
+.top nav a{padding:.45em .9em;border-radius:var(--pill);font-size:.88rem;font-weight:500;color:var(--gray);text-decoration:none}
+.top nav a:hover{background:var(--surf);color:var(--ink)}
+.top nav a.on{background:var(--ink);color:#fff}
+main{width:min(92vw,90rem);margin:0 auto;padding:2.6rem 0 4rem}
+.intro{max-width:52rem;margin-bottom:2.2rem}
+.intro h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:700;letter-spacing:-.018em;line-height:1.12;text-wrap:balance}
+.intro p{font-size:1.15rem;color:var(--gray);margin-top:.8rem;line-height:1.55;text-wrap:pretty}
+.pattern{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1.6rem 0 0}
+.pattern div{background:var(--surf);border-radius:var(--r-md);padding:.9rem 1rem;font-size:.92rem;color:var(--gray)}
+.pattern b{display:block;color:var(--ink);font-weight:600;margin-bottom:.15rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,34rem),1fr));gap:1.3rem;align-items:start}
+.ex{border:1px solid var(--line);border-radius:var(--r-lg);padding:1.4rem 1.5rem 1.5rem;min-width:0;background:var(--bg)}
+.ex h2{font-size:1.6rem;font-weight:650;letter-spacing:-.015em;margin:.7rem 0 .35rem}
+.ex .what{color:#3C4043;line-height:1.55}
+.ex .tools{margin-top:.6rem;font-size:.9rem;color:var(--gray-2);display:flex;gap:.4rem;flex-wrap:wrap;align-items:center}
+.tabs{display:flex;gap:.25rem;margin:1.1rem 0 .8rem;padding:.3rem;background:var(--surf);border-radius:var(--pill);width:fit-content;max-width:100%;overflow-x:auto}
+.tabs button{padding:.45em 1em;border-radius:var(--pill);font-size:.86rem;font-weight:500;color:var(--gray);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(27,27,31,.12)}
+.panel[hidden]{display:none}
+.panel p{color:#3C4043;margin:.5rem 0;line-height:1.55}
+.panel .hint{font-size:.9rem;color:var(--gray)}
+.panel pre{margin:.6rem 0;font-size:.8rem}
+.panel pre.long{max-height:28rem}
+.panel pre.wrap{white-space:pre-wrap}
+.code{position:relative}
+.code .cp{position:absolute;top:.5rem;right:.5rem;font-size:.75rem;font-weight:500;padding:.3em .8em;border-radius:var(--pill);background:rgba(255,255,255,.12);color:#fff}
+.code .cp:hover{background:rgba(255,255,255,.22)}
+.code pre{padding-top:2.3rem}
+.ex.link{background:var(--surf);border-color:transparent}
+.ex.link .actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.1rem}
+.foot{margin-top:2.4rem;font-size:.88rem;color:var(--gray-2);max-width:52rem;line-height:1.55}
+@media (max-width:760px){
+  .top{flex-wrap:wrap;gap:.5rem;padding:.7rem 1rem}
+  .top nav{margin-left:0;width:100%;justify-content:space-between}
+  .top nav a{padding:.4em .7em;font-size:.82rem}
+  main{padding-top:1.6rem}
+  .pattern{grid-template-columns:1fr 1fr}
+  .ex{padding:1.1rem 1rem 1.2rem}
+  .panel pre{font-size:.74rem}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="home" href="../">DevFest Baguio 2026</a>
+  <nav aria-label="Talk pages"><a href="../slides/">Slides</a><a href="../demo/">Demo</a><a class="on" href="./">Examples</a><a href="../codelab/">Codelab</a></nav>
+</header>
+<main>
+  <section class="intro">
+    <span class="pill b">Examples</span>
+    <h1>Agents a developer would actually use</h1>
+    <p>Each one is the same pattern as the codelab: an instruction, a few Python tools, and one prompt to build it. Run it on your laptop first, then deploy it to Google Cloud and call it from CI or Gemini Enterprise.</p>
+    <div class="pattern">
+      <div><b>1. Instruction</b>The job, in plain words.</div>
+      <div><b>2. Tools</b>Python functions with clear docstrings.</div>
+      <div><b>3. Local</b><code>agents-cli playground</code></div>
+      <div><b>4. Cloud</b><code>agents-cli deploy</code>, then call it.</div>
+    </div>
+  </section>
+  <div class="grid">
+
+<article class="ex" id="code-reviewer">
+  <header>
+    <span class="pill">Code review</span>
+    <h2>Code reviewer</h2>
+    <p class="what">Reads the changes on your branch and reports bugs, security problems and missing tests, with file, line and severity.</p>
+    <p class="tools">Tools: <code>get_diff</code><code>read_file</code></p>
+  </header>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="code">Agent code</button>
+    <button role="tab" aria-selected="false" data-tab="prompt">One prompt</button>
+    <button role="tab" aria-selected="false" data-tab="run">Run and deploy</button>
+  </div>
+  <div class="panel" data-panel="code">
+    <p class="hint">Replace <code>app/agent.py</code> in a project made with <code>agents-cli create code-reviewer --prototype --yes</code>.</p>
+    <pre class="long"><code>import subprocess
+from pathlib import Path
+
+from google.adk.agents import Agent
+from google.adk.apps import App
+from google.adk.models import Gemini
+from google.genai import types
+
+REPO = Path.cwd()
+
+
+def get_diff(base: str = "main") -&gt; dict:
+    """Get the changes on this branch compared with a base branch.
+
+    Call this first. It returns a unified diff with file names and line
+    numbers, which is what you review.
+
+    Args:
+        base: The branch to compare against, for example "main".
+
+    Returns:
+        A dict with "status" and either "diff" or "error_message".
+    """
+    result = subprocess.run(
+        ["git", "diff", f"{base}...HEAD", "--unified=3"],
+        cwd=REPO, capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode != 0:
+        return {"status": "error", "error_message": result.stderr.strip()}
+    return {"status": "success", "diff": result.stdout[:200_000]}
+
+
+def read_file(path: str) -&gt; dict:
+    """Read a whole file from the repository, for context around a change.
+
+    Args:
+        path: A path relative to the repository root, for example "lib/main.dart".
+
+    Returns:
+        A dict with "status" and either "content" or "error_message".
+    """
+    file = (REPO / path).resolve()
+    if REPO.resolve() not in file.parents or not file.is_file():
+        return {"status": "error", "error_message": f"No file {path!r} in the repo."}
+    return {"status": "success", "content": file.read_text(errors="replace")}
+
+
+root_agent = Agent(
+    name="code_reviewer",
+    model=Gemini(model="gemini-3.8-flash", retry_options=types.HttpRetryOptions(attempts=3)),
+    instruction=(
+        "You review code changes. If the message contains a diff, review it. "
+        "Otherwise call get_diff, and read_file when you need context. "
+        "Report bugs, security problems and missing tests. For "
+        "each finding give the file, the line, a severity (high, medium, low) "
+        "and a one-line fix. If there is nothing worth fixing, say so."
+    ),
+    tools=[get_diff, read_file],
+)
+
+app = App(root_agent=root_agent, name="app")</code></pre>
+  </div>
+  <div class="panel" data-panel="prompt" hidden>
+    <p class="hint">Or give this to Claude Code, Antigravity or another coding agent with the Agents CLI skills installed.</p>
+    <pre class="wrap"><code>Use agents-cli to build a code reviewer agent called code-reviewer. Give it two tools: get_diff(base) returns git diff base...HEAD, and read_file(path) reads one file inside the repo. If the message already contains a diff, review that instead. Report each finding with file, line, severity and a one-line fix.</code></pre>
+  </div>
+  <div class="panel" data-panel="run" hidden>
+    <p><b>On your laptop.</b> Run the playground from inside a git repo, then ask: <code>Review this branch against main</code>.</p>
+<pre><code>agents-cli create code-reviewer --prototype --yes
+cd code-reviewer &amp;&amp; agents-cli install
+<span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
+agents-cli playground</code></pre>
+    <p><b>On Google Cloud.</b> Needs a billed project.</p>
+<pre><code>agents-cli scaffold enhance -d cloud_run --yes
+agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
+    <p>From CI, call the deployed agent:</p>
+<pre><code>agents-cli run "Review this diff: $(git diff origin/main...HEAD)" \
+  --url SERVICE_URL --mode a2a</code></pre>
+<p class="hint">On Cloud Run the agent has no checkout of your repo, so CI sends the diff in the message.</p>
+  </div>
+</article>
+<article class="ex" id="design-reviewer">
+  <header>
+    <span class="pill">Design review</span>
+    <h2>Design reviewer</h2>
+    <p class="what">Looks at a screenshot of a mobile screen and lists the top five issues. Contrast and tap targets are measured with tools, not guessed.</p>
+    <p class="tools">Tools: <code>contrast_ratio</code><code>check_touch_target</code></p>
+  </header>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="code">Agent code</button>
+    <button role="tab" aria-selected="false" data-tab="prompt">One prompt</button>
+    <button role="tab" aria-selected="false" data-tab="run">Run and deploy</button>
+  </div>
+  <div class="panel" data-panel="code">
+    <p class="hint">Replace <code>app/agent.py</code> in a project made with <code>agents-cli create design-reviewer --prototype --yes</code>.</p>
+    <pre class="long"><code>from google.adk.agents import Agent
+from google.adk.apps import App
+from google.adk.models import Gemini
+from google.genai import types
+
+
+def _luminance(hex_color: str) -&gt; float:
+    rgb = [int(hex_color.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    lin = [c / 12.92 if c &lt;= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+
+def contrast_ratio(foreground: str, background: str) -&gt; dict:
+    """Compute the WCAG contrast ratio between a text color and its background.
+
+    Use this for every text color you can read from the screenshot. Do not
+    guess contrast by eye.
+
+    Args:
+        foreground: Text color as hex, for example "#777777".
+        background: Background color as hex, for example "#FFFFFF".
+
+    Returns:
+        A dict with the ratio and whether it passes WCAG AA for normal
+        text (4.5:1) and large text (3:1).
+    """
+    a, b = _luminance(foreground), _luminance(background)
+    ratio = (max(a, b) + 0.05) / (min(a, b) + 0.05)
+    return {"ratio": round(ratio, 2), "aa_normal_text": ratio &gt;= 4.5, "aa_large_text": ratio &gt;= 3}
+
+
+def check_touch_target(width_dp: float, height_dp: float) -&gt; dict:
+    """Check a tappable element against the 48 x 48 dp minimum touch target.
+
+    Args:
+        width_dp: Width of the element in dp.
+        height_dp: Height of the element in dp.
+
+    Returns:
+        A dict with "passes" and the smallest side.
+    """
+    passes = width_dp &gt;= 48 and height_dp &gt;= 48
+    return {"passes": passes, "smallest_side_dp": min(width_dp, height_dp)}
+
+
+root_agent = Agent(
+    name="design_reviewer",
+    model=Gemini(model="gemini-3.8-flash", retry_options=types.HttpRetryOptions(attempts=3)),
+    instruction=(
+        "You review mobile app screens. The user attaches a screenshot. Check "
+        "hierarchy, spacing and alignment by looking. Check text contrast with "
+        "contrast_ratio and tap targets with check_touch_target, never by eye. "
+        "Return the top five issues, most important first, each with a fix."
+    ),
+    tools=[contrast_ratio, check_touch_target],
+)
+
+app = App(root_agent=root_agent, name="app")</code></pre>
+  </div>
+  <div class="panel" data-panel="prompt" hidden>
+    <p class="hint">Or give this to Claude Code, Antigravity or another coding agent with the Agents CLI skills installed.</p>
+    <pre class="wrap"><code>Use agents-cli to build a design reviewer agent called design-reviewer for mobile app screenshots. Give it two tools: contrast_ratio(foreground, background) returns the WCAG ratio and whether it passes AA, and check_touch_target(width_dp, height_dp) checks the 48 x 48 dp minimum. Return the top five issues with a fix for each.</code></pre>
+  </div>
+  <div class="panel" data-panel="run" hidden>
+    <p><b>On your laptop.</b> In the playground, attach a screenshot of a Flutter screen and ask: <code>Review this screen</code>.</p>
+<pre><code>agents-cli create design-reviewer --prototype --yes
+cd design-reviewer &amp;&amp; agents-cli install
+<span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
+agents-cli playground</code></pre>
+    <p><b>On Google Cloud.</b> Needs a billed project.</p>
+<pre><code>agents-cli scaffold enhance -d cloud_run --yes
+agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
+    <p class="hint">Deployed, publish it to Gemini Enterprise with <code>agents-cli publish gemini</code> so your team can reach it from chat.</p>
+  </div>
+</article>
+<article class="ex" id="release-notes-writer">
+  <header>
+    <span class="pill">Release</span>
+    <h2>Release notes writer</h2>
+    <p class="what">Turns the commits since your last tag into short release notes for app users, grouped into New, Improved and Fixed.</p>
+    <p class="tools">Tools: <code>git_log</code></p>
+  </header>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="code">Agent code</button>
+    <button role="tab" aria-selected="false" data-tab="prompt">One prompt</button>
+    <button role="tab" aria-selected="false" data-tab="run">Run and deploy</button>
+  </div>
+  <div class="panel" data-panel="code">
+    <p class="hint">Replace <code>app/agent.py</code> in a project made with <code>agents-cli create release-notes-writer --prototype --yes</code>.</p>
+    <pre class="long"><code>import subprocess
+
+from google.adk.agents import Agent
+from google.adk.apps import App
+from google.adk.models import Gemini
+from google.genai import types
+
+
+def git_log(since: str) -&gt; dict:
+    """List the commits since a tag or commit, one per line.
+
+    Call this first to see what changed in the release.
+
+    Args:
+        since: A tag or commit, for example "v1.4.0".
+
+    Returns:
+        A dict with "status" and either "commits" or "error_message".
+    """
+    result = subprocess.run(
+        ["git", "log", f"{since}..HEAD", "--no-merges", "--pretty=format:%h %s"],
+        capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode != 0:
+        return {"status": "error", "error_message": result.stderr.strip()}
+    return {"status": "success", "commits": result.stdout.splitlines()}
+
+
+root_agent = Agent(
+    name="release_notes_writer",
+    model=Gemini(model="gemini-3.8-flash", retry_options=types.HttpRetryOptions(attempts=3)),
+    instruction=(
+        "You write release notes for app users, not developers. If the message "
+        "lists commits, use them. Otherwise call git_log with the tag the user "
+        "gives. Group changes into New, Improved and "
+        "Fixed. Skip refactors, CI and dependency bumps. Plain words, under "
+        "500 characters."
+    ),
+    tools=[git_log],
+)
+
+app = App(root_agent=root_agent, name="app")</code></pre>
+  </div>
+  <div class="panel" data-panel="prompt" hidden>
+    <p class="hint">Or give this to Claude Code, Antigravity or another coding agent with the Agents CLI skills installed.</p>
+    <pre class="wrap"><code>Use agents-cli to build an agent called release-notes-writer. Give it one tool, git_log(since), that lists commits since a tag. If the message already lists commits, use those. Write release notes for app users, grouped into New, Improved and Fixed, under 500 characters.</code></pre>
+  </div>
+  <div class="panel" data-panel="run" hidden>
+    <p><b>On your laptop.</b> Run the playground in your app repo and ask: <code>Write release notes since v1.4.0</code>.</p>
+<pre><code>agents-cli create release-notes-writer --prototype --yes
+cd release-notes-writer &amp;&amp; agents-cli install
+<span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
+agents-cli playground</code></pre>
+    <p><b>On Google Cloud.</b> Needs a billed project.</p>
+<pre><code>agents-cli scaffold enhance -d cloud_run --yes
+agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
+    <p>From CI, call the deployed agent:</p>
+<pre><code>agents-cli run "Write release notes for these commits: $(git log v1.4.0..HEAD --pretty=%s)" \
+  --url SERVICE_URL --mode a2a</code></pre>
+<p class="hint">Run it in your release workflow and paste the result into the store listing.</p>
+  </div>
+</article>
+<article class="ex link" id="root-cause-agent">
+  <span class="pill g">Codelab</span>
+  <h2>Root cause agent</h2>
+  <p class="what">Reads a log file and explains what broke, with the lines that prove it. This is the one you build step by step in the codelab.</p>
+  <p class="ex-tools tools">Tools: <code>read_log</code><code>find_errors</code></p>
+  <div class="actions"><a class="btn d" href="../codelab/">Build it in the codelab</a><a class="btn" href="../demo/">Watch the demo</a></div>
+</article>
+  </div>
+  <p class="foot">The tools in each example were run against real inputs, and each agent loads with google-adk 2.13.0 and agents-cli 1.13.0. Model answers vary, so none are shown. Without a gcloud login, set <code>otel_to_cloud = False</code> in <code>app/fast_api_app.py</code> first (codelab step 4).</p>
+</main>
+<script>
+(function(){
+"use strict";
+[].slice.call(document.querySelectorAll('.ex')).forEach(function(card){
+  var tabs=[].slice.call(card.querySelectorAll('[data-tab]'));
+  tabs.forEach(function(t){t.onclick=function(){
+    tabs.forEach(function(o){o.setAttribute('aria-selected',String(o===t));});
+    [].slice.call(card.querySelectorAll('[data-panel]')).forEach(function(p){p.hidden=p.dataset.panel!==t.dataset.tab;});
+  };});
+});
+[].slice.call(document.querySelectorAll('main pre')).forEach(function(pre){
+  var w=document.createElement('div');w.className='code';pre.parentNode.insertBefore(w,pre);w.appendChild(pre);
+  var b=document.createElement('button');b.type='button';b.className='cp';b.textContent='Copy';
+  b.onclick=function(){var text=pre.innerText.replace(/\n$/,'');
+    var ok=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy';},1500);};
+    if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(text).then(ok,fb);else fb();
+    function fb(){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok();}catch(e){}document.body.removeChild(ta);}};
+  w.appendChild(b);
+});
+})();
+</script>
+</body>
+</html>

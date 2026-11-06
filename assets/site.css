@@ -19,6 +19,7 @@ a{color:var(--pri)}
 .pill{display:inline-flex;align-items:center;gap:.45em;font-size:.8rem;font-weight:500;padding:.4em .9em;border-radius:var(--pill);background:var(--surf-2);color:var(--gray)}
 .pill.b{background:var(--pri-c);color:var(--pri)}
 .pill.d{background:var(--ink);color:#fff}
+.pill.g{background:var(--grad);color:#fff}
 .card{background:var(--surf);border-radius:var(--r-lg);padding:1.3rem 1.4rem}
 .card.line{background:var(--bg);border:1px solid var(--line)}
 .card.gen{background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
