@@ -373,6 +373,19 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .insp-r .card{padding:1em 1.2em}
 .insp-r .card p{font-size:.95em}
 @media (max-aspect-ratio:1/1){.insp{grid-template-columns:1fr;gap:1.6em}.insp-stat{font-size:5em}}
+
+/* ---- history timeline ---- */
+.hist{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:1.2em;margin-top:1.2em}
+.hist::before{content:"";position:absolute;left:0;right:0;top:2.55em;height:2px;background:linear-gradient(90deg,var(--line),#9B72CB 70%,#D96570)}
+.hx{position:relative}
+.hx-y{font-size:1.25em;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.hx-dot{width:.9em;height:.9em;border-radius:50%;background:var(--bg);border:3px solid #9B72CB;margin:.55em 0 1em;position:relative;z-index:1}
+.hx:last-child .hx-dot{background:var(--grad);border-color:transparent;box-shadow:0 0 0 .35em rgba(155,114,203,.18)}
+.hx h3{font-size:1.15em;margin-bottom:.35em}
+.hx p{font-size:.88em;line-height:1.45;max-width:none}
+.hx span{display:block;margin-top:.6em;font-size:.76em;color:var(--gray-2);line-height:1.35}
+.hx:last-child h3{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (max-aspect-ratio:1/1){.hist{grid-template-columns:1fr 1fr}.hist::before{display:none}}
 </style>
 </head>
 <body>
@@ -407,6 +420,42 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   <div class="ch-dots" aria-hidden="true"><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>
   <div class="notes"><h4>Pause here. Clock check: about 1 minutes in.</h4>
   Take a breath and a sip of water. Ask if anyone has a question about the last part before you move on.</div>
+</section>
+
+<!-- DevFest Baguio: a short history -->
+<section class="slide" data-sec="Why agents" data-at="1" data-steps="7" data-title="From autocomplete to agents">
+  <h2 class="dm" style="max-width:none">From autocomplete to teams of agents</h2>
+  <div class="hist">
+    <div class="hx" data-step="1">
+      <div class="hx-y">2021</div><div class="hx-dot"></div>
+      <h3>Autocomplete</h3><p>AI suggests the next line in your editor.</p><span>GitHub Copilot preview, June</span>
+    </div>
+    <div class="hx" data-step="2">
+      <div class="hx-y">2022</div><div class="hx-dot"></div>
+      <h3>Chat</h3><p>Ask a model anything, then copy the answer back.</p><span>ChatGPT, November</span>
+    </div>
+    <div class="hx" data-step="3">
+      <div class="hx-y">2023</div><div class="hx-dot"></div>
+      <h3>Wrappers and tools</h3><p>Apps wrap a prompt. Function calling lets models call your code.</p><span>Tool calling in model APIs</span>
+    </div>
+    <div class="hx" data-step="4">
+      <div class="hx-y">2024</div><div class="hx-dot"></div>
+      <h3>Context</h3><p>A standard way for models to reach your tools and data.</p><span>Model Context Protocol, November</span>
+    </div>
+    <div class="hx" data-step="5">
+      <div class="hx-y">2025</div><div class="hx-dot"></div>
+      <h3>Coding agents</h3><p>Agents read the repo, run commands, and edit code in a loop.</p><span>Claude Code, Gemini CLI, ADK and A2A</span>
+    </div>
+    <div class="hx" data-step="6">
+      <div class="hx-y">2026</div><div class="hx-dot"></div>
+      <h3>Orchestration</h3><p>Engineers direct teams of agents, inside a harness that checks their work.</p><span>ADK 2.0, Agents CLI, Antigravity CLI</span>
+    </div>
+  </div>
+  <p class="insight" data-step="7" style="margin-top:1.6em"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="sph1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#sph1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>Each step moved more of the work to the model. What stays with you: the instructions, the tools, and the checks. That's the job now.</span></p>
+  <div class="notes"><h4>Two minutes. Seven presses. Tell it as a story.</h4>
+  2021: Copilot finishes your line. 2022: ChatGPT, and everyone copy-pastes answers into their code. 2023: every app is a prompt wrapper, and function calling lets a model call your functions. 2024: MCP gives models one standard way to reach tools and data. 2025: coding agents like Claude Code and Gemini CLI work in your repo in a loop, and Google ships ADK and A2A. 2026: engineers run teams of agents in a harness that checks their work, which is the next two slides.<br>
+  <strong>Why software engineers should care:</strong> the model does more of the typing every year. The part that stays yours is deciding what the agent should do, giving it good tools, and checking its work. That's what this talk teaches.<br>
+  Dates: Copilot technical preview June 2021, ChatGPT Nov 30 2022, function calling in model APIs 2023, MCP Nov 2024, Claude Code Feb 2025, ADK Apr 9 2025 (Cloud Next), Gemini CLI Jun 2025, ADK 2.0 May 19 2026, Agents CLI Apr 22 2026, Antigravity CLI replaced Gemini CLI for individual users Jun 18 2026.</div>
 </section>
 
 
