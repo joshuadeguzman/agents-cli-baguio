@@ -1,0 +1,23 @@
+metrics_to_run:
+  - custom_response_quality
+  - names_the_timeout
+
+thresholds:
+  names_the_timeout: 1.0
+  custom_response_quality: 3  # the judge scores 1-5
+
+custom_metrics:
+  # Local LLM judge from the template. Uses your GEMINI_API_KEY.
+  - name: custom_response_quality
+    custom_function_file: response_quality.py
+  # Plain Python check. Passes when the answer names the bad setting.
+  - name: names_the_timeout
+    custom_function: |
+      def evaluate(instance):
+          prompt = str(instance.get("prompt", ""))
+          if "order-api.log" not in prompt or "healthy" in prompt:
+              return {"score": 1.0, "explanation": "Not the failing log, skipped."}
+          text = str(instance.get("response", "")).lower()
+          hit = "payment_timeout_ms" in text or "30ms" in text or "30 ms" in text
+          return {"score": 1.0 if hit else 0.0,
+                  "explanation": "Names the timeout." if hit else "Misses the timeout."}

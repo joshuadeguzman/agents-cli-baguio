@@ -1,0 +1,32 @@
+2026-11-07T08:58:01.114Z INFO  order-api  pid=4121 Starting order-api v2.4.1 (build 8f3c2e1)
+2026-11-07T08:58:01.152Z INFO  order-api  config loaded from /etc/order-api/config.yaml
+2026-11-07T08:58:01.153Z INFO  order-api  config PAYMENT_GATEWAY_URL=https://pay.example.com/v1
+2026-11-07T08:58:01.153Z INFO  order-api  config PAYMENT_TIMEOUT_MS=30
+2026-11-07T08:58:01.153Z INFO  order-api  config DB_POOL_SIZE=20
+2026-11-07T08:58:01.410Z INFO  db         connected to postgres://orders-db:5432/orders pool=20
+2026-11-07T08:58:01.622Z INFO  http       listening on :8080
+2026-11-07T08:59:12.031Z INFO  http       GET /health 200 2ms
+2026-11-07T09:00:03.418Z INFO  http       GET /menu?store=baguio-session-rd 200 41ms
+2026-11-07T09:00:05.902Z WARN  cache      miss key=menu:baguio-session-rd, loading from db
+2026-11-07T09:00:07.215Z INFO  http       POST /cart/items 201 18ms user=u_1842
+2026-11-07T09:00:09.770Z INFO  http       POST /orders 201 63ms user=u_1842 order=o_99120
+2026-11-07T09:00:09.771Z INFO  payment    charge start order=o_99120 amount=12.40 USD
+2026-11-07T09:00:09.802Z ERROR payment    charge failed order=o_99120 error=TimeoutError("payment gateway did not respond within 30ms")
+2026-11-07T09:00:09.803Z WARN  payment    retry 1/2 order=o_99120
+2026-11-07T09:00:09.834Z ERROR payment    charge failed order=o_99120 error=TimeoutError("payment gateway did not respond within 30ms")
+2026-11-07T09:00:09.835Z WARN  payment    retry 2/2 order=o_99120
+2026-11-07T09:00:09.866Z ERROR payment    charge failed order=o_99120 error=TimeoutError("payment gateway did not respond within 30ms")
+2026-11-07T09:00:09.867Z ERROR http       POST /orders/o_99120/pay 502 97ms user=u_1842 reason="payment_unavailable"
+2026-11-07T09:00:14.010Z INFO  http       GET /health 200 1ms
+2026-11-07T09:00:21.551Z INFO  http       POST /orders 201 58ms user=u_2007 order=o_99121
+2026-11-07T09:00:21.552Z INFO  payment    charge start order=o_99121 amount=8.75 USD
+2026-11-07T09:00:21.583Z ERROR payment    charge failed order=o_99121 error=TimeoutError("payment gateway did not respond within 30ms")
+2026-11-07T09:00:21.584Z WARN  payment    retry 1/2 order=o_99121
+2026-11-07T09:00:21.615Z ERROR payment    charge failed order=o_99121 error=TimeoutError("payment gateway did not respond within 30ms")
+2026-11-07T09:00:21.616Z WARN  payment    retry 2/2 order=o_99121
+2026-11-07T09:00:21.647Z ERROR payment    charge failed order=o_99121 error=TimeoutError("payment gateway did not respond within 30ms")
+2026-11-07T09:00:21.648Z ERROR http       POST /orders/o_99121/pay 502 96ms user=u_2007 reason="payment_unavailable"
+2026-11-07T09:00:30.118Z INFO  gateway    pay.example.com status check ok p50=412ms p95=780ms
+2026-11-07T09:00:44.020Z WARN  http       slow request GET /menu?store=baguio-burnham 1204ms (cold cache)
+2026-11-07T09:01:02.330Z INFO  http       GET /health 200 2ms
+2026-11-07T09:01:05.447Z ERROR alerts     payment success rate 0% over last 60s (threshold 95%), paging on-call

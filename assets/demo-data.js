@@ -280,7 +280,7 @@ window.DEMO = {
 "say": "Two log files from a made-up food ordering API. One has a planted failure.",
 "steps": [
 {
-"cmd": "curl -LO https://joshuamdeguzman.com/devfest_baguio/sample_logs.zip",
+"cmd": "curl -LO https://joshuamdeguzman.com/agents-cli-baguio/sample_logs.zip",
 "cwd": "~/root-cause-agent",
 "out": [
 "  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current",

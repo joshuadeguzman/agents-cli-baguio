@@ -1,0 +1,28 @@
+metrics_to_run:
+  - custom_response_quality
+  - user_facing_only
+
+thresholds:
+  user_facing_only: 1.0
+  custom_response_quality: 3   # the judge scores 1-5
+
+custom_metrics:
+  - name: custom_response_quality
+    custom_function_file: response_quality.py
+  # Plain Python. Keeps the user-facing changes and leaves out refactors, CI and dependency bumps.
+  - name: user_facing_only
+    custom_function: |
+      def evaluate(instance):
+          prompt = str(instance.get("prompt", "")).lower()
+          text = str(instance.get("response", "")).lower()
+          if "since v1.4.0" in prompt:
+              keep, drop = ["dark mode", "eta", "crash", "coupon"], ["refactor", "flutter 3.38", "dependenc"]
+          elif "offline mode" in prompt:
+              keep, drop = ["offline", "login"], ["gradle", "refactor"]
+          else:
+              return {"score": 1.0, "explanation": "No expectations for this case."}
+          missing = [k for k in keep if k not in text]
+          leaked = [d for d in drop if d in text]
+          ok = not missing and not leaked
+          why = "OK" if ok else f"Missing: {missing}. Should be left out: {leaked}."
+          return {"score": 1.0 if ok else 0.0, "explanation": why}

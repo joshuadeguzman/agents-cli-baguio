@@ -89,7 +89,8 @@ main{width:min(92vw,90rem);margin:0 auto;padding:2.6rem 0 4rem}
   </div>
   <div class="panel" data-panel="code">
     <p class="hint">Replace <code>app/agent.py</code> in a project made with <code>agents-cli create code-reviewer --prototype --yes</code>.</p>
-    <pre class="long"><code>import subprocess
+    <pre class="long"><code>import os
+import subprocess
 from pathlib import Path
 
 from google.adk.agents import Agent
@@ -97,7 +98,10 @@ from google.adk.apps import App
 from google.adk.models import Gemini
 from google.genai import types
 
-REPO = Path.cwd()
+
+def _repo() -&gt; Path:
+    """The git repo to review: REPO_DIR from .env, or the current folder."""
+    return Path(os.getenv("REPO_DIR", ".")).resolve()
 
 
 def get_diff(base: str = "main") -&gt; dict:
@@ -114,7 +118,7 @@ def get_diff(base: str = "main") -&gt; dict:
     """
     result = subprocess.run(
         ["git", "diff", f"{base}...HEAD", "--unified=3"],
-        cwd=REPO, capture_output=True, text=True, timeout=30,
+        cwd=_repo(), capture_output=True, text=True, timeout=30,
     )
     if result.returncode != 0:
         return {"status": "error", "error_message": result.stderr.strip()}
@@ -130,8 +134,9 @@ def read_file(path: str) -&gt; dict:
     Returns:
         A dict with "status" and either "content" or "error_message".
     """
-    file = (REPO / path).resolve()
-    if REPO.resolve() not in file.parents or not file.is_file():
+    repo = _repo()
+    file = (repo / path).resolve()
+    if repo not in file.parents or not file.is_file():
         return {"status": "error", "error_message": f"No file {path!r} in the repo."}
     return {"status": "success", "content": file.read_text(errors="replace")}
 
@@ -161,6 +166,8 @@ app = App(root_agent=root_agent, name="app")</code></pre>
 cd code-reviewer &amp;&amp; agents-cli install
 <span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
 agents-cli playground</code></pre>
+    <p><b>Evaluate it.</b> The ready-made project has eval cases and a metric that checks the facts it must get right:</p>
+<pre><code>agents-cli eval run --dataset tests/eval/datasets/code-review.json</code></pre>
     <p><b>On Google Cloud.</b> Needs a billed project.</p>
 <pre><code>agents-cli scaffold enhance -d cloud_run --yes
 agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
@@ -254,6 +261,8 @@ app = App(root_agent=root_agent, name="app")</code></pre>
 cd design-reviewer &amp;&amp; agents-cli install
 <span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
 agents-cli playground</code></pre>
+    <p><b>Evaluate it.</b> The ready-made project has eval cases and a metric that checks the facts it must get right:</p>
+<pre><code>agents-cli eval run --dataset tests/eval/datasets/design-review.json</code></pre>
     <p><b>On Google Cloud.</b> Needs a billed project.</p>
 <pre><code>agents-cli scaffold enhance -d cloud_run --yes
 agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
@@ -275,7 +284,9 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
   </div>
   <div class="panel" data-panel="code">
     <p class="hint">Replace <code>app/agent.py</code> in a project made with <code>agents-cli create release-notes-writer --prototype --yes</code>.</p>
-    <pre class="long"><code>import subprocess
+    <pre class="long"><code>import os
+import subprocess
+from pathlib import Path
 
 from google.adk.agents import Agent
 from google.adk.apps import App
@@ -296,6 +307,7 @@ def git_log(since: str) -&gt; dict:
     """
     result = subprocess.run(
         ["git", "log", f"{since}..HEAD", "--no-merges", "--pretty=format:%h %s"],
+        cwd=Path(os.getenv("REPO_DIR", ".")).resolve(),
         capture_output=True, text=True, timeout=30,
     )
     if result.returncode != 0:
@@ -328,6 +340,8 @@ app = App(root_agent=root_agent, name="app")</code></pre>
 cd release-notes-writer &amp;&amp; agents-cli install
 <span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
 agents-cli playground</code></pre>
+    <p><b>Evaluate it.</b> The ready-made project has eval cases and a metric that checks the facts it must get right:</p>
+<pre><code>agents-cli eval run --dataset tests/eval/datasets/release-notes.json</code></pre>
     <p><b>On Google Cloud.</b> Needs a billed project.</p>
 <pre><code>agents-cli scaffold enhance -d cloud_run --yes
 agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
@@ -346,6 +360,7 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
   <div class="actions"><a class="btn d" href="../codelab/">Build it in the codelab</a><a class="btn" href="../demo/">Watch the demo</a></div>
 </article>
   </div>
+  <p class="foot"><b>Ready-made projects</b> for every agent on this page, with sample data and a setup script: <a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">github.com/joshuadeguzman/agents-cli-baguio/examples/agents</a>.</p>
   <p class="foot"><b>Your API key</b> goes only in each project's <code>.env</code>, which <code>agents-cli create</code> lists in <code>.gitignore</code>. Before you commit, check with <code>git check-ignore -v .env</code>. Share <code>.env.example</code>, never <code>.env</code>.</p>
   <p class="foot">The tools in each example were run against real inputs, and each agent loads with google-adk 2.13.0 and agents-cli 1.13.0. Model answers vary, so none are shown. Without a gcloud login, set <code>otel_to_cloud = False</code> in <code>app/fast_api_app.py</code> first (codelab step 4).</p>
 </main>

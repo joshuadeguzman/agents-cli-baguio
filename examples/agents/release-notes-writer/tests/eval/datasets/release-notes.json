@@ -1,0 +1,46 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "notes_from_repo",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Write release notes since v1.4.0."
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "New: dark mode in settings, delivery ETA on the order screen. Fixed: a crash when opening an expired order, and a wrong total when a coupon is removed."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "notes_from_pasted_commits",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Write release notes for these commits:\nAdd offline mode\nFix login loop on Android 15\nBump Gradle\nRefactor cart store"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "New: offline mode. Fixed: a login loop on Android 15."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

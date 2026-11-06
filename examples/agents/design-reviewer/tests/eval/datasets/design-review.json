@@ -1,0 +1,46 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "measures_contrast_and_targets",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Review this screen. The subtitle is #B0B0B0 on #FFFFFF. The button is white text on #FFC107, and it is 120 x 36 dp."
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "The subtitle fails AA at 2.17:1. The button text fails at 1.63:1. The 36 dp button is under the 48 dp minimum."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "passes_good_contrast",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Is black text #212121 on white #FFFFFF readable, and is a 48 x 48 dp icon button big enough?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Yes. The contrast passes AA, and 48 x 48 dp meets the minimum."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -390,6 +390,12 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .hx-fan circle{fill:#D96570;opacity:.35}
 .hx:last-child h3{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 @media (max-aspect-ratio:1/1){.hist{grid-template-columns:1fr 1fr}.hist::before,.hx-fan{display:none}}
+
+/* ---- demo time ---- */
+.slide.demo-time{justify-content:center}
+.demo-word{font-size:9em!important;font-weight:700;letter-spacing:-.02em!important;line-height:1.05!important;margin:.15em 0 .2em!important;max-width:none!important;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.demo-sub{font-size:1.6em!important;color:var(--ink)!important;font-weight:400;max-width:none!important}
+.demo-small{margin-top:2.2em!important;font-size:.95em!important;color:var(--gray-2)!important;max-width:none!important}
 </style>
 </head>
 <body>
@@ -728,11 +734,25 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   Illustration generated for this talk with Higgsfield (GPT Image 2.6). Original characters, not Google mascots.</div>
 </section>
 
+<!-- DevFest Baguio: demo time -->
+<section class="slide center demo-time" data-sec="What is an agent" data-at="7" data-title="Demo time">
+  <span class="pill b">Live</span>
+  <h2 class="demo-word">Demo</h2>
+  <p class="demo-sub">The root cause agent, running on my laptop.</p>
+  <p class="demo-small">Follow along later: <code>examples/agents/root-cause-agent</code> in <a class="src" style="margin:0" href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">github.com/joshuadeguzman/agents-cli-baguio</a></p>
+  <div class="notes"><h4>Three minutes. Switch to the playground.</h4>
+  Before the talk: <code>cd examples/agents/root-cause-agent</code>, key in <code>.env</code>, <code>agents-cli playground</code>, and the tab open at <code>127.0.0.1:8080/dev-ui/?app=app</code>.<br>
+  1. Ask <strong>&ldquo;What went wrong in this log?&rdquo;</strong> Let the answer stream.<br>
+  2. Click the <code>find_errors</code> call, then <code>read_log</code>. Show the arguments and what the tool returned: that's the loop from the last slides.<br>
+  3. Open the Events tab: every step is saved as an event. That's the next slide.<br>
+  If the Wi-Fi fails, use the demo page instead: <code>/demo</code>, scene 6.</div>
+</section>
+
 <!-- DevFest Baguio: how ADK runs an agent -->
 <section class="slide" data-sec="What is an agent" data-at="3" data-steps="4" data-title="How ADK runs an agent">
   <h2 class="dm" style="margin-bottom:.15em">How ADK runs an agent</h2>
   <p style="max-width:none;font-size:1.02em">The model decides. Your code does the work. Every step is saved as an event.</p>
-  <svg class="flow-d ag-d" viewBox="0 0 1160 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The ADK runtime loop: you send a message, the Runner saves it to the Session and runs the agent, the agent asks Gemini, Gemini returns an answer or a tool call, the agent runs the tool and sends the result back, and the Runner saves every step as an event.">
+  <svg class="flow-d ag-d" viewBox="-6 -6 1172 442" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The ADK runtime loop: you send a message, the Runner saves it to the Session and runs the agent, the agent asks Gemini, Gemini returns an answer or a tool call, the agent runs the tool and sends the result back, and the Runner saves every step as an event.">
     <defs>
       <linearGradient id="agg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4285F4"/><stop offset=".52" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient>
       <marker id="agh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9AA0A6"/></marker>
@@ -782,7 +802,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 <section class="slide" data-sec="What is an agent" data-at="2" data-steps="2">
   <h2 class="dm" style="margin-bottom:.2em">Why write an agent when you already have Claude or Antigravity?</h2>
   <p style="font-size:1.05em;max-width:none">A chat session starts from zero every time. An agent keeps the instructions, tools and checks in code.</p>
-  <svg class="flow-d" viewBox="0 0 1160 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same weekly task typed into a chat session three times, compared with one agent that runs every week's file">
+  <svg class="flow-d" viewBox="-6 -6 1172 304" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same weekly task typed into a chat session three times, compared with one agent that runs every week's file">
     <defs><linearGradient id="fdg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4285F4"/><stop offset=".52" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs>
     <g data-step="1">
       <text class="fd-l" x="0" y="14">A CHAT SESSION, EVERY WEEK</text>
@@ -1017,7 +1037,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 <!-- DevFest Baguio: sample agents -->
 <section class="slide" data-sec="Build and run" data-at="13" data-title="Sample agents, one prompt each">
   <h2 class="dm">Sample agents, one prompt each</h2>
-  <p style="max-width:none;margin-bottom:1.3em">Each one runs on your laptop with <code>agents-cli playground</code> and an AI Studio key. More, with code: <a class="src" style="margin:0" href="../examples/" target="_blank" rel="noopener">joshuamdeguzman.com/devfest_baguio/examples</a></p>
+  <p style="max-width:none;margin-bottom:1.3em">Each one runs on your laptop with <code>agents-cli playground</code> and an AI Studio key. More, with code: <a class="src" style="margin:0" href="../examples/" target="_blank" rel="noopener">joshuamdeguzman.com/agents-cli-baguio/examples</a></p>
   <div class="cols c3" style="align-items:stretch">
     <div class="card">
       <span class="pill d">Demo in this talk</span>
@@ -1514,10 +1534,10 @@ custom_metrics:
       <h2 style="margin-bottom:0">Try it yourself</h2>
       <p class="lede">Build a root cause agent that reads a log and explains what broke.</p>
       <p style="font-size:1.1em;max-width:36ch">A Gemini API key from AI Studio is all you need. No Google Cloud project, no billing.</p>
-      <p class="grad-text" style="font-size:1.45em;font-weight:600;letter-spacing:-.02em;max-width:none;margin-top:.4em;overflow-wrap:anywhere">joshuamdeguzman.com/<wbr>devfest_baguio/<wbr>codelab</p>
+      <p class="grad-text" style="font-size:1.45em;font-weight:600;letter-spacing:-.02em;max-width:none;margin-top:.4em;overflow-wrap:anywhere">joshuamdeguzman.com/<wbr>agents-cli-baguio/<wbr>codelab</p>
     </div>
     <div class="card line" style="padding:1.6em;display:grid;place-items:center;min-width:0">
-      <img src="../assets/qr-codelab.svg" alt="QR code for joshuamdeguzman.com/devfest_baguio/codelab" style="width:100%;max-width:17em;aspect-ratio:1;display:block;image-rendering:pixelated">
+      <img src="../assets/qr-codelab.svg" alt="QR code for joshuamdeguzman.com/agents-cli-baguio/codelab" style="width:100%;max-width:17em;aspect-ratio:1;display:block;image-rendering:pixelated">
     </div>
   </div>
   <div class="notes"><h4>Thirty seconds. Leave it up.</h4>
@@ -1560,8 +1580,9 @@ custom_metrics:
     <a href="https://google.github.io/agents-cli/guide/evaluation/" target="_blank" rel="noopener"><b>Evaluation guide</b>google.github.io/agents-cli/guide/evaluation</a>
     <a href="https://google.github.io/agents-cli/reference/skills/" target="_blank" rel="noopener"><b>Skills reference</b>google.github.io/agents-cli/reference/skills</a>
     <a href="https://github.com/google/agents-cli" target="_blank" rel="noopener"><b>Source</b>github.com/google/agents-cli</a>
-    <a href="../codelab/"><b>This talk's codelab</b>joshuamdeguzman.com/devfest_baguio/codelab</a>
-    <a href="../examples/"><b>Example agents</b>joshuamdeguzman.com/devfest_baguio/examples</a>
+    <a href="../codelab/"><b>This talk's codelab</b>joshuamdeguzman.com/agents-cli-baguio/codelab</a>
+    <a href="../examples/"><b>Example agents</b>joshuamdeguzman.com/agents-cli-baguio/examples</a>
+    <a href="https://github.com/joshuadeguzman/agents-cli-baguio" target="_blank" rel="noopener"><b>Talk source</b>github.com/joshuadeguzman/agents-cli-baguio</a>
     <a href="https://codelabs.developers.google.com/agents-cli-adk-lifecycle" target="_blank" rel="noopener"><b>Google codelab</b>Vibe Coding AI Agents with Agents CLI and ADK 2.0</a>
     <a href="https://adk.dev/" target="_blank" rel="noopener"><b>ADK docs</b>adk.dev</a>
     <a href="https://adk.dev/integrations/code-execution/" target="_blank" rel="noopener"><b>Code execution</b>adk.dev/integrations/code-execution</a>
@@ -1571,7 +1592,7 @@ custom_metrics:
     <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener"><b>Gemini API key</b>aistudio.google.com/apikey</a>
     <a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener"><b>Install uv</b>docs.astral.sh/uv</a>
   </div>
-  <p class="grad-text" style="margin-top:1.6em;font-size:1.5em;font-weight:600;letter-spacing:-.02em;max-width:none">joshuamdeguzman.com/devfest_baguio</p>
+  <p class="grad-text" style="margin-top:1.6em;font-size:1.5em;font-weight:600;letter-spacing:-.02em;max-width:none">joshuamdeguzman.com/agents-cli-baguio</p>
   <div class="notes"><h4>Leave this up through Q&amp;A</h4>
   <span class="flag">Re-check every link the morning of the talk.</span><br>
   <strong>Do I need Gemini Enterprise?</strong> Only for <code>publish</code>.<br>

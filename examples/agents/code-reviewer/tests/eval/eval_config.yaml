@@ -1,0 +1,27 @@
+metrics_to_run:
+  - custom_response_quality
+  - finds_planted_issues
+
+thresholds:
+  finds_planted_issues: 0.66   # at least two of the three planted problems
+  custom_response_quality: 3   # the judge scores 1-5
+
+custom_metrics:
+  # Local LLM judge from the template. Uses your GEMINI_API_KEY.
+  - name: custom_response_quality
+    custom_function_file: response_quality.py
+  # Plain Python. On the sample branch, checks the review names the planted problems.
+  - name: finds_planted_issues
+    custom_function: |
+      def evaluate(instance):
+          prompt = str(instance.get("prompt", "")).lower()
+          if "against main" not in prompt:
+              return {"score": 1.0, "explanation": "Not the sample branch, skipped."}
+          text = str(instance.get("response", "")).lower()
+          found = {
+              "hardcoded key": any(w in text for w in ("hardcoded", "hard-coded", "api key", "secret")),
+              "insecure url": "http://" in text or "https" in text or "query string" in text,
+              "forced unwrap": "name!" in text or "null" in text or "unwrap" in text,
+          }
+          hits = [k for k, v in found.items() if v]
+          return {"score": round(len(hits) / len(found), 2), "explanation": "Found: " + (", ".join(hits) or "none")}

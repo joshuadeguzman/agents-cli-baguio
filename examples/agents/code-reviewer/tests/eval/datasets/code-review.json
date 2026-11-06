@@ -1,0 +1,67 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "finds_planted_issues",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Review this branch against main."
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "High: hardcoded API key in flutter_app/login_service.dart. High: the password is sent in the query string of an http:// URL; use HTTPS and a POST body. Medium: name! crashes when name is null. Low: no tests."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "reviews_pasted_diff",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Review this diff:\n+def total(items):\n+    return sum(i.price for i in items) / len(items)\n"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Medium: division by zero when items is empty. Low: the function returns an average, not a total, so the name is misleading. Add a test for an empty list."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "clean_change",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Review this diff:\n-    timeout = 30\n+    timeout = 30  # seconds\n"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Nothing worth fixing. The change only adds a comment."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

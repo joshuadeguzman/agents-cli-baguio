@@ -1,0 +1,25 @@
+metrics_to_run:
+  - custom_response_quality
+  - uses_measured_numbers
+
+thresholds:
+  uses_measured_numbers: 1.0
+  custom_response_quality: 3   # the judge scores 1-5
+
+custom_metrics:
+  - name: custom_response_quality
+    custom_function_file: response_quality.py
+  # Plain Python. The answer must quote the numbers the tools compute, not guesses.
+  - name: uses_measured_numbers
+    custom_function: |
+      def evaluate(instance):
+          prompt = str(instance.get("prompt", ""))
+          text = str(instance.get("response", ""))
+          if "#B0B0B0" in prompt:
+              need = ["2.17", "1.63", "48"]
+          elif "#212121" in prompt:
+              need = ["48"]
+          else:
+              return {"score": 1.0, "explanation": "No expected numbers for this case."}
+          missing = [n for n in need if n not in text]
+          return {"score": 0.0 if missing else 1.0, "explanation": "Missing: " + ", ".join(missing) if missing else "All measured numbers quoted."}

@@ -1,0 +1,37 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "finds_timeout_root_cause",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "What went wrong in order-api.log?"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "Payments fail because v2.4.1 set PAYMENT_TIMEOUT_MS=30 (30ms). The gateway needs about 400ms, so every charge times out and /pay returns 502. Set the timeout back to 3000ms."}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "healthy_log_has_no_failure",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Is anything broken in order-api-healthy.log?"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "No. Payments succeed. The only warning is a cache miss, which is normal."}]
+        }
+      }
+    },
+    {
+      "eval_case_id": "missing_file",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Check payments.log for errors."}]
+      }
+    }
+  ]
+}
