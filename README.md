@@ -55,5 +55,5 @@ git grep -nE 'AIza[0-9A-Za-z_-]{20,}|sk_live|ghp_[A-Za-z0-9]{20,}' -- ':!README.
 
 ## Fonts
 
-Only Google's open-source fonts, from Google Fonts (SIL Open Font License): **Google Sans Flex** for all text, and
-**Google Sans Code** for code, commands and terminal output. Product Sans is not used: it is proprietary.
+Only Google's open-source fonts, from Google Fonts: **Google Sans** (the Product Sans design, weights 400 to 700) for
+all text, and **Google Sans Code** for code, commands and terminal output.
