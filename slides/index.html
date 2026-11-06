@@ -310,6 +310,11 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .co-facts li{font-size:.85em;color:var(--gray);padding-left:1.1em;position:relative}
 .co-facts li::before{content:"";position:absolute;left:0;top:.55em;width:.45em;height:.45em;border-radius:50%;background:var(--grad)}
 @media (max-aspect-ratio:1/1){.co{grid-template-columns:1fr;gap:1.4em}}
+
+/* ---- ADK runtime diagram ---- */
+.ag-a{stroke:#9AA0A6;stroke-width:1.6;fill:none;marker-end:url(#agh)}
+.ag-n{fill:var(--ink);font-size:12.5px;font-weight:600;font-family:var(--sans)}
+.ag-loop{fill:#9B72CB;font-size:13px;font-weight:500;font-family:var(--sans)}
 </style>
 </head>
 <body>
@@ -528,6 +533,55 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   </div>
   <div class="notes"><h4>One minute. Four presses.</h4>
   Use the root cause agent from the end of the talk as the example. A chatbot answers from what it knows. An agent goes and looks: it calls <code>find_errors</code>, reads the lines, then answers.</div>
+</section>
+
+<!-- DevFest Baguio: how ADK runs an agent -->
+<section class="slide" data-sec="Why agents" data-at="3" data-steps="4" data-title="How ADK runs an agent">
+  <h2 class="dm" style="margin-bottom:.15em">How ADK runs an agent</h2>
+  <p style="max-width:none;font-size:1.02em">The model decides. Your code does the work. Every step is saved as an event.</p>
+  <svg class="flow-d ag-d" viewBox="0 0 1160 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The ADK runtime loop: you send a message, the Runner saves it to the Session and runs the agent, the agent asks Gemini, Gemini returns an answer or a tool call, the agent runs the tool and sends the result back, and the Runner saves every step as an event.">
+    <defs>
+      <linearGradient id="agg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4285F4"/><stop offset=".52" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient>
+      <marker id="agh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9AA0A6"/></marker>
+    </defs>
+    <g data-step="1">
+      <rect class="fd-n" x="0" y="185" width="120" height="70" rx="14"/>
+      <text class="fd-t" x="60" y="215" text-anchor="middle">You</text><text class="fd-s" x="60" y="236" text-anchor="middle">or your app</text>
+      <rect class="fd-n" x="190" y="172" width="210" height="96" rx="16"/>
+      <text class="fd-t" x="212" y="204">Runner</text><text class="fd-s" x="212" y="226">Runs each turn and saves</text><text class="fd-s" x="212" y="243">every event it receives</text>
+      <rect class="fd-n" x="190" y="328" width="210" height="82" rx="16"/>
+      <text class="fd-t" x="212" y="360">Session</text><text class="fd-s" x="212" y="382">State and event history</text>
+      <rect class="fd-n gen" x="470" y="160" width="260" height="120" rx="16" style="stroke:url(#agg)"/>
+      <text class="fd-t" x="492" y="194">Agent (LlmAgent)</text><text class="fd-s" x="492" y="217">Instruction + tools</text><text class="fd-s" x="492" y="236">Yields one event per step,</text><text class="fd-s" x="492" y="253">then waits for the Runner</text>
+      <path class="ag-a" d="M120 210 H186"/><text class="ag-n" x="153" y="200" text-anchor="middle">1 ask</text>
+      <path class="ag-a" d="M400 205 H466"/><text class="ag-n" x="433" y="195" text-anchor="middle">2 run</text>
+    </g>
+    <g data-step="2">
+      <rect class="fd-n" x="860" y="30" width="300" height="104" rx="16"/>
+      <text class="fd-t" x="882" y="62">Gemini</text><text class="fd-s" x="882" y="85">Reads the instruction, history</text><text class="fd-s" x="882" y="102">and tool docstrings. Returns an</text><text class="fd-s" x="882" y="119">answer or a tool call.</text>
+      <path class="ag-a" d="M730 190 H790 V70 H856"/><text class="ag-n" x="823" y="60" text-anchor="middle">3 ask</text>
+      <path class="ag-a" d="M856 112 H812 V205 H734"/><text class="ag-n" x="834" y="132" text-anchor="middle">4 call</text>
+    </g>
+    <g data-step="3">
+      <rect class="fd-n" x="860" y="306" width="300" height="104" rx="16"/>
+      <text class="fd-t" x="882" y="338">Tools</text><text class="fd-s" x="882" y="361">Your Python functions,</text><text class="fd-s" x="882" y="378">like read_log() and find_errors()</text>
+      <path class="ag-a" d="M730 235 H812 V336 H856"/><text class="ag-n" x="834" y="326" text-anchor="middle">5 run</text>
+      <path class="ag-a" d="M856 382 H790 V255 H734"/><text class="ag-n" x="823" y="400" text-anchor="middle">6 result</text>
+      <text class="ag-loop" x="600" y="140" text-anchor="middle">&#8635; repeat 3 to 6 until Gemini answers</text>
+    </g>
+    <g data-step="4">
+      <path class="ag-a" d="M466 240 H404"/><text class="ag-n" x="435" y="262" text-anchor="middle">7 events</text>
+      <path class="ag-a" d="M295 268 V324"/><text class="ag-n" x="306" y="300">saves</text>
+      <path class="ag-a" d="M186 235 H124"/><text class="ag-n" x="155" y="258" text-anchor="middle">answer</text>
+    </g>
+  </svg>
+  <a class="src" href="https://adk.dev/runtime/event-loop/" target="_blank" rel="noopener" style="align-self:flex-start;width:auto">adk.dev/runtime/event-loop</a>
+  <div class="notes"><h4>90 seconds. Four presses.</h4>
+  1: you send a message. The <strong>Runner</strong> saves it to the <strong>Session</strong> and runs the agent.<br>
+  2: the agent asks <strong>Gemini</strong>. Gemini sees the instruction, the history and each tool's docstring, and returns an answer or a tool call.<br>
+  3: for a tool call, the agent runs your Python function and sends the result back. This repeats until Gemini answers.<br>
+  4: every step is an event. The Runner saves each one, applies any state changes, and passes it on. <strong>Those events are what you see in the playground's Events view.</strong><br>
+  Source: ADK docs, Runtime &rsaquo; Event loop. The agent pauses after each event until the Runner has processed it.</div>
 </section>
 
 
