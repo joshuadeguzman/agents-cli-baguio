@@ -1,0 +1,67 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "q3_revenue",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "What was the revenue in Q3?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Q3 revenue was 18,496.35."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "south_widget_units",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "How many Widgets did the South region sell?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "The South region sold 1643 Widgets."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "mean_revenue",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "What is the average revenue per row?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "The average revenue per row is 1,500.13."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

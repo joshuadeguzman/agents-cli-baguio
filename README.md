@@ -1,6 +1,6 @@
 # Agents CLI at DevFest Baguio 2026
 
-Slides, a live demo, a hands-on codelab and four example agents for the talk
+Slides, a live demo, a hands-on codelab and five example agents for the talk
 **Google's Agents CLI: Build & Deploy Agents in Under 20 Minutes**, DevFest Baguio, November 7, 2026.
 
 - Site: https://joshuamdeguzman.com/agents-cli-baguio/
@@ -14,12 +14,12 @@ Slides, a live demo, a hands-on codelab and four example agents for the talk
 | `index.html` | Landing page: title, date, QR code to the codelab |
 | `slides/index.html` | The talk deck. Arrow keys to move, `N` for speaker notes, `J` to jump |
 | `demo/index.html` | Click-through replay of a recorded agents-cli session. `?embed=1` for a compact view |
-| `codelab/index.html` | 13-step codelab: build a root cause agent, then three more in the bonus step |
+| `codelab/index.html` | 14-step codelab: build a root cause agent with guardrails, unit tests and an eval, deploy it (optional), then three more in the bonus step |
 | `examples/index.html` | Example agents for developers, with code, a one-prompt version and deploy steps |
-| `examples/agents/` | The four example agents as runnable Agents CLI projects. Start with its README |
+| `examples/agents/` | The five example agents as runnable Agents CLI projects. Start with its README |
 | `sample_logs/`, `sample_logs.zip` | Log files the codelab agent reads. One planted failure |
 | `samples/` | Bonus-step samples: a Flutter file with planted bugs (fake key) and a phone screen with design issues |
-| `assets/` | Shared styles, the terminal replay, the live demo slide, the QR code, illustrations and screenshots |
+| `assets/` | Shared styles, the terminal replay, the live demo slide, the QR code, the ADK and Agents CLI logos, illustrations and screenshots |
 
 ## Run the site locally
 
@@ -38,13 +38,14 @@ You need three things: [uv](https://docs.astral.sh/uv/getting-started/installati
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh   # uv (on Windows, inside Ubuntu on WSL)
 uvx google-agents-cli@1.13.0 setup                # Agents CLI and its skills, then open a new terminal
-cd examples/agents/root-cause-agent
+cd examples/agents/ask-your-data                  # the sales CSV agent from the demo
 cp .env.example .env                              # paste your key from aistudio.google.com/apikey
 agents-cli install
+uv run pytest tests/unit                          # offline tests, no key needed
 agents-cli playground
 ```
 
-The full steps, running all four at once, and a checklist for the session are in
+The full steps, running all five at once, and a checklist for the session are in
 [`examples/agents/README.md`](examples/agents/README.md).
 
 ## Publish
@@ -87,5 +88,6 @@ commands and terminal output.
 
 ## Credits
 
-Illustrations generated for this talk with Higgsfield (GPT Image 2.6). Company screenshots are of public homepages,
+The ADK and Agents CLI logos are from Google's [adk-python](https://github.com/google/adk-python) and
+[agents-cli](https://github.com/google/agents-cli) repositories. Illustrations generated for this talk with Higgsfield (GPT Image 2.6). Company screenshots are of public homepages,
 retrieved November 6, 2026, and quotes come from the Google posts linked on each slide.

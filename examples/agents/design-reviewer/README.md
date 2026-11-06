@@ -25,6 +25,14 @@ Review this screen. The subtitle is #B0B0B0 on #FFFFFF. The button is white text
 
 Giving the colors and size in the message helps: models read layout well, but not exact hex values.
 
+## Unit test it
+
+```bash
+uv run pytest tests/unit     # 5 passed, no API key needed
+```
+
+The tests in `tests/unit/test_tools.py` check `contrast_ratio` against known WCAG values (black on white is 21:1) and the 48 dp check in `check_touch_target`. They call the Python tools directly, with no model, so run them after every change.
+
 ## Evaluate it
 
 ```bash

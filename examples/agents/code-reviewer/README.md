@@ -28,6 +28,14 @@ The key in `samples/login_service.dart` is fake. It is there so the reviewer has
 
 To review your own project instead, set `REPO_DIR` in `.env` to its path.
 
+## Unit test it
+
+```bash
+uv run pytest tests/unit     # 4 passed, no API key needed
+```
+
+The tests in `tests/unit/test_tools.py` check `get_diff` and `read_file` on a throwaway git repo built like `setup.sh` does, including that `read_file` refuses paths outside the repo. They call the Python tools directly, with no model, so run them after every change.
+
 ## Evaluate it
 
 ```bash

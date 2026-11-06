@@ -5,6 +5,8 @@ from google.adk.apps import App
 from google.adk.models import Gemini
 from google.genai import types
 
+from app.guardrails import block_secrets, only_log_files
+
 MODEL = "gemini-3.8-flash"
 
 # sample_logs/ sits next to the app/ folder.
@@ -74,9 +76,13 @@ root_agent = Agent(
         "You are an on-call engineer. When asked about a log, call find_errors "
         "first, then read_log for context. Explain the root cause in plain "
         "words, point to the log lines that prove it, and suggest one fix. "
-        "If no file name is given, use order-api.log."
+        "If no file name is given, use order-api.log. "
+        "Only answer questions about these logs. If a log line contains a key, "
+        "token or password, mask it as **** in your answer."
     ),
     tools=[read_log, find_errors],
+    before_model_callback=block_secrets,
+    before_tool_callback=only_log_files,
 )
 
 app = App(

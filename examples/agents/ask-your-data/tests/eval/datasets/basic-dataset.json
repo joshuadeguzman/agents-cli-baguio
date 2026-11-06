@@ -1,0 +1,130 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "total_revenue",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "What is the total revenue for the year?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Total revenue for the year is 72,006.26."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "median_revenue",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "What's the median revenue per row?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "The median revenue per row is 1,378.97."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "biggest_outlier",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Which row is the biggest outlier above the mean, and by how much?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "May, South, Gadget at 6,196.90, which is 4,696.77 above the mean."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "revenue_by_region",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "What is the revenue for each region?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "North: 34,363.31. South: 37,642.95."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "units_by_product",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "How many units of each product were sold?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Widget: 3542 units. Gadget: 1832 units."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "best_quarter",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Which quarter had the highest revenue?"
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Q4, with 18,585.81."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -395,6 +395,11 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .slide.demo-time{justify-content:center}
 .demo-word{font-size:9em!important;font-weight:700;letter-spacing:-.02em!important;line-height:1.05!important;margin:.15em 0 .2em!important;max-width:none!important;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
 .demo-sub{font-size:1.6em!important;color:var(--ink)!important;font-weight:400;max-width:none!important}
+.brandmark{display:flex;align-items:center;gap:.5em;font-weight:500;color:var(--ink);font-size:.95em}
+.brandmark img{flex:none}
+@media (min-width:900px){.brandmark,.title-role{white-space:nowrap}}
+.brandmark img{height:2em;width:auto;display:block}
+.brandrow{display:flex;gap:1.6em;align-items:center;flex-wrap:wrap}
 .demo-small{margin-top:2.2em!important;font-size:.95em!important;color:var(--gray-2)!important;max-width:none!important}
 </style>
 </head>
@@ -405,11 +410,12 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 <section class="slide roomy" data-sec="Why agents" data-at="0" data-title="Google's Agents CLI: Build &amp; Deploy Agents in Under 20 Minutes">
   <div class="cols c2w t1" style="grid-template-columns:1.5fr .6fr;gap:3em">
     <div style="display:flex;flex-direction:column;gap:1.3em">
+      <div class="brandrow"><span class="brandmark"><img src="../assets/logos/adk.png" alt="">Agent Development Kit</span><span class="brandmark"><img src="../assets/logos/agents-cli.png" alt="">Agents CLI</span></div>
       <div class="kicker" style="margin:0">DevFest Baguio 2026 &middot; November 7</div>
       <h1 class="two" style="font-size:3.6em;letter-spacing:-.016em;line-height:1.14;white-space:nowrap">Google's Agents CLI:<br>Build &amp; Deploy Agents<br><span class="grad-text">in Under 20 Minutes</span></h1>
       <div style="margin-top:.6em">
         <p style="font-size:1.3em;font-weight:500;color:var(--ink)">Joshua M. de Guzman</p>
-        <p style="font-size:1em;color:var(--gray);font-weight:300;margin-top:.15em">Senior Software Engineer, Google Developer Expert</p>
+        <p class="title-role" style="font-size:1em;color:var(--gray);font-weight:300;margin-top:.15em;max-width:none">Senior Software Engineer, Google Developer Expert</p>
       </div>
     </div>
     <div style="text-align:center">
@@ -738,14 +744,15 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 <section class="slide center demo-time" data-sec="What is an agent" data-at="7" data-title="Demo time">
   <span class="pill b">Live</span>
   <h2 class="demo-word">Demo</h2>
-  <p class="demo-sub">The root cause agent, running on my laptop.</p>
-  <p class="demo-small">Follow along later: <code>examples/agents/root-cause-agent</code> in <a class="src" style="margin:0" href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">github.com/joshuadeguzman/agents-cli-baguio</a></p>
+  <p class="demo-sub">Ask a sales spreadsheet a question. The agent writes the code and runs it.</p>
+  <p class="demo-small">Then, if there's time, the code reviewer and the release notes writer. All in <code>examples/agents</code> at <a class="src" style="margin:0" href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">github.com/joshuadeguzman/agents-cli-baguio</a></p>
   <div class="notes"><h4>Three minutes. Switch to the playground.</h4>
-  Before the talk: <code>cd examples/agents/root-cause-agent</code>, key in <code>.env</code>, <code>agents-cli playground</code>, and the tab open at <code>127.0.0.1:8080/dev-ui/?app=app</code>.<br>
-  1. Ask <strong>&ldquo;What went wrong in this log?&rdquo;</strong> Let the answer stream.<br>
-  2. Click the <code>find_errors</code> call, then <code>read_log</code>. Show the arguments and what the tool returned: that's the loop from the last slides.<br>
-  3. Open the Events tab: every step is saved as an event. That's the next slide.<br>
-  If the Wi-Fi fails, use the demo page instead: <code>/demo</code>, scene 6.</div>
+  Before the talk: in <code>examples/agents/ask-your-data</code>, key in <code>.env</code>, <code>agents-cli install</code>, <code>agents-cli playground</code>, and the tab open at <code>127.0.0.1:8080/dev-ui/?app=app</code>. No Google Cloud, no tools to write.<br>
+  1. Ask <strong>&ldquo;What is the total revenue for the year?&rdquo;</strong> Point at the code block and its output: the number comes from pandas, not from the model's memory. Expect <strong>72,006.26</strong>.<br>
+  2. Ask <strong>&ldquo;What's the median revenue per row, and which row is the biggest outlier above the mean?&rdquo;</strong> Expect a median of 1,378.97, and May, South, Gadget at 6,196.90, which is 4,696.77 above the mean.<br>
+  3. Open the Events tab: the code, the result and the answer are separate events. That's the next slide.<br>
+  Extra, only if there's time: the code reviewer on port 8502 (<code>./setup.sh</code> first, ask &ldquo;Review this branch against main.&rdquo;) and the release notes writer on 8504 (&ldquo;Write release notes since v1.4.0.&rdquo;).<br>
+  If the Wi-Fi fails, use the demo page instead: <code>/demo</code>.</div>
 </section>
 
 <!-- DevFest Baguio: how ADK runs an agent -->
@@ -856,6 +863,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 
 <!-- 05 -->
 <section class="slide" data-sec="ADK and Agents CLI" data-at="5">
+  <img src="../assets/logos/adk.png" alt="Agent Development Kit logo" style="height:3.2em;width:auto;display:block;margin-bottom:.8em;align-self:flex-start;object-fit:contain">
   <h2>ADK is Google's framework for building agents</h2>
   <p style="font-size:1.08em;max-width:56ch;margin-top:-.2em">Agent Development Kit. Open source, code-first, Apache 2.0. Agents CLI creates ADK projects.</p>
   <div class="cols c3" style="align-items:stretch;gap:1.1em;margin-top:1.6em">
@@ -916,6 +924,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 <section class="slide roomy" data-sec="ADK and Agents CLI" data-at="8">
   <div class="cols c2w">
     <div>
+      <img src="../assets/logos/agents-cli.png" alt="Agents CLI logo" style="height:3.2em;width:auto;display:block;margin-bottom:.8em;align-self:flex-start;object-fit:contain">
       <h2 class="dm">Agents CLI is a command-line tool plus seven skills</h2>
       <p style="font-size:1.12em;color:var(--ink);font-weight:400;max-width:34ch">It creates, runs, evaluates and deploys ADK agents. The skills teach coding agents like Claude Code, Antigravity and Cursor how to use it.</p>
       <div class="row" style="gap:.5em;margin-top:1.5em">
@@ -1530,11 +1539,11 @@ custom_metrics:
 <section class="slide" data-sec="Your turn" data-at="35" data-title="Try it yourself">
   <div class="cols c2w">
     <div style="display:flex;flex-direction:column;gap:1em">
-      <span class="pill b" style="align-self:flex-start">Codelab &middot; about 45 minutes</span>
+      <span class="pill b" style="align-self:flex-start">Codelab &middot; about 55 minutes</span>
       <h2 style="margin-bottom:0">Try it yourself</h2>
       <p class="lede">Build a root cause agent that reads a log and explains what broke.</p>
-      <p style="font-size:1.1em;max-width:36ch">A Gemini API key from AI Studio is all you need. No Google Cloud project, no billing.</p>
-      <p class="grad-text" style="font-size:1.45em;font-weight:600;letter-spacing:-.02em;max-width:none;margin-top:.4em;overflow-wrap:anywhere">joshuamdeguzman.com/<wbr>agents-cli-baguio/<wbr>codelab</p>
+      <p style="font-size:1.1em;max-width:36ch">With guardrails, unit tests and an eval. A Gemini API key from AI Studio is all you need. No Google Cloud project, no billing.</p>
+      <p class="grad-text" style="font-size:1.45em;font-weight:600;letter-spacing:-.02em;max-width:none;margin-top:.4em;overflow-wrap:anywhere">joshuamdeguzman.com/<wbr>agents-cli-baguio</p>
     </div>
     <div class="card line" style="padding:1.6em;display:grid;place-items:center;min-width:0">
       <img src="../assets/qr-codelab.svg" alt="QR code for joshuamdeguzman.com/agents-cli-baguio/codelab" style="width:100%;max-width:17em;aspect-ratio:1;display:block;image-rendering:pixelated">

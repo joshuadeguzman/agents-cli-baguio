@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Example agents for developers · DevFest Baguio 2026</title>
-<meta name="description" content="ADK agents developers can build with one prompt and deploy to Google Cloud: code reviewer, design reviewer, release notes writer, root cause agent.">
+<meta name="description" content="ADK agents developers can build with one prompt and deploy to Google Cloud: code reviewer, design reviewer, release notes writer, root cause agent, ask your data.">
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -352,6 +352,13 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
     <p class="hint">Sample data and step-by-step setup: <a href="../codelab/#12">codelab bonus step</a>.</p>
   </div>
 </article>
+<article class="ex link" id="ask-your-data">
+  <span class="pill b">Talk demo</span>
+  <h2>Ask your data</h2>
+  <p class="what">Answers questions about a sales CSV by writing pandas code and running it, so the numbers are computed, not guessed. No tools to write: it uses ADK's built-in code execution.</p>
+  <p class="ex-tools tools">Tools: <code>BuiltInCodeExecutor</code></p>
+  <div class="actions"><a class="btn d" href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents/ask-your-data" target="_blank" rel="noopener">Open the project</a></div>
+</article>
 <article class="ex link" id="root-cause-agent">
   <span class="pill g">Codelab</span>
   <h2>Root cause agent</h2>
@@ -360,7 +367,7 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
   <div class="actions"><a class="btn d" href="../codelab/">Build it in the codelab</a><a class="btn" href="../demo/">Watch the demo</a></div>
 </article>
   </div>
-  <p class="foot"><b>Ready-made projects</b> for every agent on this page, with sample data and a setup script: <a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">github.com/joshuadeguzman/agents-cli-baguio/examples/agents</a>.</p>
+  <p class="foot"><b>Ready-made projects</b> for every agent on this page, with sample data, unit tests and an eval: <a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">github.com/joshuadeguzman/agents-cli-baguio/examples/agents</a>.</p>
   <p class="foot"><b>Your API key</b> goes only in each project's <code>.env</code>, which <code>agents-cli create</code> lists in <code>.gitignore</code>. Before you commit, check with <code>git check-ignore -v .env</code>. Share <code>.env.example</code>, never <code>.env</code>.</p>
   <p class="foot">The tools in each example were run against real inputs, and each agent loads with google-adk 2.13.0 and agents-cli 1.13.0. Model answers vary, so none are shown. Without a gcloud login, set <code>otel_to_cloud = False</code> in <code>app/fast_api_app.py</code> first (codelab step 4).</p>
 </main>

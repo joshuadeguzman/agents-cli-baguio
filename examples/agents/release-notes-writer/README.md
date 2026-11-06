@@ -25,6 +25,14 @@ coupon total).
 
 To use your own app, set `REPO_DIR` in `.env` to its path and ask for notes since your last tag.
 
+## Unit test it
+
+```bash
+uv run pytest tests/unit     # 3 passed, no API key needed
+```
+
+The tests in `tests/unit/test_tools.py` check `git_log` on a throwaway repo with a tag: only commits after the tag, and an error for an unknown tag. They call the Python tools directly, with no model, so run them after every change.
+
 ## Evaluate it
 
 ```bash

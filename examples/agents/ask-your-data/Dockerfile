@@ -11,13 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""
-You can add your unit tests here.
-This is where you test your business logic, including agent functionality,
-data processing, and other core components of your application.
-"""
 
+FROM python:3.12-slim
 
-def test_dummy() -> None:
-    """Placeholder - replace with real tests."""
-    assert 1 == 1
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:0.8.13 /uv /uvx /bin/
+
+WORKDIR /code
+
+COPY ./pyproject.toml ./README.md ./uv.lock* ./
+
+COPY ./app ./app
+
+RUN uv sync --frozen
+
+ARG AGENT_VERSION=0.0.0
+ENV AGENT_VERSION=${AGENT_VERSION}
+
+EXPOSE 8080
+
+CMD ["uv", "run", "uvicorn", "app.fast_api_app:app", "--host", "0.0.0.0", "--port", "8080"]

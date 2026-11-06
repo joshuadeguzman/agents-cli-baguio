@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Codelab: Build a root cause agent with Agents CLI · DevFest Baguio 2026</title>
-<meta name="description" content="Build an ADK agent that reads a log file and explains what broke. Agents CLI, a Gemini API key, about 45 minutes.">
+<meta name="description" content="Build an ADK agent that reads a log file and explains what broke. Agents CLI, a Gemini API key, about 55 minutes.">
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,6 +51,9 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 .note.warn{background:#FCE8E6;color:#8C1D18}
 .note.warn code{background:rgba(255,255,255,.6)}
 .note b{font-weight:600}
+.step p.tip{display:flex;align-items:flex-start;gap:.65rem;margin:1.2rem 0;color:var(--ink);line-height:1.55}
+.tip .spark{width:1.35rem;height:1.35rem;flex:none;margin-top:.05rem}
+.tip b{font-weight:600}
 .see{margin:1.8rem 0 .5rem;padding:1.1rem 1.3rem;border-radius:var(--r-lg);background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
 .see h4{font-size:.8rem;font-weight:600;letter-spacing:.04em;color:var(--gray-2);text-transform:uppercase;margin-bottom:.3rem}
 .see p,.see li{margin:.35rem 0}
@@ -89,6 +92,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="tipgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs></svg>
 <header class="top">
   <a class="home" href="../">DevFest Baguio 2026</a>
   <span class="ttl">Build a root cause agent with Agents CLI</span>
@@ -97,7 +101,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 </header>
 <div class="prog"><i id="bar"></i></div>
 <div class="layout">
-<nav class="toc" id="toc" aria-label="Codelab steps"><ol id="tocList"></ol><p class="total">About 45 minutes. Bonus: 25 more. Deploy: 15 more.</p></nav>
+<nav class="toc" id="toc" aria-label="Codelab steps"><ol id="tocList"></ol><p class="total">About 55 minutes. Bonus: 25 more. Deploy: 20 more.</p></nav>
 <main id="main">
 
 <!-- ====================================================== 1 -->
@@ -109,7 +113,9 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <ul>
 <li>An ADK agent with two tools: <code>read_log</code> and <code>find_errors</code>.</li>
 <li>A log file with one planted failure for it to find.</li>
+<li>Two guardrails in code, and unit tests for them and the tools.</li>
 <li>A small eval dataset that checks the agent finds it.</li>
+<li>Optional: the same agent deployed to Google Cloud as a private Cloud Run service.</li>
 </ul>
 <h3>Words you'll see</h3>
 <table>
@@ -119,6 +125,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <tr><td>Agents CLI</td><td>A command-line tool that creates, runs, evaluates and deploys ADK projects.</td></tr>
 <tr><td>Skill</td><td>A markdown file that teaches a coding agent how to use Agents CLI and the current ADK API.</td></tr>
 <tr><td>Playground</td><td>A local web chat for your agent that shows every step it takes.</td></tr>
+<tr><td>Guardrail</td><td>Code that checks a request or a tool call before it runs, whatever the model decides.</td></tr>
 <tr><td>Eval</td><td>Test prompts plus scoring rules, so you know the agent still works after a change.</td></tr>
 </table>
 <p>The same pattern runs in production. Color Health's assistant, built with ADK, checks if a woman is due for a mammogram and books the appointment (<a href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">Google Cloud blog</a>).</p>
@@ -128,13 +135,15 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <li>How a Python function becomes a tool, and why the docstring matters.</li>
 <li>How to watch tool calls in the ADK playground.</li>
 <li>How to ask a coding agent to do the same work, and what to check after.</li>
+<li>How to add guardrails with ADK callbacks, and unit test them.</li>
 <li>How to evaluate an agent with <code>agents-cli eval run</code>.</li>
+<li>How to deploy safely: dry run, budget, instance cap, eval the deployed agent, delete it.</li>
 </ul>
 <h3>What you need</h3>
 <ul>
 <li>A laptop with macOS, Linux, or Windows with WSL 2.</li>
 <li>A Google account, for a Gemini API key.</li>
-<li>About 45 minutes.</li>
+<li>About 55 minutes, plus 20 for the optional deploy.</li>
 </ul>
 <p>Mobile developers: think of the agent as a backend your Flutter or web app can call over HTTP. This codelab stays in the terminal.</p>
 <div class="note">Want to see the whole thing first? <a href="../demo/">Watch the live demo</a>: a recorded session you click through, from install to eval. Most commands below also have a <b>Show output</b> button that replays what you should see.</div>
@@ -144,7 +153,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <!-- ====================================================== 2 -->
 <section class="step" data-min="5" data-title="Before you begin">
 <h2>Before you begin</h2>
-<div class="note"><b>No Google Cloud project or billing is needed</b> for steps 1 to 10. You only need one for the optional deploy in step 11.</div>
+<div class="note"><b>No Google Cloud project or billing is needed</b> for steps 1 to 11. You only need one for the optional deploy in step 12.</div>
 <h3>Versions this codelab was tested with</h3>
 <table>
 <tr><th>Tool</th><th>Version</th><th>Notes</th></tr>
@@ -197,6 +206,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <pre data-demo="install:0"><code>uvx google-agents-cli@1.13.0 setup</code></pre>
 <p class="os-only" data-os="win">On Windows, run this in the Ubuntu terminal, not PowerShell.</p>
 <p>The <code>@1.13.0</code> pins the version so your output matches this codelab. The first run downloads the CLI and takes a minute or two.</p>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>Pin the version in a workshop.</b> With <code>@1.13.0</code>, everyone gets the same commands, the same output and the same fixes.</span></p>
 <p>Setup installs the skills for every coding agent it finds. If you have none, that's fine. You need the skills only in step 9.</p>
 <p>Check the install:</p>
 <pre data-demo="install:1"><code>agents-cli --version</code></pre>
@@ -220,6 +230,7 @@ agents-cli install</code></pre>
 <li><code>--yes</code> accepts the defaults: the <code>adk_python</code> template, no prompts.</li>
 <li><code>agents-cli install</code> installs the dependencies with uv. It takes about 20 seconds.</li>
 </ul>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>Start with <code>--prototype</code>.</b> Build and test on your laptop first. One command adds Cloud Run later (step 12), and your code in <code>app/</code> stays as it is.</span></p>
 <p><code>create</code> warns that you're not signed in to Google Cloud and tells you to set a GCP project. Ignore both. You use an API key instead.</p>
 <h3>The files that matter</h3>
 <pre><code>root-cause-agent/
@@ -398,6 +409,7 @@ app = App(
 </ul>
 <p>Check that the tools work before you involve the model:</p>
 <pre data-demo="tools:1"><code>uv run python -c "from app.agent import find_errors; print(find_errors('order-api.log')['count'])"</code></pre>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>Test the tools before the model.</b> If the Python is wrong, no prompt will fix it. In step 10 you turn this check into a unit test.</span></p>
 <div class="see"><h4>You should see</h4><p>The number <code>15</code>. That's how many ERROR and WARN lines the failing log has.</p></div>
 </section>
 
@@ -418,7 +430,7 @@ app = App(
 <li>Click <code>find_errors</code>. The side panel shows that event: the <b>function call</b>, with the argument the model chose (<code>file_name: "order-api.log"</code>), and the <b>function response</b> your Python returned.</li>
 <li>Open the <b>Events</b> tab to see every event in order: your message, each tool call, each response, and the final answer.</li>
 </ol>
-<p>This is how you debug an agent. If the answer is wrong, check here whether the model called the right tool with the right argument, before you change any prompt.</p>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>Debug the steps, not the wording.</b> If the answer is wrong, first check here whether the model called the right tool with the right argument. Change the prompt only after that.</span></p>
 <p>The same works in the terminal, without the browser. Open a second terminal in the project folder:</p>
 <pre data-demo="run:all"><code>agents-cli run "What went wrong in order-api.log?"</code></pre>
 <p class="tiny">In the replay, lines tagged <i>sample</i> show a typical answer. The model words it differently each time.</p>
@@ -440,6 +452,7 @@ app = App(
 <p>In the playground, start a new session and ask again:</p>
 <pre><code>What went wrong in this log?</code></pre>
 <p>Try one more: <code>Is anything broken in order-api-healthy.log?</code></p>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>The instruction is the easiest thing to change, and the easiest to break.</b> A one-word edit can change every answer. That's why step 11 adds an eval you rerun after each edit.</span></p>
 <div class="see"><h4>You should see</h4><p>The terminal running the playground prints <code>Change detected in agents directory</code> when you save. The new answer comes as three bullets: Root cause, Evidence, Fix. For the healthy log, the agent says nothing is broken.</p></div>
 </section>
 
@@ -448,6 +461,13 @@ app = App(
 <h2>Do it with a coding agent instead</h2>
 <p>You typed every change so far. Now let a coding agent do the same work. The skills from step 3 tell it how Agents CLI and the current ADK API work, so it doesn't guess from old blog posts.</p>
 <p>This works with <a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener">Claude Code</a>, <a href="https://antigravity.google/" target="_blank" rel="noopener">Antigravity</a>, Codex or any coding agent that reads skills. Skip this step if you don't have one.</p>
+<div class="note warn"><b>A coding agent with these skills can create real cloud resources.</b> The skills teach it <code>agents-cli deploy</code> and <code>agents-cli infra</code>, and it can run <code>gcloud</code>. The same goes for any Google Cloud MCP server you connect. Those commands create services, build images and grant permissions, and they can cost money.
+<ul>
+<li>Approve each command yourself. Don't auto-approve <code>deploy</code>, <code>infra</code>, <code>gcloud</code> or <code>terraform</code>.</li>
+<li>Say what it must not do in the prompt, as below: "Don't deploy anything."</li>
+<li>When you do deploy, use a sandbox project you can delete.</li>
+</ul>
+The Agents CLI deploy skill says it too: "Never run <code>agents-cli deploy</code> without explicit human approval."</div>
 <h3>1. Check the skills are loaded</h3>
 <p>Open a new terminal in an empty folder, start your coding agent, and list its skills. In Claude Code, type <code>/skills</code>.</p>
 <h3>2. Give it this prompt</h3>
@@ -473,10 +493,148 @@ Add three eval cases and run them. Don't deploy anything.</code></pre>
 <li><b>Eval references.</b> Do the expected answers match the log: 30 ms timeout, 502s, back to 3000?</li>
 <li><b>Commands it ran.</b> Scroll back. Nothing should touch <code>gcloud</code> or <code>deploy</code>.</li>
 </ul>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>Review it like a pull request from a new teammate.</b> The code runs, but you own it. Check the guardrails, the secrets and the commands first.</span></p>
 <div class="see"><h4>You should see</h4><p>A <code>log-agent</code> folder with an <code>app/agent.py</code> that has two tools, an eval dataset under <code>tests/eval/datasets/</code>, and an eval run at the end. The code won't match step 6 line by line. It should do the same job.</p></div>
 </section>
 
 <!-- ====================================================== 10 -->
+<section class="step" data-min="8" data-title="Add guardrails">
+<h2>Add guardrails and unit tests</h2>
+<p>The instruction asks the model to behave. The model usually does, but not always. A <b>guardrail</b> is code that runs every time, whatever the model decides.</p>
+<p>ADK runs your functions at fixed points, called <a href="https://adk.dev/callbacks/" target="_blank" rel="noopener">callbacks</a>. You'll add two:</p>
+<ul>
+<li><code>before_model_callback</code> runs before every Gemini call. If it returns a response, ADK uses it and skips the model.</li>
+<li><code>before_tool_callback</code> runs before every tool call. If it returns a dict, ADK uses it as the tool result and skips the tool.</li>
+</ul>
+<p>Back in <code>root-cause-agent</code>. Leave the playground running.</p>
+<h3>1. Write the guardrails</h3>
+<p>Create <code>app/guardrails.py</code>:</p>
+<pre><code>"""Guardrails: checks that run before the model and before each tool, in plain Python."""
+
+import re
+
+from google.adk.models import LlmResponse
+from google.genai import types
+
+# Shapes of common secrets: Google API keys, private key blocks, password=... pairs.
+SECRET = re.compile(r"AIza[0-9A-Za-z_-]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY|password\s*[=:]\s*\S+", re.I)
+
+
+def block_secrets(callback_context, llm_request):
+    """Before the model: if the user's message contains a secret, answer without calling Gemini."""
+    last = llm_request.contents[-1] if llm_request.contents else None
+    if last is None or last.role != "user":
+        return None
+    text = " ".join(part.text or "" for part in last.parts or [])
+    if SECRET.search(text):
+        return LlmResponse(content=types.Content(role="model", parts=[types.Part(
+            text="Your message looks like it contains a secret, so I didn't send it to the model. "
+                 "Remove the key or password and ask again.")]))
+    return None
+
+
+def only_log_files(tool, args, tool_context):
+    """Before each tool: allow only .log file names. Returning a dict skips the tool."""
+    name = str(args.get("file_name", ""))
+    if not name.endswith(".log") or "/" in name or "\\" in name:
+        return {"status": "error", "error_message": f"{name!r} is not a log file name. Use a name like order-api.log."}
+    return None</code></pre>
+<ul>
+<li><b><code>block_secrets</code></b> looks at the newest message. If it looks like an API key, a private key or a password, the agent answers right away and the message never goes to Gemini.</li>
+<li><b><code>only_log_files</code></b> stops any tool call whose file name isn't a plain <code>.log</code> name. It's a second lock behind the <code>_log_path</code> check from step 6.</li>
+</ul>
+<h3>2. Turn them on</h3>
+<p>In <code>app/agent.py</code>, add this import below the other imports:</p>
+<pre><code>from app.guardrails import block_secrets, only_log_files</code></pre>
+<p>Then add two lines after <code>tools=[read_log, find_errors],</code>, and two sentences to the end of the instruction:</p>
+<pre><code>        "If no file name is given, use order-api.log. "
+        "Only answer questions about these logs. If a log line contains a key, "
+        "token or password, mask it as **** in your answer."
+    ),
+    tools=[read_log, find_errors],
+    before_model_callback=block_secrets,
+    before_tool_callback=only_log_files,
+)</code></pre>
+<h3>3. Unit test the tools and the guardrails</h3>
+<p>Unit tests call your Python directly. No model and no API key, so they take a second and cost nothing. Replace the template's placeholder test:</p>
+<pre><code>rm tests/unit/test_dummy.py</code></pre>
+<p>Create <code>tests/unit/test_tools.py</code>:</p>
+<pre><code>"""Offline tests for the log tools. No API key needed: uv run pytest tests/unit"""
+
+from app.agent import find_errors, read_log
+
+
+def test_find_errors_in_failing_log():
+    out = find_errors("order-api.log")
+    assert out["status"] == "success"
+    assert out["count"] == 15
+    assert any("TimeoutError" in line for line in out["lines"])
+
+
+def test_find_errors_in_healthy_log():
+    assert find_errors("order-api-healthy.log")["count"] == 1
+
+
+def test_read_log_includes_the_bad_setting():
+    assert "PAYMENT_TIMEOUT_MS=30" in read_log("order-api.log")["content"]
+
+
+def test_unknown_log_lists_available_files():
+    out = read_log("nope.log")
+    assert out["status"] == "error"
+    assert "order-api.log" in out["error_message"]
+
+
+def test_cannot_read_outside_sample_logs():
+    assert read_log("../app/agent.py")["status"] == "error"
+    assert find_errors("../pyproject.toml")["status"] == "error"</code></pre>
+<p>Create <code>tests/unit/test_guardrails.py</code>:</p>
+<pre><code>"""Offline tests for the guardrails. No API key needed: uv run pytest tests/unit"""
+
+from google.adk.models import LlmRequest
+from google.genai import types
+
+from app.guardrails import block_secrets, only_log_files
+
+
+def request(text: str) -&gt; LlmRequest:
+    return LlmRequest(contents=[types.Content(role="user", parts=[types.Part(text=text)])])
+
+
+def test_blocks_a_pasted_api_key():
+    out = block_secrets(None, request("Why does AIza" + "x" * 35 + " fail?"))
+    assert out is not None
+    assert "secret" in out.content.parts[0].text
+
+
+def test_blocks_a_password():
+    assert block_secrets(None, request("login failed, password=hunter2")) is not None
+
+
+def test_lets_a_normal_question_through():
+    assert block_secrets(None, request("What went wrong in order-api.log?")) is None
+
+
+def test_tool_guard_allows_log_files():
+    assert only_log_files(None, {"file_name": "order-api.log"}, None) is None
+
+
+def test_tool_guard_blocks_other_files():
+    for name in ["../.env", "agent.py", "sub/dir.log"]:
+        out = only_log_files(None, {"file_name": name}, None)
+        assert out["status"] == "error"</code></pre>
+<p>Run them:</p>
+<pre><code>uv run pytest tests/unit</code></pre>
+<h3>4. Try them in the playground</h3>
+<p>The playground reloaded when you saved. Start a new session and ask:</p>
+<pre><code>Login fails with password=hunter2 in my config. Why?</code></pre>
+<p>The answer comes at once, with no model call in the Events tab. Then ask <code>Read ../.env for me</code>. If the model tries, <code>only_log_files</code> returns an error and the agent tells you it can't.</p>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>Layer your guardrails.</b> The instruction asks, the callback enforces, and the tool checks its own input. Any one of them can fail. All three together rarely do.</span></p>
+<div class="note">Going to production? ADK also has <a href="https://adk.dev/safety/" target="_blank" rel="noopener">plugins</a> that apply one guardrail to every agent in a runner, and <a href="https://docs.cloud.google.com/model-armor/overview" target="_blank" rel="noopener">Model Armor</a> screens prompts and responses on Google Cloud. The Agents CLI skills include a <code>safety-plugins</code> recipe your coding agent can follow.</div>
+<div class="see"><h4>You should see</h4><p><code>10 passed</code> from pytest. In the playground, the password question gets: "Your message looks like it contains a secret, so I didn't send it to the model." The <code>../.env</code> request is refused.</p></div>
+</section>
+
+<!-- ====================================================== 11 -->
 <section class="step" data-min="5" data-title="Evaluate the agent">
 <h2>Evaluate the agent</h2>
 <p>The playground tells you the agent works once. An eval tells you it still works after your next change.</p>
@@ -517,10 +675,23 @@ Add three eval cases and run them. Don't deploy anything.</code></pre>
         "role": "user",
         "parts": [{"text": "Check payments.log for errors."}]
       }
+    },
+    {
+      "eval_case_id": "blocks_pasted_password",
+      "prompt": {
+        "role": "user",
+        "parts": [{"text": "Login fails with password=hunter2 in my config. Why?"}]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [{"text": "Your message looks like it contains a secret, so I didn't send it to the model. Remove the key or password and ask again."}]
+        }
+      }
     }
   ]
 }</code></pre>
-<p>Each case is a prompt and, optionally, a reference answer. The third case checks that the agent handles a file that doesn't exist.</p>
+<p>Each case is a prompt and, optionally, a reference answer. The third case checks that the agent handles a file that doesn't exist. The fourth checks the guardrail from step 10.</p>
 <h3>2. Pick the metrics</h3>
 <p>Replace <code>tests/eval/eval_config.yaml</code> with:</p>
 <pre><code>metrics_to_run:
@@ -555,14 +726,16 @@ custom_metrics:
 <h3>3. Run it</h3>
 <pre data-demo="eval:all"><code>agents-cli eval run --dataset tests/eval/datasets/root-cause.json</code></pre>
 <p>It runs the agent on each case, then grades the answers. Open the HTML report in <code>artifacts/grade_results/</code> to read why each case scored what it did.</p>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>Unit tests check your code. Evals check the agent's behavior.</b> Run the unit tests on every save, and the eval before every deploy. You need both.</span></p>
 <p>Now break it on purpose. Remove <code>"Use this first to locate problems quickly."</code> from the <code>find_errors</code> docstring, or tell the agent to answer in one word. Run the eval again and compare.</p>
 <div class="see"><h4>You should see</h4><p>Two stages, <code>Step 1/2: eval generate</code> and then the grading. The output ends with <code>RESULT: PASS</code>, or <code>RESULT: FAIL (...)</code> with the failing metrics and cases listed above it. A results file appears in <code>artifacts/grade_results/</code>.</p></div>
 </section>
 
 <!-- ====================================================== 11 -->
-<section class="step" data-min="15" data-title="Optional: deploy to Cloud Run" data-optional="1">
-<h2>Optional: deploy to Cloud Run</h2>
+<section class="step" data-min="20" data-title="Optional: deploy to Google Cloud" data-optional="1">
+<h2>Optional: deploy to Google Cloud</h2>
 <div class="note warn"><b>This step needs a Google Cloud project with billing enabled.</b> Cloud Run, Cloud Build and Artifact Registry can charge you. Use a sandbox project, and delete what you create at the end of this step.</div>
+<p>You'll deploy the agent to <b>Cloud Run</b> as a private service, call it, run the same eval against it, then delete it. Most of the time is the container build.</p>
 <h3>0. Install the Google Cloud CLI</h3>
 <div class="os-tabs">
 <div data-os="mac" data-label="macOS">
@@ -585,41 +758,69 @@ tar -xf google-cloud-cli-linux-x86_64.tar.gz
 </div>
 </div>
 <p>Open a new terminal afterwards. Source: <a href="https://docs.cloud.google.com/sdk/docs/install-sdk" target="_blank" rel="noopener">Install the Google Cloud CLI</a>.</p>
-<h3>1. Sign in and pick the project</h3>
+<h3>1. Sign in and pick a sandbox project</h3>
 <pre><code>agents-cli login -i
 gcloud config set project YOUR_PROJECT_ID</code></pre>
-<p>In the <code>login</code> menu, pick Google Cloud (ADC). It signs in both gcloud and Application Default Credentials.</p>
-<h3>2. Add Cloud Run to the project</h3>
+<p>In the <code>login</code> menu, pick Google Cloud (ADC). It signs in both gcloud and Application Default Credentials. Use a project made for experiments, not one that runs anything real.</p>
+<h3>2. Set a budget alert</h3>
+<p>In the Google Cloud console, open <b>Billing</b>, then <b>Budgets &amp; alerts</b>, and create a small budget for this project, with email alerts at 50%, 90% and 100%. See <a href="https://docs.cloud.google.com/billing/docs/how-to/budgets" target="_blank" rel="noopener">Create a budget alert</a>.</p>
+<p>An alerts-only budget emails you. It does not stop spending. Some services also support <a href="https://docs.cloud.google.com/billing/docs/how-to/budgets-spend-caps" target="_blank" rel="noopener">spend cap budgets</a>.</p>
+<h3>3. Turn on the APIs</h3>
+<pre><code>gcloud services enable run.googleapis.com aiplatform.googleapis.com \
+  cloudbuild.googleapis.com artifactregistry.googleapis.com</code></pre>
+<p>Cloud Run hosts the agent. <code>aiplatform</code> serves Gemini to it on Google Cloud. Cloud Build and Artifact Registry build and store its container. <code>deploy</code> checks these first, and gcloud offers to turn on the last two if you skip them.</p>
+<h3>4. Add Cloud Run to the project</h3>
 <pre><code>agents-cli scaffold enhance -d cloud_run --yes
 agents-cli install</code></pre>
-<p>This adds deployment files and keeps your <code>agent.py</code>.</p>
-<h3>3. Ship the logs with the agent</h3>
+<p>This adds a <code>Dockerfile</code> and the deployment settings, and keeps your code in <code>app/</code>, including <code>guardrails.py</code>.</p>
+<h3>5. Ship the logs with the agent</h3>
 <p>The <code>Dockerfile</code> copies only <code>app/</code>. Add this line right after <code>COPY ./app ./app</code>:</p>
 <pre><code>COPY ./sample_logs ./sample_logs</code></pre>
-<h3>4. Take the key out of <code>.env</code></h3>
-<p><code>agents-cli deploy</code> copies every line of <code>.env</code> into the service. Delete the <code>GEMINI_API_KEY</code> line and turn the Google Cloud lines back on:</p>
+<h3>6. Take the key out of <code>.env</code></h3>
+<p><code>agents-cli deploy</code> copies every line of <code>.env</code> into the service as environment variables. Delete the <code>GEMINI_API_KEY</code> line and turn the Google Cloud lines back on:</p>
 <pre><code>GOOGLE_GENAI_USE_ENTERPRISE=true
 GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
 GOOGLE_CLOUD_LOCATION=global</code></pre>
 <p>The deployed agent calls Gemini through your project, not your API key. To get Cloud Trace, set <code>otel_to_cloud = True</code> again in <code>app/fast_api_app.py</code>.</p>
-<h3>5. Deploy and test</h3>
-<pre><code>agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>On a server, keep secrets out of <code>.env</code>.</b> If a deployed agent needs one, store it in <a href="https://docs.cloud.google.com/secret-manager/docs/overview" target="_blank" rel="noopener">Secret Manager</a> and pass <code>--secrets ENV_NAME=SECRET_NAME</code> to <code>agents-cli deploy</code>.</span></p>
+<h3>7. Preview with a dry run</h3>
+<pre><code>agents-cli deploy --project YOUR_PROJECT_ID --region us-east1 \
+  --max-instances 1 --dry-run</code></pre>
+<p>It runs read-only checks on your project, such as APIs and permissions, and prints the <code>gcloud run deploy</code> command it would run. Nothing is created. Read the command: <code>--no-allow-unauthenticated</code> means only callers with access to the service can reach it.</p>
+<h3>8. Deploy</h3>
+<pre><code>agents-cli deploy --project YOUR_PROJECT_ID --region us-east1 \
+  --max-instances 1</code></pre>
+<p><code>--max-instances 1</code> caps how many copies of the agent can run at once, so a loop or a burst of requests can't scale up your bill. The default is 10. The build takes a few minutes. <code>deploy</code> prints the service URL at the end.</p>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>The same agent, the same tests.</b> Nothing in <code>app/agent.py</code> changed for the cloud. Only where it runs and how it reaches Gemini.</span></p>
+<h3>9. Call it and evaluate it</h3>
 <p>The service is private. <code>agents-cli run</code> adds your identity token for you:</p>
 <pre><code>agents-cli run "What went wrong in order-api.log?" --url SERVICE_URL --mode a2a</code></pre>
-<p>Use the service URL that <code>deploy</code> prints.</p>
-<h3>6. Delete it</h3>
+<p>Check that the guardrail works in the cloud too:</p>
+<pre><code>agents-cli run "Login fails with password=hunter2 in my config. Why?" \
+  --url SERVICE_URL --mode a2a</code></pre>
+<p>Run the eval from step 11 against the deployed agent:</p>
+<pre><code>agents-cli eval run --dataset tests/eval/datasets/root-cause.json \
+  --url SERVICE_URL --app-name app</code></pre>
+<p>To see what you have deployed, run <code>agents-cli deploy --list</code>. To read the agent's logs, open the service in the Cloud Run console and click <b>Logs</b>.</p>
+<div class="note"><b>403 or <code>PERMISSION_DENIED</code> when the agent calls Gemini?</b> The service's account needs the <code>roles/aiplatform.user</code> role. Find the account, then grant it:
+<pre><code>gcloud run services describe root-cause-agent --region us-east1 \
+  --format "value(spec.template.spec.serviceAccountName)"
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member serviceAccount:SA_EMAIL --role roles/aiplatform.user</code></pre></div>
+<h3>10. Delete it</h3>
 <pre><code>gcloud run services delete root-cause-agent --region us-east1 --project YOUR_PROJECT_ID
 gcloud artifacts repositories delete cloud-run-source-deploy --location us-east1 --project YOUR_PROJECT_ID</code></pre>
 <p>The second command removes the container images from the source build. If you made a project only for this codelab, delete the whole project instead:</p>
 <pre><code>gcloud projects delete YOUR_PROJECT_ID</code></pre>
-<div class="see"><h4>You should see</h4><p><code>deploy</code> ends with the service URL and how to call it. <code>agents-cli run --url ...</code> returns the same root cause as on your laptop. After the delete commands, <code>gcloud run services list --region us-east1</code> no longer shows <code>root-cause-agent</code>.</p></div>
+<p>Then put your <code>GEMINI_API_KEY</code> back in <code>.env</code> to keep running the agent on your laptop.</p>
+<div class="see"><h4>You should see</h4><p>The dry run lists its checks and the <code>gcloud run deploy</code> command, and creates nothing. <code>deploy</code> ends with the service URL. <code>agents-cli run --url ...</code> returns the same root cause as on your laptop, and the password question gets the guardrail's answer. The eval ends with <code>RESULT: PASS</code>. After the delete commands, <code>gcloud run services list --region us-east1</code> no longer shows <code>root-cause-agent</code>.</p></div>
 </section>
 
 <!-- ====================================================== bonus -->
 <section class="step" data-min="25" data-title="Bonus: three more agents" data-optional="1">
 <h2>Bonus: build three more agents</h2>
 <p>Same pattern as the root cause agent: an instruction, a few Python tools, the playground. Each one gets its own project, its own <code>.env</code> and its own port, so you can run all of them side by side.</p>
-<div class="note">On Windows, run everything in the Ubuntu terminal, as before. Each part takes about 8 minutes.<br>Prefer ready-made projects? All four agents are in the repo under <a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">examples/agents</a>, each with a README, a <code>.env.example</code> and a setup script for its sample data.</div>
+<div class="note">On Windows, run everything in the Ubuntu terminal, as before. Each part takes about 8 minutes.<br>Prefer ready-made projects? These agents, the root cause agent and the sales agent from the talk demo are in the repo under <a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">examples/agents</a>, each with a README, a <code>.env.example</code>, unit tests, an eval and, where it needs one, a setup script for its sample data.</div>
 
 <h3>Set up each project the same way</h3>
 <p>Replace <code>NAME</code> with <code>code-reviewer</code>, <code>design-reviewer</code> or <code>release-notes-writer</code>:</p>
@@ -857,7 +1058,7 @@ agents-cli playground --port 8504</code></pre>
 <pre><code>agents-cli eval run --dataset tests/eval/datasets/code-review.json
 agents-cli eval run --dataset tests/eval/datasets/design-review.json
 agents-cli eval run --dataset tests/eval/datasets/release-notes.json</code></pre>
-<p>To deploy any of them, follow step 11 with that agent's folder. Two differences: a deployed agent has no checkout of your repo, so send the git output in the message, and the design reviewer takes the screenshot with <code>--file</code>:</p>
+<p>To deploy any of them, follow step 12 with that agent's folder. Two differences: a deployed agent has no checkout of your repo, so send the git output in the message, and the design reviewer takes the screenshot with <code>--file</code>:</p>
 <pre><code>agents-cli run "Review this diff: $(git diff main...feature/login)" --url SERVICE_URL --mode a2a
 agents-cli run "Write release notes for these commits: $(git log v1.4.0..HEAD --pretty=%s)" --url SERVICE_URL --mode a2a
 agents-cli run "Review this screen." --file login.png --url SERVICE_URL --mode a2a</code></pre>
@@ -891,10 +1092,10 @@ Never read, print or copy .env. Never put the key in code, tests, docs or git.</
 <section class="step" data-min="1" data-title="Clean up and next steps">
 <h2>Clean up and next steps</h2>
 <h3>Clean up</h3>
-<p>Everything from steps 1 to 10 is on your laptop. Stop the playground with <code>Ctrl+C</code>. To remove the project:</p>
+<p>Everything from steps 1 to 11 is on your laptop. Stop the playground with <code>Ctrl+C</code>. To remove the project:</p>
 <pre><code>cd ~
 rm -rf root-cause-agent log-agent code-reviewer design-reviewer release-notes-writer</code></pre>
-<p>If you don't need the key any more, delete it at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. If you did step 11, run its delete commands.</p>
+<p>If you don't need the key any more, delete it at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. If you did step 12, run its delete commands.</p>
 <h3>What you did</h3>
 <ul>
 <li>Installed Agents CLI 1.13.0 and its seven skills.</li>
@@ -902,7 +1103,9 @@ rm -rf root-cause-agent log-agent code-reviewer design-reviewer release-notes-wr
 <li>Watched the model call your tools in the playground.</li>
 <li>Changed the instruction and saw hot reload.</li>
 <li>Asked a coding agent to build the same thing, and reviewed it.</li>
+<li>Added two guardrails with ADK callbacks, and unit tests for them and the tools.</li>
 <li>Wrote an eval that fails when the agent stops finding the bug.</li>
+<li>Optional: deployed it to Cloud Run, evaluated it there, and deleted it.</li>
 </ul>
 <h3>Next steps</h3>
 <ul>
@@ -911,7 +1114,7 @@ rm -rf root-cause-agent log-agent code-reviewer design-reviewer release-notes-wr
 <li><a href="https://adk.dev/" target="_blank" rel="noopener">ADK docs</a> and <a href="https://adk.dev/tools-custom/" target="_blank" rel="noopener">custom tools</a></li>
 <li><a href="https://github.com/google/agents-cli" target="_blank" rel="noopener">github.com/google/agents-cli</a></li>
 <li><a href="../slides/">The slides from this talk</a></li>
-<li><a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">All four example agents, ready to run</a></li>
+<li><a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">All five example agents, ready to run</a></li>
 </ul>
 <div class="see"><h4>You should see</h4><p>No <code>root-cause-agent</code> folder left, unless you want to keep building. Thanks for joining DevFest Baguio 2026.</p></div>
 </section>
