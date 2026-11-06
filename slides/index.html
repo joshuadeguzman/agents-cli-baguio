@@ -296,8 +296,8 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 
 /* ---- production section: focus, insight line, full company slides ---- */
 .prod .card{transition:opacity .35s,filter .35s}
-.prod.f1 .card:not(:nth-child(1)),.prod.f2 .card:not(:nth-child(2)),.prod.f3 .card:not(:nth-child(3)){opacity:.38;filter:grayscale(.7)}
-.prod.f1 .card:nth-child(1),.prod.f2 .card:nth-child(2),.prod.f3 .card:nth-child(3){background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent;box-shadow:0 1.2em 3em rgba(27,27,31,.1)}
+.prod.f1 .card:not(:nth-child(1)),.prod.f2 .card:not(:nth-child(2)),.prod.f3 .card:not(:nth-child(3)),.prod.f4 .card:not(:nth-child(4)){opacity:.38;filter:grayscale(.7)}
+.prod.f1 .card:nth-child(1),.prod.f2 .card:nth-child(2),.prod.f3 .card:nth-child(3),.prod.f4 .card:nth-child(4){background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent;box-shadow:0 1.2em 3em rgba(27,27,31,.1)}
 .insight{display:flex;align-items:flex-start;gap:.7em;margin-top:1.3em;max-width:none;color:var(--ink);font-weight:400;font-size:1em;line-height:1.5}
 .insight .spark{width:1.5em;height:1.5em;flex:none;margin-top:-.05em}
 .co{display:grid;grid-template-columns:1.35fr 1fr;gap:2.6em;align-items:center}
@@ -397,66 +397,32 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 <!-- DevFest Baguio: ADK in production, focus 1 -->
 <section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production">
   <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
-  <div class="cols c3 prod f1" style="align-items:stretch;margin-top:.2em">
-    <div class="card line" style="padding:1.1em 1.2em">
-      <figure class="shot"><img src="../assets/brands/color.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Healthcare</span><h3 style="margin-top:.6em;font-size:1.3em">Color Health</h3>
-      <p>Color Assistant checks if a woman is due for a mammogram, connects her with clinicians, and schedules care. Built with ADK, scaled on Agent Engine.</p></div>
-    <div class="card line" style="padding:1.1em 1.2em">
+  <div class="cols c4 prod f1" style="align-items:stretch;margin-top:.2em;gap:1.2em">
+    <div class="card line" style="padding:1em 1.05em">
       <figure class="shot"><img src="../assets/brands/paypal.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Payments</span><h3 style="margin-top:.6em;font-size:1.3em">PayPal</h3>
-      <p>Builds and deploys agents with ADK. Uses its CLI and visual tools to trace multi-agent flows for agent-based commerce.</p></div>
-    <div class="card line" style="padding:1.1em 1.2em">
-      <figure class="shot"><img src="../assets/brands/geotab.jpg" alt="Geotab homepage" loading="lazy"><figcaption>geotab.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Fleet data</span><h3 style="margin-top:.6em;font-size:1.3em">Geotab</h3>
-      <p>Uses ADK as the framework for its AI Agent Center of Excellence, one governed path to production.</p></div>
+      <span class="pill">Payments</span><h3 style="margin-top:.55em;font-size:1.25em">PayPal</h3>
+      <p>Builds and deploys agents with ADK, and traces each step of agent payment flows.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/xfinity.jpg" alt="Comcast homepage" loading="lazy"><figcaption>xfinity.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Telecom</span><h3 style="margin-top:.55em;font-size:1.25em">Comcast</h3>
+      <p>Rebuilt the Xfinity Assistant with ADK: multi-agent troubleshooting and self-service.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/loreal.jpg" alt="L'Or&eacute;al homepage" loading="lazy"><figcaption>loreal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Beauty</span><h3 style="margin-top:.55em;font-size:1.25em">L'Or&eacute;al</h3>
+      <p>Its Beauty Tech Agentic Platform uses ADK, with agents connected to company data over MCP.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/renault.jpg" alt="Renault Group homepage" loading="lazy"><figcaption>renaultgroup.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Automotive</span><h3 style="margin-top:.55em;font-size:1.25em">Renault Group</h3>
+      <p>Built an ADK agent that helps decide where to install EV chargers.</p></div>
   </div>
-  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</span></p>
+  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and across Google. More than six trillion tokens are processed monthly on Gemini models through ADK.</span></p>
   <div class="srcs" style="flex-direction:row;gap:1.4em">
-    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
-    <a class="src" href="https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/" target="_blank" rel="noopener">developers.googleblog.com &middot; May 20, 2025</a>
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/introducing-gemini-enterprise-agent-platform" target="_blank" rel="noopener">cloud.google.com/blog &middot; Apr 23, 2026</a>
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/build-and-manage-multi-system-agents-with-vertex-ai" target="_blank" rel="noopener">cloud.google.com/blog &middot; Apr 10, 2025</a>
   </div>
-  <div class="notes"><h4>One minute. Three companies, one at a time.</h4>
-  Read the headline, then press &rarr; for each company. The highlighted box is the one coming next.<br>
-  Everything here is quoted from the two Google posts linked at the bottom. Agent Engine is the earlier name of Agent Runtime.</div>
-</section>
-
-<!-- DevFest Baguio: Color Health -->
-<section class="slide fullshot" data-sec="Why agents" data-at="4" data-title="In production: Color Health">
-  <img class="fs-img" src="../assets/brands/color-lg.jpg" alt="Color Health homepage" loading="lazy">
-  <span class="fs-cap">color.com &middot; Retrieved Nov 6, 2026</span>
-  <div class="notes"><h4>One minute. Read the quote.</h4>
-  &ldquo;The Color Assistant determines if women are due for a mammogram, connects them with clinicians, and schedules care. The power of the agent lies in the scale it enables, helping us reach more women, collect diverse and context-rich answers, and respond in real time.&rdquo;<br>
-  <strong>Jayodita Sanghvi, PhD., Head of AI Platform, Color</strong><br>
-  Built with ADK, powered by Gemini &middot; Scaled into production on Agent Engine &middot; With Google Cloud and Google.org<br>
-  Tell it as a flow: a patient asks, the agent checks if she is due for a screening, finds a clinician, books the slot. Same pattern as ours: an instruction and a few tools.<br>Quote is word for word from cloud.google.com/blog, Nov 6, 2025.</div>
-</section>
-
-<!-- DevFest Baguio: ADK in production, focus 2 -->
-<section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production: PayPal next">
-  <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
-  <div class="cols c3 prod f2" style="align-items:stretch;margin-top:.2em">
-    <div class="card line" style="padding:1.1em 1.2em">
-      <figure class="shot"><img src="../assets/brands/color.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Healthcare</span><h3 style="margin-top:.6em;font-size:1.3em">Color Health</h3>
-      <p>Color Assistant checks if a woman is due for a mammogram, connects her with clinicians, and schedules care. Built with ADK, scaled on Agent Engine.</p></div>
-    <div class="card line" style="padding:1.1em 1.2em">
-      <figure class="shot"><img src="../assets/brands/paypal.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Payments</span><h3 style="margin-top:.6em;font-size:1.3em">PayPal</h3>
-      <p>Builds and deploys agents with ADK. Uses its CLI and visual tools to trace multi-agent flows for agent-based commerce.</p></div>
-    <div class="card line" style="padding:1.1em 1.2em">
-      <figure class="shot"><img src="../assets/brands/geotab.jpg" alt="Geotab homepage" loading="lazy"><figcaption>geotab.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Fleet data</span><h3 style="margin-top:.6em;font-size:1.3em">Geotab</h3>
-      <p>Uses ADK as the framework for its AI Agent Center of Excellence, one governed path to production.</p></div>
-  </div>
-  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg2)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</span></p>
-  <div class="srcs" style="flex-direction:row;gap:1.4em">
-    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
-    <a class="src" href="https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/" target="_blank" rel="noopener">developers.googleblog.com &middot; May 20, 2025</a>
-  </div>
-  <div class="notes"><h4>Back to the overview, ten seconds.</h4>
-  Point at PayPal, then press &rarr;.<br>
-  Everything here is quoted from the two Google posts linked at the bottom. Agent Engine is the earlier name of Agent Runtime.</div>
+  <div class="notes"><h4>One minute. Four brands, one at a time.</h4>
+  Read the headline. Press &rarr; for each company; the highlighted card is the one coming next.<br>
+  Also building with ADK, if asked: Color Health (breast cancer screening assistant), Geotab, Burns &amp; McDonnell. All quotes are word for word from the two Google Cloud posts linked here. Agent Engine is the earlier name of Agent Runtime.</div>
 </section>
 
 <!-- DevFest Baguio: PayPal -->
@@ -464,50 +430,133 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   <img class="fs-img" src="../assets/brands/paypal-lg.jpg" alt="PayPal homepage" loading="lazy">
   <span class="fs-cap">paypal.com &middot; Retrieved Nov 6, 2026</span>
   <div class="notes"><h4>One minute. Read the quote.</h4>
-  &ldquo;We leverage the step-by-step visibility feature for tracing and debugging agent workflows. This lets the team easily trace requests/responses and visualize the flow of intent, cart, and payment mandates.&rdquo;<br>
+  &ldquo;PayPal uses Agent Platform to rapidly build and deploy agents in production. Specifically, we use Agent Development Kit (ADK) and visual tools to inspect agent interactions, and manage multi-agent workflows. This provides the step-by-step visibility we need to visualize the flow of intent and payment mandates.&rdquo;<br>
   <strong>Nitin Sharma, Principal Engineer, AI, PayPal</strong><br>
-  Builds and deploys agents with ADK &middot; Uses the ADK CLI and visual tools to inspect agent interactions and state &middot; Multi-agent workflows for agent-based commerce<br>
-  The point for developers: they debug agents the way we will today, by looking at each step. That is the event view in the playground.<br>Quote is word for word from cloud.google.com/blog, Nov 6, 2025.</div>
+  They debug agents the way we will today: by looking at each step. That is the Events view in the playground.<br>Source: cloud.google.com/blog, Apr 23, 2026.</div>
+</section>
+
+<!-- DevFest Baguio: ADK in production, focus 2 -->
+<section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production: Comcast next">
+  <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
+  <div class="cols c4 prod f2" style="align-items:stretch;margin-top:.2em;gap:1.2em">
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/paypal.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Payments</span><h3 style="margin-top:.55em;font-size:1.25em">PayPal</h3>
+      <p>Builds and deploys agents with ADK, and traces each step of agent payment flows.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/xfinity.jpg" alt="Comcast homepage" loading="lazy"><figcaption>xfinity.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Telecom</span><h3 style="margin-top:.55em;font-size:1.25em">Comcast</h3>
+      <p>Rebuilt the Xfinity Assistant with ADK: multi-agent troubleshooting and self-service.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/loreal.jpg" alt="L'Or&eacute;al homepage" loading="lazy"><figcaption>loreal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Beauty</span><h3 style="margin-top:.55em;font-size:1.25em">L'Or&eacute;al</h3>
+      <p>Its Beauty Tech Agentic Platform uses ADK, with agents connected to company data over MCP.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/renault.jpg" alt="Renault Group homepage" loading="lazy"><figcaption>renaultgroup.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Automotive</span><h3 style="margin-top:.55em;font-size:1.25em">Renault Group</h3>
+      <p>Built an ADK agent that helps decide where to install EV chargers.</p></div>
+  </div>
+  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg2)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and across Google. More than six trillion tokens are processed monthly on Gemini models through ADK.</span></p>
+  <div class="srcs" style="flex-direction:row;gap:1.4em">
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/introducing-gemini-enterprise-agent-platform" target="_blank" rel="noopener">cloud.google.com/blog &middot; Apr 23, 2026</a>
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/build-and-manage-multi-system-agents-with-vertex-ai" target="_blank" rel="noopener">cloud.google.com/blog &middot; Apr 10, 2025</a>
+  </div>
+  <div class="notes"><h4>Ten seconds. Point, then press &rarr;.</h4>
+  Next: Comcast.<br>
+  Also building with ADK, if asked: Color Health (breast cancer screening assistant), Geotab, Burns &amp; McDonnell. All quotes are word for word from the two Google Cloud posts linked here. Agent Engine is the earlier name of Agent Runtime.</div>
+</section>
+
+<!-- DevFest Baguio: Comcast -->
+<section class="slide fullshot" data-sec="Why agents" data-at="4" data-title="In production: Comcast">
+  <img class="fs-img" src="../assets/brands/xfinity-lg.jpg" alt="Comcast homepage" loading="lazy">
+  <span class="fs-cap">xfinity.com &middot; Retrieved Nov 6, 2026</span>
+  <div class="notes"><h4>One minute. Read the quote.</h4>
+  &ldquo;By rebuilding Comcast's Xfinity Assistant with Agent Development Kit (ADK), we've moved beyond simple scripted automation to conversational generative intelligence that delivers personalized troubleshooting and self-service support to our customers.&rdquo;<br>
+  <strong>Rick Rioboli, Chief Technical Officer, Connectivity &amp; Platforms, Comcast</strong><br>
+  Everyone has called support. This is the move from a scripted bot to an agent that can actually troubleshoot, deployed on Agent Runtime.<br>Source: cloud.google.com/blog, Apr 23, 2026.</div>
 </section>
 
 <!-- DevFest Baguio: ADK in production, focus 3 -->
-<section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production: Geotab next">
+<section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production: L'Oréal next">
   <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
-  <div class="cols c3 prod f3" style="align-items:stretch;margin-top:.2em">
-    <div class="card line" style="padding:1.1em 1.2em">
-      <figure class="shot"><img src="../assets/brands/color.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Healthcare</span><h3 style="margin-top:.6em;font-size:1.3em">Color Health</h3>
-      <p>Color Assistant checks if a woman is due for a mammogram, connects her with clinicians, and schedules care. Built with ADK, scaled on Agent Engine.</p></div>
-    <div class="card line" style="padding:1.1em 1.2em">
+  <div class="cols c4 prod f3" style="align-items:stretch;margin-top:.2em;gap:1.2em">
+    <div class="card line" style="padding:1em 1.05em">
       <figure class="shot"><img src="../assets/brands/paypal.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Payments</span><h3 style="margin-top:.6em;font-size:1.3em">PayPal</h3>
-      <p>Builds and deploys agents with ADK. Uses its CLI and visual tools to trace multi-agent flows for agent-based commerce.</p></div>
-    <div class="card line" style="padding:1.1em 1.2em">
-      <figure class="shot"><img src="../assets/brands/geotab.jpg" alt="Geotab homepage" loading="lazy"><figcaption>geotab.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-      <span class="pill">Fleet data</span><h3 style="margin-top:.6em;font-size:1.3em">Geotab</h3>
-      <p>Uses ADK as the framework for its AI Agent Center of Excellence, one governed path to production.</p></div>
+      <span class="pill">Payments</span><h3 style="margin-top:.55em;font-size:1.25em">PayPal</h3>
+      <p>Builds and deploys agents with ADK, and traces each step of agent payment flows.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/xfinity.jpg" alt="Comcast homepage" loading="lazy"><figcaption>xfinity.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Telecom</span><h3 style="margin-top:.55em;font-size:1.25em">Comcast</h3>
+      <p>Rebuilt the Xfinity Assistant with ADK: multi-agent troubleshooting and self-service.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/loreal.jpg" alt="L'Or&eacute;al homepage" loading="lazy"><figcaption>loreal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Beauty</span><h3 style="margin-top:.55em;font-size:1.25em">L'Or&eacute;al</h3>
+      <p>Its Beauty Tech Agentic Platform uses ADK, with agents connected to company data over MCP.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/renault.jpg" alt="Renault Group homepage" loading="lazy"><figcaption>renaultgroup.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Automotive</span><h3 style="margin-top:.55em;font-size:1.25em">Renault Group</h3>
+      <p>Built an ADK agent that helps decide where to install EV chargers.</p></div>
   </div>
-  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg3)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</span></p>
+  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg3)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and across Google. More than six trillion tokens are processed monthly on Gemini models through ADK.</span></p>
   <div class="srcs" style="flex-direction:row;gap:1.4em">
-    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
-    <a class="src" href="https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/" target="_blank" rel="noopener">developers.googleblog.com &middot; May 20, 2025</a>
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/introducing-gemini-enterprise-agent-platform" target="_blank" rel="noopener">cloud.google.com/blog &middot; Apr 23, 2026</a>
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/build-and-manage-multi-system-agents-with-vertex-ai" target="_blank" rel="noopener">cloud.google.com/blog &middot; Apr 10, 2025</a>
   </div>
-  <div class="notes"><h4>Back to the overview, ten seconds.</h4>
-  Point at Geotab, then press &rarr;.<br>
-  Everything here is quoted from the two Google posts linked at the bottom. Agent Engine is the earlier name of Agent Runtime.</div>
+  <div class="notes"><h4>Ten seconds. Point, then press &rarr;.</h4>
+  Next: L'Or&eacute;al.<br>
+  Also building with ADK, if asked: Color Health (breast cancer screening assistant), Geotab, Burns &amp; McDonnell. All quotes are word for word from the two Google Cloud posts linked here. Agent Engine is the earlier name of Agent Runtime.</div>
 </section>
 
-<!-- DevFest Baguio: Geotab -->
-<section class="slide fullshot" data-sec="Why agents" data-at="4" data-title="In production: Geotab">
-  <img class="fs-img" src="../assets/brands/geotab-lg.jpg" alt="Geotab homepage" loading="lazy">
-  <span class="fs-cap">geotab.com &middot; Retrieved Nov 6, 2026</span>
+<!-- DevFest Baguio: L'Or&eacute;al -->
+<section class="slide fullshot" data-sec="Why agents" data-at="4" data-title="In production: L'Oréal">
+  <img class="fs-img" src="../assets/brands/loreal-lg.jpg" alt="L'Or&eacute;al homepage" loading="lazy">
+  <span class="fs-cap">loreal.com &middot; Retrieved Nov 6, 2026</span>
   <div class="notes"><h4>One minute. Read the quote.</h4>
-  &ldquo;For Geotab, ADK is the foundation that allows us to rapidly and safely scale our agentic AI solutions across the enterprise.&rdquo;<br>
-  <strong>Mike Branch, Vice President, Data &amp; Analytics, Geotab</strong><br>
-  ADK is the framework for its AI Agent Center of Excellence &middot; One governable path to production &middot; A faster build, test and deploy cycle<br>
-  This one is about teams: one framework, one path to production, so every team ships agents the same way.<br>Quote is word for word from cloud.google.com/blog, Nov 6, 2025.</div>
+  &ldquo;Leveraging Agent Development Kit (ADK), we are leading a fundamental shift: moving from deterministic workflow automation to autonomous, outcome-oriented agent orchestration. Our agents are not locked in a vacuum: through Model Context Protocol (MCP), they are securely connected to our single sources of truth.&rdquo;<br>
+  <strong>Etienne Bertin, Group CIO, L'Or&eacute;al</strong><br>
+  The point: tools are how agents reach real data. ADK tools can be your Python functions, or MCP servers.<br>Source: cloud.google.com/blog, Apr 23, 2026.</div>
 </section>
 
+<!-- DevFest Baguio: ADK in production, focus 4 -->
+<section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production: Renault Group next">
+  <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
+  <div class="cols c4 prod f4" style="align-items:stretch;margin-top:.2em;gap:1.2em">
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/paypal.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Payments</span><h3 style="margin-top:.55em;font-size:1.25em">PayPal</h3>
+      <p>Builds and deploys agents with ADK, and traces each step of agent payment flows.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/xfinity.jpg" alt="Comcast homepage" loading="lazy"><figcaption>xfinity.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Telecom</span><h3 style="margin-top:.55em;font-size:1.25em">Comcast</h3>
+      <p>Rebuilt the Xfinity Assistant with ADK: multi-agent troubleshooting and self-service.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/loreal.jpg" alt="L'Or&eacute;al homepage" loading="lazy"><figcaption>loreal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Beauty</span><h3 style="margin-top:.55em;font-size:1.25em">L'Or&eacute;al</h3>
+      <p>Its Beauty Tech Agentic Platform uses ADK, with agents connected to company data over MCP.</p></div>
+    <div class="card line" style="padding:1em 1.05em">
+      <figure class="shot"><img src="../assets/brands/renault.jpg" alt="Renault Group homepage" loading="lazy"><figcaption>renaultgroup.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Automotive</span><h3 style="margin-top:.55em;font-size:1.25em">Renault Group</h3>
+      <p>Built an ADK agent that helps decide where to install EV chargers.</p></div>
+  </div>
+  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg4)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and across Google. More than six trillion tokens are processed monthly on Gemini models through ADK.</span></p>
+  <div class="srcs" style="flex-direction:row;gap:1.4em">
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/introducing-gemini-enterprise-agent-platform" target="_blank" rel="noopener">cloud.google.com/blog &middot; Apr 23, 2026</a>
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/build-and-manage-multi-system-agents-with-vertex-ai" target="_blank" rel="noopener">cloud.google.com/blog &middot; Apr 10, 2025</a>
+  </div>
+  <div class="notes"><h4>Ten seconds. Point, then press &rarr;.</h4>
+  Next: Renault Group.<br>
+  Also building with ADK, if asked: Color Health (breast cancer screening assistant), Geotab, Burns &amp; McDonnell. All quotes are word for word from the two Google Cloud posts linked here. Agent Engine is the earlier name of Agent Runtime.</div>
+</section>
+
+<!-- DevFest Baguio: Renault Group -->
+<section class="slide fullshot" data-sec="Why agents" data-at="4" data-title="In production: Renault Group">
+  <img class="fs-img" src="../assets/brands/renault-lg.jpg" alt="Renault Group homepage" loading="lazy">
+  <span class="fs-cap">renaultgroup.com &middot; Retrieved Nov 6, 2026</span>
+  <div class="notes"><h4>One minute. Read the quote.</h4>
+  &ldquo;We used the ADK to develop an agent that ensures we're installing EV chargers where drivers need them most. The agent assists our data analysts to leverage geographical, zoning, and traffic data to inform and prioritize critical EV infrastructure investments.&rdquo;<br>
+  <strong>Laurent Giraud, Chief Data (&amp;AI) Officer, Renault Group</strong><br>
+  An agent that helps analysts, not one that replaces them: it pulls zoning and traffic data so people decide faster.<br>Source: cloud.google.com/blog, Apr 10, 2025.</div>
+</section>
 
 <!-- DevFest Baguio: what is an agent -->
 <section class="slide" data-sec="Why agents" data-at="2" data-steps="4">
