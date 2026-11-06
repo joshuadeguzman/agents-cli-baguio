@@ -284,6 +284,12 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   .lv{grid-template-columns:1fr;height:auto}
   .lv-term{height:24em}.lv-chat{height:30em}
 }
+
+/* ---- brand screenshots on the production slide ---- */
+.shot{position:relative;margin:-.35em -.4em .9em;border-radius:.9em;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/8.4;background:var(--surf)}
+.prod .card p{font-size:.88em;line-height:1.45}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.shot figcaption{position:absolute;right:.55em;bottom:.5em;font-size:.56em;font-weight:400;color:rgba(27,27,31,.7);background:rgba(255,255,255,.82);padding:.2em .6em;border-radius:var(--pill);backdrop-filter:blur(4px)}
 </style>
 </head>
 <body>
@@ -359,16 +365,22 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 <!-- DevFest Baguio: ADK in production -->
 <section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production">
-  <h2 class="dm">Agents built with ADK are already in production</h2>
-  <div class="cols c3" style="align-items:stretch;margin-top:.4em">
-    <div class="card line"><span class="pill">Healthcare</span><h3 style="margin-top:.8em;font-size:1.4em">Color Health</h3>
+  <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
+  <div class="cols c3 prod" style="align-items:stretch;margin-top:.2em">
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/color.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Healthcare</span><h3 style="margin-top:.6em;font-size:1.3em">Color Health</h3>
       <p>Color Assistant checks if a woman is due for a mammogram, connects her with clinicians, and schedules care. Built with ADK, scaled on Agent Engine.</p></div>
-    <div class="card line"><span class="pill">Payments</span><h3 style="margin-top:.8em;font-size:1.4em">PayPal</h3>
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/paypal.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Payments</span><h3 style="margin-top:.6em;font-size:1.3em">PayPal</h3>
       <p>Builds and deploys agents with ADK. Uses its CLI and visual tools to trace multi-agent flows for agent-based commerce.</p></div>
-    <div class="card line"><span class="pill">Fleet data</span><h3 style="margin-top:.8em;font-size:1.4em">Geotab</h3>
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/geotab.jpg" alt="Geotab homepage" loading="lazy"><figcaption>geotab.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Fleet data</span><h3 style="margin-top:.6em;font-size:1.3em">Geotab</h3>
       <p>Uses ADK as the framework for its AI Agent Center of Excellence, one governed path to production.</p></div>
   </div>
-  <div class="card gen" style="margin-top:1.1em;padding:1.1em 1.4em"><p style="max-width:none;color:var(--ink);font-weight:400">ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</p></div>
+  <div class="card gen" style="margin-top:.9em;padding:.8em 1.3em"><p style="max-width:none;color:var(--ink);font-weight:400;font-size:.92em">ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</p></div>
   <div class="srcs" style="flex-direction:row;gap:1.4em">
     <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
     <a class="src" href="https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/" target="_blank" rel="noopener">developers.googleblog.com &middot; May 20, 2025</a>
