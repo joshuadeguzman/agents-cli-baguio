@@ -315,6 +315,12 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .ag-a{stroke:#9AA0A6;stroke-width:1.6;fill:none;marker-end:url(#agh)}
 .ag-n{fill:var(--ink);font-size:12.5px;font-weight:600;font-family:var(--sans)}
 .ag-loop{fill:#9B72CB;font-size:13px;font-weight:500;font-family:var(--sans)}
+
+/* ---- full-bleed company screenshots ---- */
+.slide.fullshot{padding:0;justify-content:stretch}
+.slide.fullshot>.fs-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;display:block;max-width:none}
+.slide.fullshot>.fs-cap{position:absolute;right:1.4em;bottom:1.2em;font-size:.72em;color:rgba(27,27,31,.72);background:rgba(255,255,255,.82);padding:.3em .8em;border-radius:var(--pill);backdrop-filter:blur(4px);width:auto}
+@media (max-aspect-ratio:1/1){.slide.fullshot{min-height:0!important;padding:0!important;aspect-ratio:1440/790}}
 </style>
 </head>
 <body>
@@ -416,20 +422,14 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- DevFest Baguio: Color Health -->
-<section class="slide" data-sec="Why agents" data-at="4" data-title="In production: Color Health">
-  <div class="co">
-    <figure class="shot co-shot"><img src="../assets/brands/color-lg.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-    <div class="co-txt">
-      <span class="pill">Healthcare &middot; 1 of 3</span>
-      <h2 class="dm" style="margin:.5em 0 .5em">Color Health</h2>
-      <blockquote>&ldquo;The Color Assistant determines if women are due for a mammogram, connects them with clinicians, and schedules care. The power of the agent lies in the scale it enables, helping us reach more women, collect diverse and context-rich answers, and respond in real time.&rdquo;</blockquote>
-      <p class="co-who">Jayodita Sanghvi, PhD., Head of AI Platform, Color</p>
-      <ul class="co-facts"><li>Built with ADK, powered by Gemini</li><li>Scaled into production on Agent Engine</li><li>With Google Cloud and Google.org</li></ul>
-      <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
-    </div>
-  </div>
-  <div class="notes"><h4>One minute</h4>
-  Tell it as a flow: a patient asks, the agent checks if she is due for a screening, finds a clinician, books the slot. Same pattern as ours: an instruction and a few tools.<br>The quote is word for word from the Google Cloud blog post.</div>
+<section class="slide fullshot" data-sec="Why agents" data-at="4" data-title="In production: Color Health">
+  <img class="fs-img" src="../assets/brands/color-lg.jpg" alt="Color Health homepage" loading="lazy">
+  <span class="fs-cap">color.com &middot; Retrieved Nov 6, 2026</span>
+  <div class="notes"><h4>One minute. Read the quote.</h4>
+  &ldquo;The Color Assistant determines if women are due for a mammogram, connects them with clinicians, and schedules care. The power of the agent lies in the scale it enables, helping us reach more women, collect diverse and context-rich answers, and respond in real time.&rdquo;<br>
+  <strong>Jayodita Sanghvi, PhD., Head of AI Platform, Color</strong><br>
+  Built with ADK, powered by Gemini &middot; Scaled into production on Agent Engine &middot; With Google Cloud and Google.org<br>
+  Tell it as a flow: a patient asks, the agent checks if she is due for a screening, finds a clinician, books the slot. Same pattern as ours: an instruction and a few tools.<br>Quote is word for word from cloud.google.com/blog, Nov 6, 2025.</div>
 </section>
 
 <!-- DevFest Baguio: ADK in production, focus 2 -->
@@ -460,20 +460,14 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- DevFest Baguio: PayPal -->
-<section class="slide" data-sec="Why agents" data-at="4" data-title="In production: PayPal">
-  <div class="co">
-    <figure class="shot co-shot"><img src="../assets/brands/paypal-lg.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-    <div class="co-txt">
-      <span class="pill">Payments &middot; 2 of 3</span>
-      <h2 class="dm" style="margin:.5em 0 .5em">PayPal</h2>
-      <blockquote>&ldquo;We leverage the step-by-step visibility feature for tracing and debugging agent workflows. This lets the team easily trace requests/responses and visualize the flow of intent, cart, and payment mandates.&rdquo;</blockquote>
-      <p class="co-who">Nitin Sharma, Principal Engineer, AI, PayPal</p>
-      <ul class="co-facts"><li>Builds and deploys agents with ADK</li><li>Uses the ADK CLI and visual tools to inspect agent interactions and state</li><li>Multi-agent workflows for agent-based commerce</li></ul>
-      <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
-    </div>
-  </div>
-  <div class="notes"><h4>One minute</h4>
-  The point for developers: they debug agents the way we will today, by looking at each step. That is the event view in the playground.<br>The quote is word for word from the Google Cloud blog post.</div>
+<section class="slide fullshot" data-sec="Why agents" data-at="4" data-title="In production: PayPal">
+  <img class="fs-img" src="../assets/brands/paypal-lg.jpg" alt="PayPal homepage" loading="lazy">
+  <span class="fs-cap">paypal.com &middot; Retrieved Nov 6, 2026</span>
+  <div class="notes"><h4>One minute. Read the quote.</h4>
+  &ldquo;We leverage the step-by-step visibility feature for tracing and debugging agent workflows. This lets the team easily trace requests/responses and visualize the flow of intent, cart, and payment mandates.&rdquo;<br>
+  <strong>Nitin Sharma, Principal Engineer, AI, PayPal</strong><br>
+  Builds and deploys agents with ADK &middot; Uses the ADK CLI and visual tools to inspect agent interactions and state &middot; Multi-agent workflows for agent-based commerce<br>
+  The point for developers: they debug agents the way we will today, by looking at each step. That is the event view in the playground.<br>Quote is word for word from cloud.google.com/blog, Nov 6, 2025.</div>
 </section>
 
 <!-- DevFest Baguio: ADK in production, focus 3 -->
@@ -504,20 +498,14 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- DevFest Baguio: Geotab -->
-<section class="slide" data-sec="Why agents" data-at="4" data-title="In production: Geotab">
-  <div class="co">
-    <figure class="shot co-shot"><img src="../assets/brands/geotab-lg.jpg" alt="Geotab homepage" loading="lazy"><figcaption>geotab.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
-    <div class="co-txt">
-      <span class="pill">Fleet data &middot; 3 of 3</span>
-      <h2 class="dm" style="margin:.5em 0 .5em">Geotab</h2>
-      <blockquote>&ldquo;For Geotab, ADK is the foundation that allows us to rapidly and safely scale our agentic AI solutions across the enterprise.&rdquo;</blockquote>
-      <p class="co-who">Mike Branch, Vice President, Data &amp; Analytics, Geotab</p>
-      <ul class="co-facts"><li>ADK is the framework for its AI Agent Center of Excellence</li><li>One governable path to production</li><li>A faster build, test and deploy cycle</li></ul>
-      <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
-    </div>
-  </div>
-  <div class="notes"><h4>One minute</h4>
-  This one is about teams: one framework, one path to production, so every team ships agents the same way.<br>The quote is word for word from the Google Cloud blog post.</div>
+<section class="slide fullshot" data-sec="Why agents" data-at="4" data-title="In production: Geotab">
+  <img class="fs-img" src="../assets/brands/geotab-lg.jpg" alt="Geotab homepage" loading="lazy">
+  <span class="fs-cap">geotab.com &middot; Retrieved Nov 6, 2026</span>
+  <div class="notes"><h4>One minute. Read the quote.</h4>
+  &ldquo;For Geotab, ADK is the foundation that allows us to rapidly and safely scale our agentic AI solutions across the enterprise.&rdquo;<br>
+  <strong>Mike Branch, Vice President, Data &amp; Analytics, Geotab</strong><br>
+  ADK is the framework for its AI Agent Center of Excellence &middot; One governable path to production &middot; A faster build, test and deploy cycle<br>
+  This one is about teams: one framework, one path to production, so every team ships agents the same way.<br>Quote is word for word from cloud.google.com/blog, Nov 6, 2025.</div>
 </section>
 
 
