@@ -376,7 +376,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 
 /* ---- history timeline ---- */
 .hist{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:1.2em;margin-top:1.2em}
-.hist::before{content:"";position:absolute;left:0;right:0;top:2.55em;height:2px;background:linear-gradient(90deg,var(--line),#9B72CB 70%,#D96570)}
+.hist::before{content:"";position:absolute;left:0;right:calc((100% - 6em)/6 - .45em);top:2.55em;height:2px;background:linear-gradient(90deg,var(--line),#9B72CB)}
 .hx{position:relative}
 .hx-y{font-size:1.25em;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
 .hx-dot{width:.9em;height:.9em;border-radius:50%;background:var(--bg);border:3px solid #9B72CB;margin:.55em 0 1em;position:relative;z-index:1}
@@ -384,8 +384,12 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .hx h3{font-size:1.15em;margin-bottom:.35em}
 .hx p{font-size:.88em;line-height:1.45;max-width:none}
 .hx span{display:block;margin-top:.6em;font-size:.76em;color:var(--gray-2);line-height:1.35}
+/* the 2026 dot fans out to the right instead of a line that just stops */
+.hx-fan{position:absolute;left:.45em;top:.55em;width:calc(100% + 3.2em);height:4em;overflow:visible;pointer-events:none}
+.hx-fan path{fill:none;stroke:url(#hxf);stroke-width:2;stroke-dasharray:2 5;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.hx-fan circle{fill:#D96570;opacity:.35}
 .hx:last-child h3{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-@media (max-aspect-ratio:1/1){.hist{grid-template-columns:1fr 1fr}.hist::before{display:none}}
+@media (max-aspect-ratio:1/1){.hist{grid-template-columns:1fr 1fr}.hist::before,.hx-fan{display:none}}
 </style>
 </head>
 <body>
@@ -447,7 +451,12 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
       <h3>Coding agents</h3><p>Agents read the repo, run commands, and edit code in a loop.</p><span>Claude Code, Gemini CLI, ADK and A2A</span>
     </div>
     <div class="hx" data-step="6">
-      <div class="hx-y">2026</div><div class="hx-dot"></div>
+      <div class="hx-y">2026</div><svg class="hx-fan" viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true">
+        <defs><linearGradient id="hxf" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9B72CB"/><stop offset=".6" stop-color="#D96570" stop-opacity=".55"/><stop offset="1" stop-color="#D96570" stop-opacity="0"/></linearGradient></defs>
+        <path d="M0 50 C60 50 90 6 200 4"/><path d="M0 50 C60 50 100 26 200 24"/><path d="M0 50 C70 50 120 47 200 46"/>
+        <path d="M0 50 C60 50 100 70 200 72"/><path d="M0 50 C60 50 90 92 200 96"/>
+        <circle cx="150" cy="10" r="2.6"/><circle cx="168" cy="30" r="2.2"/><circle cx="176" cy="47" r="2.4"/><circle cx="160" cy="68" r="2"/><circle cx="140" cy="86" r="2.6"/>
+      </svg><div class="hx-dot"></div>
       <h3>Orchestration</h3><p>Engineers direct teams of agents, inside a harness that checks their work.</p><span>ADK 2.0, Agents CLI, Antigravity CLI</span>
     </div>
   </div>
