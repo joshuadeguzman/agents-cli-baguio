@@ -97,7 +97,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 </header>
 <div class="prog"><i id="bar"></i></div>
 <div class="layout">
-<nav class="toc" id="toc" aria-label="Codelab steps"><ol id="tocList"></ol><p class="total">About 45 minutes, plus 15 if you deploy.</p></nav>
+<nav class="toc" id="toc" aria-label="Codelab steps"><ol id="tocList"></ol><p class="total">About 45 minutes. Bonus: 25 more. Deploy: 15 more.</p></nav>
 <main id="main">
 
 <!-- ====================================================== 1 -->
@@ -138,7 +138,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 </ul>
 <p>Mobile developers: think of the agent as a backend your Flutter or web app can call over HTTP. This codelab stays in the terminal.</p>
 <div class="note">Want to see the whole thing first? <a href="../demo/">Watch the live demo</a>: a recorded session you click through, from install to eval. Most commands below also have a <b>Show output</b> button that replays what you should see.</div>
-<div class="see"><h4>You should see</h4><p>The list of 12 steps on the left (tap <b>Steps</b> on a phone). Your place is saved in the page address, so you can reload or share the link.</p></div>
+<div class="see"><h4>You should see</h4><p>The list of steps on the left (tap <b>Steps</b> on a phone). Your place is saved in the page address, so you can reload or share the link.</p></div>
 </section>
 
 <!-- ====================================================== 2 -->
@@ -186,7 +186,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <li>Click <b>Create API key</b>. Creating a key is free and needs no billing.</li>
 <li>Copy the key somewhere private. You will paste it into a file in step 4.</li>
 </ol>
-<div class="note warn"><b>Treat the key like a password.</b> Don't paste it into a chat, a slide, a screenshot or a git commit.</div>
+<div class="note warn"><b>Treat the key like a password.</b> Don't paste it into a chat, a coding agent, a slide, a screenshot or a git commit. If it ever leaks, delete it at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and create a new one.</div>
 <div class="see"><h4>You should see</h4><p><code>uv --version</code> prints a version, such as <code>uv 0.13.7</code>. You have an API key copied.</p></div>
 </section>
 
@@ -235,7 +235,18 @@ agents-cli install</code></pre>
 <span class="c"># GOOGLE_CLOUD_PROJECT=your-gcp-project-id</span>
 <span class="c"># GOOGLE_CLOUD_LOCATION=global</span>
 GEMINI_API_KEY=your-api-key-here</code></pre>
-<p>Replace <code>your-api-key-here</code> with your key. <code>.env</code> is already in <code>.gitignore</code>, so git won't commit it.</p>
+<p>Replace <code>your-api-key-here</code> with your key.</p>
+<h3>Keep the key out of git</h3>
+<ul>
+<li><code>agents-cli create</code> lists <code>.env</code> in the project's <code>.gitignore</code>, so git skips it. It does not run <code>git init</code> for you.</li>
+<li>If you put the project in git, check before your first commit. The command should print a line that mentions <code>.gitignore</code> and <code>.env</code>:</li>
+</ul>
+<pre><code>git init
+git check-ignore -v .env</code></pre>
+<ul>
+<li>To share the project, share <code>.env.example</code> (it has placeholders), never <code>.env</code>.</li>
+<li>Don't put the key in <code>agent.py</code>, a test, a README, or a screenshot of your terminal.</li>
+</ul>
 <h3>Turn off Cloud telemetry</h3>
 <p>Open <code>app/fast_api_app.py</code> and find this line:</p>
 <pre><code>otel_to_cloud = True</code></pre>
@@ -448,6 +459,7 @@ Give the agent two tools:
 Refuse any file outside sample_logs.
 The agent names the root cause, quotes the log lines that prove it, and suggests one fix.
 Use a Gemini API key, not Google Cloud. I will put the key in .env myself.
+Never read, print or copy .env. Never put the key in code, tests, docs or git.
 Add three eval cases and run them. Don't deploy anything.</code></pre>
 <p>Adjust the <code>../root-cause-agent</code> path if your folders differ. When it asks for the key, add it to <code>log-agent/.env</code> yourself. Don't paste it into the chat.</p>
 <h3>3. Review what it wrote</h3>
@@ -603,13 +615,266 @@ gcloud artifacts repositories delete cloud-run-source-deploy --location us-east1
 <div class="see"><h4>You should see</h4><p><code>deploy</code> ends with the service URL and how to call it. <code>agents-cli run --url ...</code> returns the same root cause as on your laptop. After the delete commands, <code>gcloud run services list --region us-east1</code> no longer shows <code>root-cause-agent</code>.</p></div>
 </section>
 
+<!-- ====================================================== bonus -->
+<section class="step" data-min="25" data-title="Bonus: three more agents" data-optional="1">
+<h2>Bonus: build three more agents</h2>
+<p>Same pattern as the root cause agent: an instruction, a few Python tools, the playground. Each one gets its own project, its own <code>.env</code> and its own port, so you can run all of them side by side.</p>
+<div class="note">On Windows, run everything in the Ubuntu terminal, as before. Each part takes about 8 minutes.</div>
+
+<h3>Set up each project the same way</h3>
+<p>Replace <code>NAME</code> with <code>code-reviewer</code>, <code>design-reviewer</code> or <code>release-notes-writer</code>:</p>
+<pre><code>cd ~
+agents-cli create NAME --prototype --yes
+cd NAME
+agents-cli install</code></pre>
+<p>Then make the two edits from step 4 in this project: put your key in <code>.env</code>, and set <code>otel_to_cloud = False</code> in <code>app/fast_api_app.py</code>. Every project needs its own <code>.env</code>.</p>
+
+<h3>A. Code reviewer</h3>
+<p>Reads the changes on a branch and reports bugs, security problems and missing tests. Replace <code>app/agent.py</code> with:</p>
+<pre><code>import subprocess
+from pathlib import Path
+
+from google.adk.agents import Agent
+from google.adk.apps import App
+from google.adk.models import Gemini
+from google.genai import types
+
+REPO = Path.cwd()
+
+
+def get_diff(base: str = "main") -&gt; dict:
+    """Get the changes on this branch compared with a base branch.
+
+    Call this first. It returns a unified diff with file names and line
+    numbers, which is what you review.
+
+    Args:
+        base: The branch to compare against, for example "main".
+
+    Returns:
+        A dict with "status" and either "diff" or "error_message".
+    """
+    result = subprocess.run(
+        ["git", "diff", f"{base}...HEAD", "--unified=3"],
+        cwd=REPO, capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode != 0:
+        return {"status": "error", "error_message": result.stderr.strip()}
+    return {"status": "success", "diff": result.stdout[:200_000]}
+
+
+def read_file(path: str) -&gt; dict:
+    """Read a whole file from the repository, for context around a change.
+
+    Args:
+        path: A path relative to the repository root, for example "lib/main.dart".
+
+    Returns:
+        A dict with "status" and either "content" or "error_message".
+    """
+    file = (REPO / path).resolve()
+    if REPO.resolve() not in file.parents or not file.is_file():
+        return {"status": "error", "error_message": f"No file {path!r} in the repo."}
+    return {"status": "success", "content": file.read_text(errors="replace")}
+
+
+root_agent = Agent(
+    name="code_reviewer",
+    model=Gemini(model="gemini-3.8-flash", retry_options=types.HttpRetryOptions(attempts=3)),
+    instruction=(
+        "You review code changes. If the message contains a diff, review it. "
+        "Otherwise call get_diff, and read_file when you need context. "
+        "Report bugs, security problems and missing tests. For "
+        "each finding give the file, the line, a severity (high, medium, low) "
+        "and a one-line fix. If there is nothing worth fixing, say so."
+    ),
+    tools=[get_diff, read_file],
+)
+
+app = App(root_agent=root_agent, name="app")</code></pre>
+<p>Give it a branch to review. This makes the project a git repo, commits it, and adds a Flutter file with planted problems on a new branch:</p>
+<pre><code>git init -b main
+git check-ignore -v .env
+git add -A
+git commit -m "Initial project"
+git checkout -b feature/login
+mkdir -p flutter_app
+curl -L -o flutter_app/login_service.dart https://joshuamdeguzman.com/devfest_baguio/samples/login_service.dart
+git add flutter_app
+git commit -m "Add login service"</code></pre>
+<ul>
+<li><code>git check-ignore</code> must mention <code>.env</code>. If it prints nothing, stop and fix <code>.gitignore</code> before you commit.</li>
+<li>The file goes in <code>flutter_app/</code>, not <code>lib/</code>: the project's Python <code>.gitignore</code> ignores any <code>lib/</code> folder.</li>
+<li>If git asks who you are, run <code>git config user.name "Your Name"</code> and <code>git config user.email "you@example.com"</code>, then commit again.</li>
+<li>The key in the sample file is fake. It's there so the reviewer has something to catch.</li>
+</ul>
+<pre><code>agents-cli playground --port 8502</code></pre>
+<p>Open <a href="http://127.0.0.1:8502/dev-ui/?app=app" target="_blank" rel="noopener">127.0.0.1:8502/dev-ui/?app=app</a> and ask:</p>
+<pre><code>Review this branch against main.</code></pre>
+<div class="see"><h4>You should see</h4><p>A <code>get_diff</code> call in the chat, then findings with file, line and severity. It should catch the hardcoded key, the password sent in an <code>http://</code> URL, and the forced unwrap in <code>name!</code>. Wording varies.</p></div>
+
+<h3>B. Design reviewer</h3>
+<p>Looks at a phone screenshot and lists the top five issues. Contrast and tap targets come from tools, not guesses. Replace <code>app/agent.py</code> with:</p>
+<pre><code>from google.adk.agents import Agent
+from google.adk.apps import App
+from google.adk.models import Gemini
+from google.genai import types
+
+
+def _luminance(hex_color: str) -&gt; float:
+    rgb = [int(hex_color.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    lin = [c / 12.92 if c &lt;= 0.04045 else ((c + 0.055) / 1.055) ** 2.4 for c in rgb]
+    return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2]
+
+
+def contrast_ratio(foreground: str, background: str) -&gt; dict:
+    """Compute the WCAG contrast ratio between a text color and its background.
+
+    Use this for every text color you can read from the screenshot. Do not
+    guess contrast by eye.
+
+    Args:
+        foreground: Text color as hex, for example "#777777".
+        background: Background color as hex, for example "#FFFFFF".
+
+    Returns:
+        A dict with the ratio and whether it passes WCAG AA for normal
+        text (4.5:1) and large text (3:1).
+    """
+    a, b = _luminance(foreground), _luminance(background)
+    ratio = (max(a, b) + 0.05) / (min(a, b) + 0.05)
+    return {"ratio": round(ratio, 2), "aa_normal_text": ratio &gt;= 4.5, "aa_large_text": ratio &gt;= 3}
+
+
+def check_touch_target(width_dp: float, height_dp: float) -&gt; dict:
+    """Check a tappable element against the 48 x 48 dp minimum touch target.
+
+    Args:
+        width_dp: Width of the element in dp.
+        height_dp: Height of the element in dp.
+
+    Returns:
+        A dict with "passes" and the smallest side.
+    """
+    passes = width_dp &gt;= 48 and height_dp &gt;= 48
+    return {"passes": passes, "smallest_side_dp": min(width_dp, height_dp)}
+
+
+root_agent = Agent(
+    name="design_reviewer",
+    model=Gemini(model="gemini-3.8-flash", retry_options=types.HttpRetryOptions(attempts=3)),
+    instruction=(
+        "You review mobile app screens. The user attaches a screenshot. Check "
+        "hierarchy, spacing and alignment by looking. Check text contrast with "
+        "contrast_ratio and tap targets with check_touch_target, never by eye. "
+        "Return the top five issues, most important first, each with a fix."
+    ),
+    tools=[contrast_ratio, check_touch_target],
+)
+
+app = App(root_agent=root_agent, name="app")</code></pre>
+<p>Download the sample screen and start the playground:</p>
+<pre><code>curl -LO https://joshuamdeguzman.com/devfest_baguio/samples/login.png
+agents-cli playground --port 8503</code></pre>
+<p>Open <a href="http://127.0.0.1:8503/dev-ui/?app=app" target="_blank" rel="noopener">127.0.0.1:8503/dev-ui/?app=app</a>. Click <b>+</b> in the message box, attach <code>login.png</code>, and send:</p>
+<pre><code>Review this screen. The subtitle is #B0B0B0 on #FFFFFF. The button is white text on #FFC107, and it is 120 x 36 dp.</code></pre>
+<p>Giving the colors and size in the message helps: models read layout well, but not exact hex values.</p>
+<div class="see"><h4>You should see</h4><p>Calls to <code>contrast_ratio</code> and <code>check_touch_target</code>. The subtitle fails at 2.17:1, the button text fails at 1.63:1, and the 36 dp button is under the 48 dp minimum. Then a few layout notes from the screenshot.</p></div>
+
+<h3>C. Release notes writer</h3>
+<p>Turns the commits since a tag into short notes for app users. Replace <code>app/agent.py</code> with:</p>
+<pre><code>import subprocess
+
+from google.adk.agents import Agent
+from google.adk.apps import App
+from google.adk.models import Gemini
+from google.genai import types
+
+
+def git_log(since: str) -&gt; dict:
+    """List the commits since a tag or commit, one per line.
+
+    Call this first to see what changed in the release.
+
+    Args:
+        since: A tag or commit, for example "v1.4.0".
+
+    Returns:
+        A dict with "status" and either "commits" or "error_message".
+    """
+    result = subprocess.run(
+        ["git", "log", f"{since}..HEAD", "--no-merges", "--pretty=format:%h %s"],
+        capture_output=True, text=True, timeout=30,
+    )
+    if result.returncode != 0:
+        return {"status": "error", "error_message": result.stderr.strip()}
+    return {"status": "success", "commits": result.stdout.splitlines()}
+
+
+root_agent = Agent(
+    name="release_notes_writer",
+    model=Gemini(model="gemini-3.8-flash", retry_options=types.HttpRetryOptions(attempts=3)),
+    instruction=(
+        "You write release notes for app users, not developers. If the message "
+        "lists commits, use them. Otherwise call git_log with the tag the user "
+        "gives. Group changes into New, Improved and "
+        "Fixed. Skip refactors, CI and dependency bumps. Plain words, under "
+        "500 characters."
+    ),
+    tools=[git_log],
+)
+
+app = App(root_agent=root_agent, name="app")</code></pre>
+<p>Give it a history: a tagged release, then seven commits of mixed kinds:</p>
+<pre><code>git init -b main
+git check-ignore -v .env
+git add -A
+git commit -m "Release 1.4.0"
+git tag v1.4.0
+for m in "Add dark mode to settings" "Fix crash when opening an expired order" \
+         "Refactor order repository" "Bump Flutter to 3.38 in CI" \
+         "Show delivery ETA on the order screen" "Fix wrong total when a coupon is removed" \
+         "Update dependencies"; do
+  echo "$m" >> CHANGES.txt
+  git add CHANGES.txt
+  git commit -m "$m"
+done
+agents-cli playground --port 8504</code></pre>
+<p>Open <a href="http://127.0.0.1:8504/dev-ui/?app=app" target="_blank" rel="noopener">127.0.0.1:8504/dev-ui/?app=app</a> and ask:</p>
+<pre><code>Write release notes since v1.4.0.</code></pre>
+<div class="see"><h4>You should see</h4><p>A <code>git_log</code> call, then notes grouped into New (dark mode, delivery ETA) and Fixed (the expired order crash, the coupon total). The refactor, the CI bump and the dependency update are left out.</p></div>
+
+<h3>Or build any of them with one prompt</h3>
+<p>With a coding agent and the skills from step 3, one prompt per agent does the whole thing. Start it in your home folder. You still add the key to <code>.env</code> yourself.</p>
+<pre><code>Use agents-cli to build a code reviewer agent in a new prototype project called code-reviewer.
+Give it two tools: get_diff(base) returns git diff base...HEAD, and read_file(path) reads one file inside the repo.
+If the message already contains a diff, review that instead.
+Report each finding with file, line, severity and a one-line fix.
+Set otel_to_cloud = False in app/fast_api_app.py. Use a Gemini API key; I will add it to .env myself.
+Never read, print or copy .env. Never put the key in code, tests, docs or git.</code></pre>
+<pre><code>Use agents-cli to build a design reviewer agent in a new prototype project called design-reviewer, for mobile app screenshots.
+Give it two tools: contrast_ratio(foreground, background) returns the WCAG ratio and whether it passes AA,
+and check_touch_target(width_dp, height_dp) checks the 48 x 48 dp minimum.
+Return the top five issues, most important first, each with a fix.
+Set otel_to_cloud = False in app/fast_api_app.py. Use a Gemini API key; I will add it to .env myself.
+Never read, print or copy .env. Never put the key in code, tests, docs or git.</code></pre>
+<pre><code>Use agents-cli to build an agent called release-notes-writer in a new prototype project.
+Give it one tool, git_log(since), that lists the commits since a tag. If the message already lists commits, use those.
+Write release notes for app users, grouped into New, Improved and Fixed, under 500 characters.
+Skip refactors, CI and dependency bumps.
+Set otel_to_cloud = False in app/fast_api_app.py. Use a Gemini API key; I will add it to .env myself.
+Never read, print or copy .env. Never put the key in code, tests, docs or git.</code></pre>
+<p>Review what it wrote with the checklist from step 9.</p>
+<div class="see"><h4>You should see</h4><p>Up to four playgrounds running at once, on ports 8080, 8502, 8503 and 8504, each with its own agent. That's the closing slide of the talk: one engineer, a team of agents.</p></div>
+</section>
+
 <!-- ====================================================== 12 -->
 <section class="step" data-min="1" data-title="Clean up and next steps">
 <h2>Clean up and next steps</h2>
 <h3>Clean up</h3>
 <p>Everything from steps 1 to 10 is on your laptop. Stop the playground with <code>Ctrl+C</code>. To remove the project:</p>
-<pre><code>cd ..
-rm -rf root-cause-agent log-agent</code></pre>
+<pre><code>cd ~
+rm -rf root-cause-agent log-agent code-reviewer design-reviewer release-notes-writer</code></pre>
 <p>If you don't need the key any more, delete it at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. If you did step 11, run its delete commands.</p>
 <h3>What you did</h3>
 <ul>

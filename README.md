@@ -9,6 +9,7 @@ each repo with Pages turned on serves at `/<repo-name>/`.
 | `index.html` | Landing page: title, date, links, QR code to the codelab |
 | `slides/index.html` | Copy of the `/agents-cli` deck, retargeted to DevFest Baguio |
 | `codelab/index.html` | 12-step codelab: build a root cause agent |
+| `samples/` | Bonus-step samples: a Flutter file with planted bugs (fake key) and a phone screen with design issues |
 | `sample_logs/`, `sample_logs.zip` | Log files the codelab agent reads. One planted failure. |
 | `examples/index.html` | Example agents for developers: code reviewer, design reviewer, release notes writer. Tools tested, agents load with ADK 2.13.0 |
 | `demo/index.html` | Click-through replay of a recorded agents-cli session. `?embed=1` for a compact view |
@@ -37,3 +38,17 @@ Recorded output: real runs of agents-cli on macOS. Lines tagged `sample` (model 
 to replace the sample answers.
 
 Tested with google-agents-cli 1.13.0, google-adk 2.13.0, uv 0.13.7, on November 6, 2026.
+
+## Secrets
+
+Nothing in this repo needs an API key. The codelab and examples tell people to put their Gemini API key only in each
+agent project's `.env`, which `agents-cli create` lists in `.gitignore`, and to check with `git check-ignore -v .env`
+before committing. This repo's own `.gitignore` also blocks `.env`, key files and credential JSON.
+
+`samples/login_service.dart` contains a fake key (`demo-key-not-real-0000`) on purpose, for the code reviewer agent to find.
+
+Before pushing, scan for anything that looks like a real key:
+
+```bash
+git grep -nE 'AIza[0-9A-Za-z_-]{20,}|sk_live|ghp_[A-Za-z0-9]{20,}' -- ':!README.md' ; echo "exit $? (1 means nothing found)"
+```

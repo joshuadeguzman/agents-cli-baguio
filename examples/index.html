@@ -153,7 +153,7 @@ app = App(root_agent=root_agent, name="app")</code></pre>
   </div>
   <div class="panel" data-panel="prompt" hidden>
     <p class="hint">Or give this to Claude Code, Antigravity or another coding agent with the Agents CLI skills installed.</p>
-    <pre class="wrap"><code>Use agents-cli to build a code reviewer agent called code-reviewer. Give it two tools: get_diff(base) returns git diff base...HEAD, and read_file(path) reads one file inside the repo. If the message already contains a diff, review that instead. Report each finding with file, line, severity and a one-line fix.</code></pre>
+    <pre class="wrap"><code>Use agents-cli to build a code reviewer agent called code-reviewer. Give it two tools: get_diff(base) returns git diff base...HEAD, and read_file(path) reads one file inside the repo. If the message already contains a diff, review that instead. Report each finding with file, line, severity and a one-line fix. Set otel_to_cloud = False in app/fast_api_app.py. Use a Gemini API key; I will add it to .env myself. Never read, print or copy .env. Never put the key in code, tests, docs or git.</code></pre>
   </div>
   <div class="panel" data-panel="run" hidden>
     <p><b>On your laptop.</b> Run the playground from inside a git repo, then ask: <code>Review this branch against main</code>.</p>
@@ -168,6 +168,7 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
 <pre><code>agents-cli run "Review this diff: $(git diff origin/main...HEAD)" \
   --url SERVICE_URL --mode a2a</code></pre>
 <p class="hint">On Cloud Run the agent has no checkout of your repo, so CI sends the diff in the message.</p>
+    <p class="hint">Sample data and step-by-step setup: <a href="../codelab/#12">codelab bonus step</a>.</p>
   </div>
 </article>
 <article class="ex" id="design-reviewer">
@@ -245,7 +246,7 @@ app = App(root_agent=root_agent, name="app")</code></pre>
   </div>
   <div class="panel" data-panel="prompt" hidden>
     <p class="hint">Or give this to Claude Code, Antigravity or another coding agent with the Agents CLI skills installed.</p>
-    <pre class="wrap"><code>Use agents-cli to build a design reviewer agent called design-reviewer for mobile app screenshots. Give it two tools: contrast_ratio(foreground, background) returns the WCAG ratio and whether it passes AA, and check_touch_target(width_dp, height_dp) checks the 48 x 48 dp minimum. Return the top five issues with a fix for each.</code></pre>
+    <pre class="wrap"><code>Use agents-cli to build a design reviewer agent called design-reviewer for mobile app screenshots. Give it two tools: contrast_ratio(foreground, background) returns the WCAG ratio and whether it passes AA, and check_touch_target(width_dp, height_dp) checks the 48 x 48 dp minimum. Return the top five issues with a fix for each. Set otel_to_cloud = False in app/fast_api_app.py. Use a Gemini API key; I will add it to .env myself. Never read, print or copy .env. Never put the key in code, tests, docs or git.</code></pre>
   </div>
   <div class="panel" data-panel="run" hidden>
     <p><b>On your laptop.</b> In the playground, attach a screenshot of a Flutter screen and ask: <code>Review this screen</code>.</p>
@@ -257,6 +258,7 @@ agents-cli playground</code></pre>
 <pre><code>agents-cli scaffold enhance -d cloud_run --yes
 agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
     <p class="hint">Deployed, publish it to Gemini Enterprise with <code>agents-cli publish gemini</code> so your team can reach it from chat.</p>
+    <p class="hint">Sample data and step-by-step setup: <a href="../codelab/#12">codelab bonus step</a>.</p>
   </div>
 </article>
 <article class="ex" id="release-notes-writer">
@@ -318,7 +320,7 @@ app = App(root_agent=root_agent, name="app")</code></pre>
   </div>
   <div class="panel" data-panel="prompt" hidden>
     <p class="hint">Or give this to Claude Code, Antigravity or another coding agent with the Agents CLI skills installed.</p>
-    <pre class="wrap"><code>Use agents-cli to build an agent called release-notes-writer. Give it one tool, git_log(since), that lists commits since a tag. If the message already lists commits, use those. Write release notes for app users, grouped into New, Improved and Fixed, under 500 characters.</code></pre>
+    <pre class="wrap"><code>Use agents-cli to build an agent called release-notes-writer. Give it one tool, git_log(since), that lists commits since a tag. If the message already lists commits, use those. Write release notes for app users, grouped into New, Improved and Fixed, under 500 characters. Set otel_to_cloud = False in app/fast_api_app.py. Use a Gemini API key; I will add it to .env myself. Never read, print or copy .env. Never put the key in code, tests, docs or git.</code></pre>
   </div>
   <div class="panel" data-panel="run" hidden>
     <p><b>On your laptop.</b> Run the playground in your app repo and ask: <code>Write release notes since v1.4.0</code>.</p>
@@ -333,6 +335,7 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
 <pre><code>agents-cli run "Write release notes for these commits: $(git log v1.4.0..HEAD --pretty=%s)" \
   --url SERVICE_URL --mode a2a</code></pre>
 <p class="hint">Run it in your release workflow and paste the result into the store listing.</p>
+    <p class="hint">Sample data and step-by-step setup: <a href="../codelab/#12">codelab bonus step</a>.</p>
   </div>
 </article>
 <article class="ex link" id="root-cause-agent">
@@ -343,6 +346,7 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
   <div class="actions"><a class="btn d" href="../codelab/">Build it in the codelab</a><a class="btn" href="../demo/">Watch the demo</a></div>
 </article>
   </div>
+  <p class="foot"><b>Your API key</b> goes only in each project's <code>.env</code>, which <code>agents-cli create</code> lists in <code>.gitignore</code>. Before you commit, check with <code>git check-ignore -v .env</code>. Share <code>.env.example</code>, never <code>.env</code>.</p>
   <p class="foot">The tools in each example were run against real inputs, and each agent loads with google-adk 2.13.0 and agents-cli 1.13.0. Model answers vary, so none are shown. Without a gcloud login, set <code>otel_to_cloud = False</code> in <code>app/fast_api_app.py</code> first (codelab step 4).</p>
 </main>
 <script>

@@ -1,3 +1,12 @@
 screenshots/
 .DS_Store
 .review/
+
+# Never commit secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+service-account*.json
+*credentials*.json
