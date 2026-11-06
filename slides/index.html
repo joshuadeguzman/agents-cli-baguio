@@ -7,7 +7,7 @@
 <title>Google's Agents CLI: Build &amp; Deploy Agents in Under 20 Minutes · DevFest Baguio 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&family=Google+Sans+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&family=Google+Sans+Code:wght@400;500&display=swap" media="print" onload="this.media='all'">
 <style>
 :root{
   --bg:#FFFFFF; --surf:#F7F8F9; --surf-2:#EFF0F2; --line:#E3E3E6;
@@ -15,7 +15,7 @@
   --pri:#0B57D0; --pri-c:#D3E3FD;
   --grad:linear-gradient(115deg,#4285F4 0%,#9B72CB 52%,#D96570 100%);
   --r-xl:2.2em; --r-lg:1.5em; --r-md:1em; --r-sm:.65em; --pill:999px;
-  --sans:"Google Sans Flex","Google Sans","Poppins",system-ui,-apple-system,sans-serif;
+  --sans:"Google Sans Flex","Google Sans",system-ui,-apple-system,sans-serif;
   --mono:"Google Sans Code",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -51,7 +51,7 @@ h3{font-size:1.3em;font-weight:600;letter-spacing:-.015em;line-height:1.15}
 p{font-size:1.05em;line-height:1.5;color:var(--gray);max-width:34ch;font-weight:300}
 .lede{font-size:1.95em;font-weight:400;line-height:1.3;letter-spacing:-.012em;color:var(--ink);max-width:22ch}
 .kicker{font-size:.85em;font-weight:500;color:var(--gray-2);margin-bottom:1.2em}
-.src{display:inline-block;margin-top:1.1em;font-family:var(--mono);font-size:.7em;
+.src{display:inline-block;margin-top:1.1em;font-family:var(--sans);font-size:.78em;letter-spacing:.01em;
   color:var(--gray-2);text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:.15em}
 .src:hover{color:var(--ink);border-color:var(--gray-2)}
 .tiny{font-size:.8em;color:var(--gray-2);font-weight:300;line-height:1.45;max-width:42ch}
@@ -159,7 +159,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--surf-2);padding:.1
 /* ---- agenda: large list, upcoming parts stay grey ---- */
 .ag{display:flex;flex-direction:column;gap:.45em;margin-top:.8em}
 .ag-i{display:flex;align-items:baseline;gap:1.2em}
-.ag-i i{font-family:var(--mono);font-style:normal;font-size:.95em;font-weight:400;
+.ag-i i{font-family:var(--sans);font-weight:500;font-style:normal;font-size:.95em;font-weight:400;
   color:var(--line);width:2.4em;flex:none;transition:color .42s cubic-bezier(.2,.9,.3,1)}
 .ag-i b{font-size:2.2em;font-weight:600;letter-spacing:-.016em;line-height:1.28;color:var(--ink)}
 .ag-i i{color:var(--gray-2)}
@@ -172,7 +172,7 @@ code{font-family:var(--mono);font-size:.88em;background:var(--surf-2);padding:.1
 .ag.here .ag-i.now::before{content:"";position:absolute;left:0;top:.42em;bottom:.42em;
   width:.2em;border-radius:var(--pill);background:var(--ink)}
 
-.stp{display:block;font-family:var(--mono);font-style:normal;font-size:.34em;font-weight:400;
+.stp{display:block;font-family:var(--sans);font-weight:600;font-style:normal;font-size:.34em;font-weight:400;
   letter-spacing:.08em;color:var(--gray-2);margin-bottom:.7em}
 h2.dm .stp{font-size:.42em}
 
@@ -206,7 +206,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 #jump h4:first-child{margin-top:0}
 #jump button{display:block;width:100%;text-align:left;padding:.4em .7em;border-radius:var(--r-sm);font-size:13px;color:var(--gray);font-weight:300}
 #jump button:hover,#jump button.on{background:var(--surf);color:var(--ink)}
-#jump button b{color:var(--gray-2);font-family:var(--mono);font-size:10px;margin-right:.9em;font-weight:400}
+#jump button b{color:var(--gray-2);font-family:var(--sans);font-size:10px;margin-right:.9em;font-weight:400}
 .help{position:fixed;left:1.3em;bottom:1.1em;z-index:32;font-size:11px;color:var(--gray-2);font-weight:300}
 
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -231,7 +231,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .lv-tabs{display:flex;gap:.2em;padding:.3em .5em 0;background:#232328;min-height:2.1em;overflow-x:auto;scrollbar-width:none}
 .lv-tabs::-webkit-scrollbar{display:none}
 .lv-tab{flex:none}
-.lv-tab{font-family:var(--mono);font-size:.6em;color:#9AA0A6;padding:.55em 1.1em;border-radius:.7em .7em 0 0;white-space:nowrap;animation:lvIn .35s cubic-bezier(.2,.9,.3,1) both}
+.lv-tab{font-family:var(--sans);font-size:.6em;color:#9AA0A6;padding:.55em 1.1em;border-radius:.7em .7em 0 0;white-space:nowrap;animation:lvIn .35s cubic-bezier(.2,.9,.3,1) both}
 .lv-tab.on{background:#1B1B1F;color:#fff}
 .lv-tab i{font-style:normal;color:#6E7480;margin-right:.6em}
 @keyframes lvIn{from{opacity:0;transform:translateY(.6em) scale(.96)}to{opacity:1;transform:none}}
@@ -354,7 +354,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 
 /* ---- chapter divider slides ---- */
 .slide.chapter{align-items:flex-start}
-.ch-num{font-family:var(--mono);font-size:1em;letter-spacing:.08em;color:var(--gray-2);text-transform:uppercase}
+.ch-num{font-family:var(--sans);font-weight:600;font-size:1em;letter-spacing:.12em;color:var(--gray-2);text-transform:uppercase}
 .ch-num span{color:var(--line)}
 .ch-title{font-size:5em!important;font-weight:700;letter-spacing:-.02em!important;line-height:1.08!important;margin:.25em 0 .3em!important;max-width:16ch;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
 .ch-focus{font-size:1.6em!important;line-height:1.4;color:var(--gray);max-width:34ch!important;font-weight:400}
