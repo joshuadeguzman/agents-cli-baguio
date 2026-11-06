@@ -319,8 +319,8 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .ag-loop{fill:#9B72CB;font-size:13px;font-weight:500;font-family:var(--sans)}
 
 /* ---- full-bleed company screenshots ---- */
-.slide.fullart{background:#FDFDFE}
-.slide.fullart>.fs-img{object-fit:contain;object-position:center}
+.slide.fullart{background:#FFFFFF}
+.slide.fullshot.fullart>.fs-img{object-fit:contain;object-position:center;top:7%;left:8%;width:84%;height:86%;mix-blend-mode:multiply}
 .slide.fullshot{padding:0;justify-content:stretch}
 .slide.fullshot>.fs-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;display:block;max-width:none}
 .slide.fullshot>.fs-cap{position:absolute;right:1.4em;bottom:1.2em;font-size:.72em;color:rgba(27,27,31,.72);background:rgba(255,255,255,.82);padding:.3em .8em;border-radius:var(--pill);backdrop-filter:blur(4px);width:auto}
@@ -351,6 +351,17 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .orch .a5{grid-column:2;grid-row:3}
 .orch-a{background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box!important;border:1.5px solid transparent}
 @media (max-aspect-ratio:1/1){.qt blockquote{font-size:1.9em}.qt-stats{grid-template-columns:1fr 1fr}.orch{grid-template-columns:1fr;gap:.7em}.orch>div{grid-column:1!important;grid-row:auto!important}.orch-lines{display:none}}
+
+/* ---- chapter divider slides ---- */
+.slide.chapter{align-items:flex-start}
+.ch-num{font-family:var(--mono);font-size:1em;letter-spacing:.08em;color:var(--gray-2);text-transform:uppercase}
+.ch-num span{color:var(--line)}
+.ch-title{font-size:5em!important;font-weight:700;letter-spacing:-.02em!important;line-height:1.08!important;margin:.25em 0 .3em!important;max-width:16ch;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.08em}
+.ch-focus{font-size:1.6em!important;line-height:1.4;color:var(--gray);max-width:34ch!important;font-weight:400}
+.ch-dots{display:flex;gap:.6em;margin-top:2.4em}
+.ch-dots i{width:2.6em;height:.35em;border-radius:999px;background:var(--surf-2)}
+.ch-dots i.done{background:#C8CBD0}
+.ch-dots i.on{background:var(--grad)}
 </style>
 </head>
 <body>
@@ -377,6 +388,17 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   Deploy needs a Google Cloud project, so we show that command and stop there.<br>
   There are four questions for the room along the way.</div>
 </section>
+<!-- DevFest Baguio: chapter 1 -->
+<section class="slide chapter" data-sec="Why agents" data-at="1" data-title="Chapter 1: Why agents">
+  <div class="ch-num">Chapter 01 <span>of 6</span></div>
+  <h2 class="ch-title">Why agents</h2>
+  <p class="ch-focus">Real companies already run agents in production.</p>
+  <div class="ch-dots" aria-hidden="true"><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>
+  <div class="notes"><h4>Pause here. Clock check: about 1 minutes in.</h4>
+  Take a breath and a sip of water. Ask if anyone has a question about the last part before you move on.</div>
+</section>
+
+
 
 <!-- DevFest Baguio: opening quote -->
 <section class="slide roomy" data-sec="Why agents" data-at="1" data-steps="1" data-title="Engineers orchestrating agents">
@@ -568,9 +590,19 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   More than 50,000 public servants get the Gemini Enterprise app as a start.<br>
   <span class="flag">Be precise:</span> this is the platform that <code>agents-cli deploy</code> targets, and ADK is its framework, but the release doesn&rsquo;t name ADK, and these agents are planned, not live. Say &ldquo;on the same platform&rdquo;, not &ldquo;built with ADK&rdquo;.</div>
 </section>
+<!-- DevFest Baguio: chapter 2 -->
+<section class="slide chapter" data-sec="What is an agent" data-at="10" data-title="Chapter 2: What is an agent">
+  <div class="ch-num">Chapter 02 <span>of 6</span></div>
+  <h2 class="ch-title">What is an agent</h2>
+  <p class="ch-focus">One agent, how it works, and where this is going.</p>
+  <div class="ch-dots" aria-hidden="true"><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>
+  <div class="notes"><h4>Pause here. Clock check: about 10 minutes in.</h4>
+  Take a breath and a sip of water. Ask if anyone has a question about the last part before you move on.</div>
+</section>
+
 
 <!-- DevFest Baguio: what an agent is, illustration -->
-<section class="slide fullshot fullart" data-sec="Why agents" data-at="5" data-title="An agent, in one picture">
+<section class="slide fullshot fullart" data-sec="What is an agent" data-at="5" data-title="An agent, in one picture">
   <img class="fs-img" src="../assets/art/agent-loop.jpg" alt="Illustration: a developer sends a request to a friendly agent, which uses tools in a loop (reading a log, a wrench, a database, a calendar) and returns a checked answer" loading="lazy">
   <div class="notes"><h4>Thirty seconds. Let it land.</h4>
   Walk the picture left to right: you ask, the agent picks a tool, reads what it gets back, picks another if it needs to, then answers.<br>
@@ -579,7 +611,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- DevFest Baguio: what is an agent -->
-<section class="slide" data-sec="Why agents" data-at="2" data-steps="4">
+<section class="slide" data-sec="What is an agent" data-at="2" data-steps="4">
   <h2 class="dm">What is an agent?</h2>
   <p class="lede" style="max-width:34ch;margin-bottom:1.2em">A model, an instruction and some tools, in a loop.</p>
   <div class="cols c4" style="align-items:stretch">
@@ -592,8 +624,17 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   Use the root cause agent from the end of the talk as the example. A chatbot answers from what it knows. An agent goes and looks: it calls <code>find_errors</code>, reads the lines, then answers.</div>
 </section>
 
+<!-- DevFest Baguio: vision, one engineer orchestrating agents -->
+<section class="slide fullshot fullart" data-sec="What is an agent" data-at="6" data-title="The vision: one engineer, many agents">
+  <img class="fs-img" src="../assets/art/agent-team.jpg" alt="Illustration: a developer at a laptop directs five friendly agents, each doing a different job: reviewing code, checking a phone design, writing a document, reading a log with a warning, and showing a chart" loading="lazy">
+  <div class="notes"><h4>Thirty seconds. The vision.</h4>
+  One agent is useful. The bigger idea is one engineer directing several: one reviews code, one checks the design, one writes release notes, one reads the logs, one answers the numbers.<br>
+  This is what Sundar Pichai described on the opening slide: engineers &ldquo;orchestrating fully autonomous digital task forces.&rdquo; We come back to it at the end.<br>
+  Illustration generated for this talk with Higgsfield (GPT Image 2.6). Original characters, not Google mascots.</div>
+</section>
+
 <!-- DevFest Baguio: how ADK runs an agent -->
-<section class="slide" data-sec="Why agents" data-at="3" data-steps="4" data-title="How ADK runs an agent">
+<section class="slide" data-sec="What is an agent" data-at="3" data-steps="4" data-title="How ADK runs an agent">
   <h2 class="dm" style="margin-bottom:.15em">How ADK runs an agent</h2>
   <p style="max-width:none;font-size:1.02em">The model decides. Your code does the work. Every step is saved as an event.</p>
   <svg class="flow-d ag-d" viewBox="0 0 1160 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The ADK runtime loop: you send a message, the Runner saves it to the Session and runs the agent, the agent asks Gemini, Gemini returns an answer or a tool call, the agent runs the tool and sends the result back, and the Runner saves every step as an event.">
@@ -643,7 +684,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 
 
 <!-- 03 -->
-<section class="slide" data-sec="Why agents" data-at="2" data-steps="2">
+<section class="slide" data-sec="What is an agent" data-at="2" data-steps="2">
   <h2 class="dm" style="margin-bottom:.2em">Why write an agent when you already have Claude or Antigravity?</h2>
   <p style="font-size:1.05em;max-width:none">A chat session starts from zero every time. An agent keeps the instructions, tools and checks in code.</p>
   <svg class="flow-d" viewBox="0 0 1160 292" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same weekly task typed into a chat session three times, compared with one agent that runs every week's file">
@@ -686,9 +727,20 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   Right: the rules live in <code>app/agent.py</code>. Every file goes through the same agent, and <code>eval run</code> tells you when a change breaks it.<br>
   Don't knock chat apps. They're the right tool for one-off work. <strong>Write an agent when the task repeats, or when something other than you needs to run it.</strong></div>
 </section>
+<!-- DevFest Baguio: chapter 3 -->
+<section class="slide chapter" data-sec="ADK and Agents CLI" data-at="15" data-title="Chapter 3: ADK and Agents CLI">
+  <div class="ch-num">Chapter 03 <span>of 6</span></div>
+  <h2 class="ch-title">ADK and Agents CLI</h2>
+  <p class="ch-focus">Google&#x27;s agent framework, why it&#x27;s hard, and the tool that makes it simple.</p>
+  <div class="ch-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></div>
+  <div class="notes"><h4>Pause here. Clock check: about 15 minutes in.</h4>
+  Take a breath and a sip of water. Ask if anyone has a question about the last part before you move on.</div>
+</section>
+
+
 
 <!-- 05 -->
-<section class="slide" data-sec="Where ADK stands" data-at="5">
+<section class="slide" data-sec="ADK and Agents CLI" data-at="5">
   <h2>ADK is Google's framework for building agents</h2>
   <p style="font-size:1.08em;max-width:56ch;margin-top:-.2em">Agent Development Kit. Open source, code-first, Apache 2.0. Agents CLI creates ADK projects.</p>
   <div class="cols c3" style="align-items:stretch;gap:1.1em;margin-top:1.6em">
@@ -706,8 +758,9 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   Open adk.dev only if someone asks. Don't tour it.</div>
 </section>
 
+
 <!-- 06 -->
-<section class="slide" data-sec="Writing agents is hard" data-at="6">
+<section class="slide" data-sec="ADK and Agents CLI" data-at="6">
   <h2 class="dm">Before Agents CLI, you learn ADK from its docs</h2>
   <p style="font-size:1.08em;max-width:60ch">Setup, deployment and every new release have their own pages. You read them before you write the agent.</p>
   <div class="cols c3" style="align-items:stretch;gap:1.1em;margin-top:1.5em">
@@ -724,7 +777,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- 08 -->
-<section class="slide" data-sec="Writing agents is hard" data-at="9">
+<section class="slide" data-sec="ADK and Agents CLI" data-at="9">
   <span class="pill b">Question 2 for the room</span>
   <h2 style="margin-top:.6em;max-width:24ch">Why not just ask your coding agent to write the ADK code?</h2>
   <div class="poll-wrap">
@@ -743,8 +796,9 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   Then click B. That's why the skills exist: they carry the current API.</div>
 </section>
 
+
 <!-- 07 -->
-<section class="slide roomy" data-sec="Agents CLI" data-at="8">
+<section class="slide roomy" data-sec="ADK and Agents CLI" data-at="8">
   <div class="cols c2w">
     <div>
       <h2 class="dm">Agents CLI is a command-line tool plus seven skills</h2>
@@ -775,7 +829,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- 09 -->
-<section class="slide" data-sec="Agents CLI" data-at="10" data-steps="2">
+<section class="slide" data-sec="ADK and Agents CLI" data-at="10" data-steps="2">
   <h2 class="dm">The CLI runs commands. The skills tell your coding agent how to use them.</h2>
   <div class="cols c2" style="align-items:stretch;gap:1.1em;margin-top:.4em">
     <div class="card" data-step="1">
@@ -798,7 +852,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- 10 -->
-<section class="slide" data-sec="Agents CLI" data-at="11">
+<section class="slide" data-sec="ADK and Agents CLI" data-at="11">
   <div class="cols c2w">
     <div>
       <h2>The seven skills</h2>
@@ -825,7 +879,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 </section>
 
 <!-- 11 -->
-<section class="slide" data-sec="Agents CLI" data-at="12" data-steps="4">
+<section class="slide" data-sec="ADK and Agents CLI" data-at="12" data-steps="4">
   <h2 class="dm">So far</h2>
   <div class="cols c2" style="align-items:stretch;gap:1em;margin-top:.2em">
     <div class="card line" data-step="1">
@@ -854,22 +908,19 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   Stress the second box: Agents CLI doesn't replace ADK. It makes building ADK agents simpler.<br>
   Then: "now let's build one."</div>
 </section>
-
-<!-- 12 -->
-<section class="slide roomy" data-sec="Build with ADK" data-at="13" data-title="Agenda: build with ADK">
-  <div class="ag here">
-      <div class="ag-i"><i>01</i><b>Why agents, and ADK</b></div>
-      <div class="ag-i"><i>02</i><b>Agents CLI</b></div>
-      <div class="ag-i now"><i>03</i><b>Build with ADK</b></div>
-      <div class="ag-i"><i>04</i><b>Run it locally</b></div>
-      <div class="ag-i"><i>05</i><b>Evaluate</b></div>
-      <div class="ag-i"><i>06</i><b>Deploy</b></div>
-  </div>
-  <div class="notes"><h4>20 seconds. Clock check: about 13 minutes.</h4>
-  Read the six parts once. The next section is the build.</div>
+<!-- DevFest Baguio: chapter 4 -->
+<section class="slide chapter" data-sec="Build and run" data-at="22" data-title="Chapter 4: Build and run">
+  <div class="ch-num">Chapter 04 <span>of 6</span></div>
+  <h2 class="ch-title">Build and run</h2>
+  <p class="ch-focus">Sample agents, then one built step by step and run on your laptop.</p>
+  <div class="ch-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i></div>
+  <div class="notes"><h4>Pause here. Clock check: about 22 minutes in.</h4>
+  Take a breath and a sip of water. Ask if anyone has a question about the last part before you move on.</div>
 </section>
+
+
 <!-- DevFest Baguio: sample agents -->
-<section class="slide" data-sec="Build with ADK" data-at="13" data-title="Sample agents, one prompt each">
+<section class="slide" data-sec="Build and run" data-at="13" data-title="Sample agents, one prompt each">
   <h2 class="dm">Sample agents, one prompt each</h2>
   <p style="max-width:none;margin-bottom:1.3em">Each one runs on your laptop with <code>agents-cli playground</code> and an AI Studio key. More, with code: <a class="src" style="margin:0" href="../examples/" target="_blank" rel="noopener">joshuamdeguzman.com/devfest_baguio/examples</a></p>
   <div class="cols c3" style="align-items:stretch">
@@ -903,7 +954,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 
 
 <!-- 13 -->
-<section class="slide" data-sec="Build with ADK" data-at="13">
+<section class="slide" data-sec="Build and run" data-at="13">
   <div class="cols c2">
     <div>
       <h2 class="dm">The demo: ask your data</h2>
@@ -927,7 +978,7 @@ Dec,Q4,South,Gadget,104,19.99</pre>
 </section>
 
 <!-- 14 -->
-<section class="slide" data-sec="Build with ADK" data-at="14">
+<section class="slide" data-sec="Build and run" data-at="14">
   <div class="cols c2">
     <div>
       <h2><i class="stp">STEP 1</i>Install the CLI and skills</h2>
@@ -955,7 +1006,7 @@ Dec,Q4,South,Gadget,104,19.99</pre>
 </section>
 
 <!-- 15 -->
-<section class="slide" data-sec="Build with ADK" data-at="15">
+<section class="slide" data-sec="Build and run" data-at="15">
   <h2 class="dm"><i class="stp">STEP 2</i>Create the project</h2>
   <div class="cols c2" style="align-items:start">
 <pre><span class="t">agents-cli</span> create ask-your-data <span class="k">--prototype --yes</span>
@@ -989,7 +1040,7 @@ ask-your-data/
 </section>
 
 <!-- 16 -->
-<section class="slide" data-sec="Build with ADK" data-at="16">
+<section class="slide" data-sec="Build and run" data-at="16">
   <h2 class="dm"><i class="stp">STEP 3</i>Install dependencies and add your key</h2>
   <div class="cols c2" style="align-items:start">
     <div class="stack">
@@ -1019,7 +1070,7 @@ otel_to_cloud = <span class="k">False</span></pre>
 </section>
 
 <!-- 17 -->
-<section class="slide" data-sec="Build with ADK" data-at="17">
+<section class="slide" data-sec="Build and run" data-at="17">
   <h2 class="dm"><i class="stp">STEP 4</i>Write the agent</h2>
   <div class="cols c2" style="align-items:start">
     <div>
@@ -1054,22 +1105,9 @@ app = <span class="t">App</span>(root_agent=root_agent, name=<span class="s">"ap
   If you use the prompt live, read the diff before you run it.</div>
 </section>
 
-<!-- 18 -->
-<section class="slide roomy" data-sec="Run locally" data-at="19" data-title="Agenda: run it locally">
-  <div class="ag here">
-      <div class="ag-i"><i>01</i><b>Why agents, and ADK</b></div>
-      <div class="ag-i"><i>02</i><b>Agents CLI</b></div>
-      <div class="ag-i"><i>03</i><b>Build with ADK</b></div>
-      <div class="ag-i now"><i>04</i><b>Run it locally</b></div>
-      <div class="ag-i"><i>05</i><b>Evaluate</b></div>
-      <div class="ag-i"><i>06</i><b>Deploy</b></div>
-  </div>
-  <div class="notes"><h4>Clock check: about 19 minutes</h4>
-  The project exists. Now we check that it works.</div>
-</section>
 
 <!-- 19 -->
-<section class="slide" data-sec="Run locally" data-at="19">
+<section class="slide" data-sec="Build and run" data-at="19">
   <h2 class="dm"><i class="stp">STEP 5</i>Run it</h2>
   <div class="cols c2" style="align-items:start">
 <pre><span class="c"># one prompt from the terminal</span>
@@ -1098,7 +1136,7 @@ app = <span class="t">App</span>(root_agent=root_agent, name=<span class="s">"ap
 </section>
 
 <!-- 20 -->
-<section class="slide" data-sec="Run locally" data-at="22">
+<section class="slide" data-sec="Build and run" data-at="22">
   <h2 class="dm"><i class="stp">STEP 6</i>Test it</h2>
   <div class="cols c2" style="align-items:start">
 <pre><span class="c"># your own code, offline</span>
@@ -1125,7 +1163,7 @@ app = <span class="t">App</span>(root_agent=root_agent, name=<span class="s">"ap
 </section>
 
 <!-- 21 -->
-<section class="slide" data-sec="Run locally" data-at="23">
+<section class="slide" data-sec="Build and run" data-at="23">
   <span class="pill b">Question 3 for the room</span>
   <h2 style="margin-top:.6em;max-width:24ch">Who should write the expected answers for your evals?</h2>
   <div class="poll-wrap">
@@ -1143,23 +1181,20 @@ app = <span class="t">App</span>(root_agent=root_agent, name=<span class="s">"ap
   Most rooms split between A and C. Click A first, then C, then B.<br>
   <strong>The coding agent can draft the questions. A script computes the answers.</strong></div>
 </section>
-
-<!-- 22 -->
-<section class="slide roomy" data-sec="Evaluate" data-at="25" data-title="Agenda: evaluate">
-  <div class="ag here">
-      <div class="ag-i"><i>01</i><b>Why agents, and ADK</b></div>
-      <div class="ag-i"><i>02</i><b>Agents CLI</b></div>
-      <div class="ag-i"><i>03</i><b>Build with ADK</b></div>
-      <div class="ag-i"><i>04</i><b>Run it locally</b></div>
-      <div class="ag-i now"><i>05</i><b>Evaluate</b></div>
-      <div class="ag-i"><i>06</i><b>Deploy</b></div>
-  </div>
-  <div class="notes"><h4>Clock check: about 25 minutes</h4>
-  If you're behind, skip the holdout part of step 9.</div>
+<!-- DevFest Baguio: chapter 5 -->
+<section class="slide chapter" data-sec="Evaluate and deploy" data-at="33" data-title="Chapter 5: Evaluate and deploy">
+  <div class="ch-num">Chapter 05 <span>of 6</span></div>
+  <h2 class="ch-title">Evaluate and deploy</h2>
+  <p class="ch-focus">Check it works, ship it, then the whole thing end to end.</p>
+  <div class="ch-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i></div>
+  <div class="notes"><h4>Pause here. Clock check: about 33 minutes in.</h4>
+  Take a breath and a sip of water. Ask if anyone has a question about the last part before you move on.</div>
 </section>
 
+
+
 <!-- 23 -->
-<section class="slide" data-sec="Evaluate" data-at="25">
+<section class="slide" data-sec="Evaluate and deploy" data-at="25">
   <h2 class="dm"><i class="stp">STEP 7</i>Write the eval cases</h2>
   <div class="cols c2" style="align-items:start">
     <div>
@@ -1192,7 +1227,7 @@ app = <span class="t">App</span>(root_agent=root_agent, name=<span class="s">"ap
 </section>
 
 <!-- 24 -->
-<section class="slide" data-sec="Evaluate" data-at="27">
+<section class="slide" data-sec="Evaluate and deploy" data-at="27">
   <h2 class="dm"><i class="stp">STEP 8</i>Pick metrics that run on your machine</h2>
   <div class="cols c2" style="align-items:start">
 <pre><span class="c"># tests/eval/eval_config.yaml</span>
@@ -1217,7 +1252,7 @@ custom_metrics:
 </section>
 
 <!-- 25 -->
-<section class="slide" data-sec="Evaluate" data-at="28">
+<section class="slide" data-sec="Evaluate and deploy" data-at="28">
   <h2 class="dm"><i class="stp">STEP 9</i>Run the evals</h2>
   <div class="cols c2" style="align-items:start">
 <pre><span class="t">agents-cli</span> eval run
@@ -1250,22 +1285,9 @@ custom_metrics:
   <span class="flag">Not rehearsed with a key yet.</span> Run it once before the talk and note the time.</div>
 </section>
 
-<!-- 26 -->
-<section class="slide roomy" data-sec="Deploy" data-at="31" data-title="Agenda: deploy">
-  <div class="ag here">
-      <div class="ag-i"><i>01</i><b>Why agents, and ADK</b></div>
-      <div class="ag-i"><i>02</i><b>Agents CLI</b></div>
-      <div class="ag-i"><i>03</i><b>Build with ADK</b></div>
-      <div class="ag-i"><i>04</i><b>Run it locally</b></div>
-      <div class="ag-i"><i>05</i><b>Evaluate</b></div>
-      <div class="ag-i now"><i>06</i><b>Deploy</b></div>
-  </div>
-  <div class="notes"><h4>Clock check: about 31 minutes</h4>
-  The demo stops here. The rest is what you need to know before you deploy.</div>
-</section>
 
 <!-- 27 -->
-<section class="slide" data-sec="Deploy" data-at="31">
+<section class="slide" data-sec="Evaluate and deploy" data-at="31">
   <h2 class="dm">What runs locally, and what needs Google Cloud</h2>
   <div class="cols c2w" style="align-items:start">
     <table>
@@ -1295,7 +1317,7 @@ custom_metrics:
 </section>
 
 <!-- 28 -->
-<section class="slide" data-sec="Deploy" data-at="33">
+<section class="slide" data-sec="Evaluate and deploy" data-at="33">
   <span class="pill b">Question 4 for the room</span>
   <h2 style="margin-top:.6em;max-width:24ch">Which coding agent do you need for this?</h2>
   <div class="poll-wrap">
@@ -1315,7 +1337,7 @@ custom_metrics:
 </section>
 
 <!-- 29 -->
-<section class="slide" data-sec="Deploy" data-at="34" data-steps="4">
+<section class="slide" data-sec="Evaluate and deploy" data-at="34" data-steps="4">
   <h2 class="dm">What Agents CLI doesn't do for you</h2>
   <div class="cols c2" style="align-items:stretch;gap:1em">
     <div class="card line" data-step="1"><h3>Decide if you need an agent</h3><p>It scaffolds whatever you ask for, even when a script or a cron job would do.</p></div>
@@ -1328,8 +1350,9 @@ custom_metrics:
   <code>agents-cli update</code> reinstalls the skills for every coding agent it finds.</div>
 </section>
 
+
 <!-- DevFest Baguio: live demo -->
-<section class="slide roomy" data-sec="End to end" data-at="33" data-steps="7" data-title="Live demo: one prompt to Gemini Enterprise" id="liveDemo" style="padding-top:2em;padding-bottom:2em">
+<section class="slide roomy" data-sec="Evaluate and deploy" data-at="33" data-steps="7" data-title="Live demo: one prompt to Gemini Enterprise" id="liveDemo" style="padding-top:2em;padding-bottom:2em">
   <div style="display:flex;align-items:center;gap:1em">
     <h2 class="dm" style="margin:0;max-width:none">One prompt, a local chat, then Gemini Enterprise</h2>
     <span class="pill b" style="flex:none;margin-left:auto">Press &rarr; to run each step</span>
@@ -1354,9 +1377,20 @@ custom_metrics:
   Click the terminal to skip ahead. Click a tab to look back.<br>
   <span class="flag">Say it out loud:</span> the coding agent's narration, deploy and publish are simulated, and answers are typical answers. The agents-cli output is a real recording.</div>
 </section>
+<!-- DevFest Baguio: chapter 6 -->
+<section class="slide chapter" data-sec="Your turn" data-at="51" data-title="Chapter 6: Your turn">
+  <div class="ch-num">Chapter 06 <span>of 6</span></div>
+  <h2 class="ch-title">Your turn</h2>
+  <p class="ch-focus">One engineer, a team of agents, and the codelab.</p>
+  <div class="ch-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="on"></i></div>
+  <div class="notes"><h4>Pause here. Clock check: about 51 minutes in.</h4>
+  Take a breath and a sip of water. Ask if anyone has a question about the last part before you move on.</div>
+</section>
+
+
 
 <!-- DevFest Baguio: closing, one engineer and a team of agents -->
-<section class="slide" data-sec="Try it yourself" data-at="34" data-steps="5" data-title="One engineer, a team of agents">
+<section class="slide" data-sec="Your turn" data-at="34" data-steps="5" data-title="One engineer, a team of agents">
   <h2 class="dm" style="margin-bottom:.2em;max-width:none">One engineer. A team of agents.</h2>
   <p style="max-width:none;font-size:1.05em">Each one is an instruction and a few tools. You decide what they do, and you approve what they ship.</p>
   <div class="orch">
@@ -1378,7 +1412,7 @@ custom_metrics:
 </section>
 
 <!-- DevFest Baguio: codelab QR -->
-<section class="slide" data-sec="Try it yourself" data-at="35" data-title="Try it yourself">
+<section class="slide" data-sec="Your turn" data-at="35" data-title="Try it yourself">
   <div class="cols c2w">
     <div style="display:flex;flex-direction:column;gap:1em">
       <span class="pill b" style="align-self:flex-start">Codelab &middot; about 45 minutes</span>
