@@ -17,17 +17,22 @@ nav.top{display:flex;justify-content:flex-end;gap:.4rem;padding:1.1rem 1.4rem}
 nav.top a{padding:.5em 1em;border-radius:var(--pill);font-size:.9rem;font-weight:500;color:var(--gray);text-decoration:none}
 nav.top a:hover{background:var(--surf);color:var(--ink)}
 nav.top a.d{background:var(--ink);color:#fff}
-main{flex:1;display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center;max-width:68rem;width:100%;margin:0 auto;padding:1rem 2rem 4rem}
-h1{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:700;letter-spacing:-.018em;word-spacing:.04em;line-height:1.12;margin-top:1.1rem;text-wrap:balance;max-width:16ch}
+main{flex:1;display:grid;grid-template-columns:1fr auto;gap:5vw;align-items:center;width:min(92vw,180vh);margin:0 auto;padding:1vh 2vw 7vh}
+main .pill{font-size:clamp(.8rem,min(1.35vw,2.4vh),1.7rem);padding:.45em 1em}
+h1{font-size:clamp(2rem,min(4.9vw,9.5vh),9rem);font-weight:700;letter-spacing:-.018em;word-spacing:.04em;line-height:1.1;margin-top:.45em;text-wrap:balance;max-width:none}
 h1 .grad-text{white-space:nowrap}
 .qr{text-align:center}
-.qr img{width:15rem;aspect-ratio:1;display:block;image-rendering:pixelated}
-.qr p{margin-top:.9rem;font-size:.9rem;color:var(--gray-2)}
-@media (max-width:760px){
+.qr img{width:clamp(10rem,min(30vw,54vh),40rem);aspect-ratio:1;display:block;image-rendering:pixelated}
+.qr p{margin-top:.8em;font-size:clamp(.85rem,min(1.2vw,2.1vh),1.5rem);color:var(--gray-2)}
+nav.top a{font-size:clamp(.85rem,min(1vw,1.8vh),1.2rem)}
+@media (max-width:760px),(max-aspect-ratio:4/5){
   nav.top{justify-content:center;padding:.9rem}
-  main{grid-template-columns:1fr;align-content:center;gap:2.4rem;padding:1.5rem 1.25rem 3rem;text-align:center}
-  h1{margin-left:auto;margin-right:auto}
-  .qr img{width:12rem;margin:0 auto}
+  main{grid-template-columns:1fr;align-content:center;gap:5vh;width:100%;padding:1.5rem 1.25rem 3rem;text-align:center}
+  main .pill{font-size:clamp(.8rem,3.4vw,1.3rem)}
+  h1{font-size:clamp(2rem,min(9.5vw,6.5vh),5rem);margin-left:auto;margin-right:auto;max-width:15ch}
+  h1 br{display:none}
+  .qr img{width:min(68vw,40vh);margin:0 auto}
+  .qr p{font-size:clamp(.85rem,3.4vw,1.2rem)}
 }
 </style>
 </head>
@@ -40,7 +45,7 @@ h1 .grad-text{white-space:nowrap}
 <main>
   <div>
     <span class="pill b">DevFest Baguio 2026 &middot; November 7</span>
-    <h1>Google's Agents CLI: Build &amp; Deploy Agents <span class="grad-text">in Under 20 Minutes</span></h1>
+    <h1>Google's Agents CLI:<br> Build &amp; Deploy Agents<br> <span class="grad-text">in Under 20 Minutes</span></h1>
   </div>
   <div class="qr">
     <img src="assets/qr-codelab.svg" alt="QR code that opens the codelab">
