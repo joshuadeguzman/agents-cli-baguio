@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live demo: build a root cause agent · DevFest Baguio 2026</title>
+<meta name="description" content="Click through a recorded Agents CLI session: install, create, add tools, run a prompt, evaluate.">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300..800&family=Google+Sans+Code:wght@400;500&family=Poppins:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:1rem;padding:.8rem 1.4rem;border-bottom:1px solid var(--line)}
+.top a.home{font-weight:600;color:var(--ink);text-decoration:none;white-space:nowrap}
+.top .ttl{color:var(--gray);font-weight:300;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .btn{padding:.5em 1em;font-size:.85rem}
+.layout{flex:1;display:grid;grid-template-columns:18rem 1fr;min-height:0}
+nav.scenes{border-right:1px solid var(--line);padding:1.2rem 1rem;overflow:auto}
+nav.scenes ol{list-style:none;counter-reset:s}
+nav.scenes li{counter-increment:s}
+nav.scenes button{width:100%;display:grid;grid-template-columns:1.9rem 1fr;gap:.6rem;align-items:center;text-align:left;padding:.5rem .6rem;border-radius:var(--r-sm);font-size:.92rem;line-height:1.3;color:var(--gray)}
+nav.scenes button::before{content:counter(s);width:1.6rem;height:1.6rem;border-radius:50%;display:grid;place-items:center;background:var(--surf-2);font-size:.78rem;font-weight:600}
+nav.scenes button:hover{background:var(--surf)}
+nav.scenes button.done::before{content:"\2713";background:var(--pri-c);color:var(--pri)}
+nav.scenes button.on{background:var(--surf);color:var(--ink);font-weight:500}
+nav.scenes button.on::before{content:counter(s);background:var(--ink);color:#fff}
+nav.scenes .legend{margin:1.2rem .6rem 0;font-size:.78rem;color:var(--gray-2);line-height:1.45}
+nav.scenes .legend b{color:#9B72CB;font-weight:500}
+.stage{display:flex;flex-direction:column;gap:1rem;padding:1.4rem 2rem 1.6rem;min-height:0;min-width:0}
+.head{display:flex;align-items:flex-end;gap:1.5rem;flex-wrap:wrap}
+.head .txt{flex:1;min-width:16rem}
+.meta{font-family:var(--mono);font-size:.75rem;color:var(--gray-2);letter-spacing:.04em}
+.head h1{font-size:1.75rem;font-weight:650;letter-spacing:-.012em;line-height:1.2;margin:.25rem 0 .4rem;text-wrap:balance}
+.head p{color:var(--gray);max-width:60ch}
+.controls{display:flex;gap:.5rem;align-items:center}
+.controls .btn{padding:.65em 1.15em;font-size:.92rem}
+.controls .btn[disabled]{opacity:.4;pointer-events:none}
+.stage .term{flex:1;min-height:18rem}
+.stage .term-body{font-size:.85rem}
+.hint{font-size:.78rem;color:var(--gray-2)}
+/* embed mode: inside a slide */
+body.embed .top,body.embed nav.scenes,body.embed .hint{display:none}
+body.embed .layout{grid-template-columns:1fr}
+body.embed .stage{padding:.6rem .8rem .8rem;gap:.6rem}
+body.embed .head h1{font-size:1.25rem}
+body.embed .head p{font-size:.9rem}
+body.embed .stage .term-body{font-size:.78rem}
+@media (max-width:860px){
+  .top .ttl{display:none}
+  .layout{grid-template-columns:1fr}
+  nav.scenes{border-right:none;border-bottom:1px solid var(--line);padding:.6rem .8rem;overflow-x:auto}
+  nav.scenes ol{display:flex;gap:.3rem}
+  nav.scenes button{grid-template-columns:1.6rem;padding:.3rem}
+  nav.scenes button span{display:none}
+  nav.scenes .legend{display:none}
+  .stage{padding:1rem .9rem 1.2rem}
+  .head h1{font-size:1.35rem}
+  .controls{width:100%}
+  .controls .btn{flex:1;justify-content:center}
+  .stage .term{min-height:24rem}
+  .stage .term-body{font-size:.72rem}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="home" href="../">DevFest Baguio 2026</a>
+  <span class="ttl">Live demo: build a root cause agent with Agents CLI</span>
+  <a class="btn" href="../codelab/">Do it yourself</a>
+</header>
+<div class="layout">
+  <nav class="scenes" aria-label="Demo steps">
+    <ol id="list"></ol>
+    <p class="legend" id="legend"></p>
+  </nav>
+  <section class="stage">
+    <div class="head">
+      <div class="txt">
+        <div class="meta" id="meta"></div>
+        <h1 id="title"></h1>
+        <p id="say"></p>
+      </div>
+      <div class="controls">
+        <button class="btn" id="back" type="button">&larr; Back</button>
+        <button class="btn d" id="run" type="button">&#9654; Run</button>
+      </div>
+    </div>
+    <div class="term" role="log" aria-live="polite">
+      <div class="term-bar"><span class="term-dots"></span><span class="term-title" id="termTitle">Terminal</span><button class="term-replay" id="all" type="button">Play all</button></div>
+      <div class="term-body" id="body"></div>
+    </div>
+    <div class="hint">Click the terminal to skip ahead. Keys: Space or &rarr; to run and go next, &larr; to go back.</div>
+  </section>
+</div>
+<script src="../assets/demo-data.js"></script>
+<script src="../assets/terminal.js"></script>
+<script>
+(function(){
+"use strict";
+var D=window.DEMO, scenes=D.scenes, T=window.Term;
+if(/[?&]embed=1/.test(location.search))document.body.classList.add("embed");
+var body=document.getElementById("body"), player=new T.Player(body);
+var runBtn=document.getElementById("run"), backBtn=document.getElementById("back"), allBtn=document.getElementById("all");
+var list=document.getElementById("list"), btns=[];
+var idx=0, state="ready", auto=false;  /* state: ready | playing | done */
+document.getElementById("legend").innerHTML='Everything here is recorded from a real run, except lines tagged <b>sample</b>: the model’s answers need an API key. '+D.recorded.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+scenes.forEach(function(s,i){
+  var li=document.createElement("li"),b=document.createElement("button");
+  b.type="button";var t=document.createElement("span");t.textContent=s.title;b.appendChild(t);b.title=s.title;
+  b.onclick=function(){auto=false;go(i,false);};li.appendChild(b);list.appendChild(li);btns.push(b);
+});
+
+function header(){
+  var s=scenes[idx];
+  document.getElementById("meta").textContent="STEP "+(idx+1)+" OF "+scenes.length;
+  document.getElementById("title").textContent=s.title;
+  document.getElementById("say").textContent=s.say;
+  document.getElementById("termTitle").textContent="Terminal: "+(s.steps[0].cwd||"~");
+  btns.forEach(function(b,i){b.classList.toggle("on",i===idx);b.classList.toggle("done",i<idx||(i===idx&&state==="done"));});
+  backBtn.disabled=idx===0&&state!=="done";
+  if(state==="playing"){runBtn.textContent="Skip";}
+  else if(state==="done"){runBtn.innerHTML=idx<scenes.length-1?"Next &rarr;":"Start over";}
+  else runBtn.innerHTML="&#9654; Run";
+  allBtn.textContent=auto?"Stop":"Play all";
+  try{history.replaceState(null,"","#"+(idx+1));}catch(e){}
+}
+
+/* show scenes before i instantly, then wait (or play) scene i */
+async function go(i,play){
+  idx=Math.max(0,Math.min(scenes.length-1,i));
+  player.clear();
+  for(var j=0;j<idx;j++){await player.play(scenes[j].steps,true);}
+  state="ready";header();
+  if(play)run();
+}
+async function run(){
+  state="playing";header();
+  var ok=await player.play(scenes[idx].steps);
+  if(!ok)return;
+  state="done";header();
+  if(auto&&idx<scenes.length-1){setTimeout(function(){if(auto){idx++;state="ready";header();run();}},900);}
+  else if(auto){auto=false;header();}
+}
+function primary(){
+  if(state==="playing"){player.skip();return;}
+  if(state==="done"){if(idx<scenes.length-1){idx++;state="ready";header();run();}else{auto=false;go(0,false);}return;}
+  run();
+}
+runBtn.onclick=primary;
+backBtn.onclick=function(){auto=false;go(state==="done"?idx:idx-1,false);};
+allBtn.onclick=function(){if(auto){auto=false;header();return;}auto=true;go(0,true);};
+body.onclick=function(){player.skip();};
+document.addEventListener("keydown",function(e){
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  if(e.key===" "||e.key==="ArrowRight"||e.key==="Enter"){if(e.target.closest&&e.target.closest("button")&&e.key!=="ArrowRight")return;e.preventDefault();primary();}
+  else if(e.key==="ArrowLeft"){e.preventDefault();backBtn.onclick();}
+});
+var h=parseInt((location.hash||"").slice(1),10);
+go(isNaN(h)?0:h-1,false);
+})();
+</script>
+</body>
+</html>

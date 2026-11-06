@@ -34,7 +34,9 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 .step{display:none;max-width:46rem}
 .step.on{display:block}
 .meta{font-family:var(--mono);font-size:.78rem;color:var(--gray-2);letter-spacing:.04em}
-.step h2{font-size:2.1rem;font-weight:650;letter-spacing:-.03em;line-height:1.1;margin:.4rem 0 1.2rem}
+.step h2{font-size:2.1rem;font-weight:650;letter-spacing:-.015em;line-height:1.18;margin:.4rem 0 1.2rem;text-wrap:balance}
+.step h2 code{font-size:.82em}
+.step p,.step li{line-height:1.6}
 .step h3{font-size:1.15rem;font-weight:600;letter-spacing:-.01em;margin:1.8rem 0 .5rem}
 .step p,.step li{color:#3C4043;font-weight:400;margin:.6rem 0}
 .step ul,.step ol{padding-left:1.3rem}
@@ -45,9 +47,6 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 .step th{font-weight:600;font-size:.82rem;color:var(--gray-2)}
 .step td:first-child{white-space:nowrap;font-weight:500}
 .code{position:relative}
-.code button{position:absolute;top:.5rem;right:.5rem;font-size:.75rem;font-weight:500;padding:.3em .8em;border-radius:var(--pill);background:rgba(255,255,255,.12);color:#fff}
-.code button:hover{background:rgba(255,255,255,.22)}
-.code pre{padding-right:4.8rem}
 .note{border-radius:var(--r-md);padding:.9rem 1.1rem;margin:1rem 0;background:var(--surf);font-size:.95rem}
 .note.warn{background:#FCE8E6;color:#8C1D18}
 .note.warn code{background:rgba(255,255,255,.6)}
@@ -58,10 +57,27 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 .pager{display:flex;justify-content:space-between;gap:1rem;margin-top:2.6rem;max-width:46rem}
 .pager .btn[hidden]{display:none}
 .pager .btn.d{margin-left:auto}
+.top .demo-link{font-size:.85rem;font-weight:500;color:var(--pri);text-decoration:none;white-space:nowrap}
+.code-tools{position:absolute;top:.5rem;right:.5rem;display:flex;gap:.35rem}
+.code-tools button{font-size:.75rem;font-weight:500;padding:.3em .8em;border-radius:var(--pill);background:rgba(255,255,255,.12);color:#fff}
+.code-tools button:hover{background:rgba(255,255,255,.22)}
+.code pre{padding-top:2.4rem}
+.os-tabs{margin:.8rem 0 1rem;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.os-bar{display:flex;gap:.25rem;padding:.35rem;background:var(--surf);border-bottom:1px solid var(--line)}
+.os-bar button{padding:.45em 1em;border-radius:var(--pill);font-size:.85rem;font-weight:500;color:var(--gray)}
+.os-bar button[aria-selected="true"]{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(27,27,31,.12)}
+.os-tabs>[data-os]{padding:.2rem 1rem .4rem}
+.os-tabs>[data-os][hidden],.os-only[hidden]{display:none}
+.tiny{font-size:.85rem;color:var(--gray-2)}
+.see .got{display:flex;align-items:center;gap:.55rem;margin-top:.8rem;font-size:.9rem;font-weight:500;color:var(--ink);cursor:pointer;width:fit-content}
+.see .got input{width:1.1rem;height:1.1rem;accent-color:var(--pri)}
+.see.ok{background:linear-gradient(#F3F8FF,#F3F8FF) padding-box,var(--grad) border-box}
+.term-mini{margin:-.4rem 0 1rem}
 @media (max-width:860px){
   .top{padding:.7rem 1rem}
   .top .ttl{display:none}
-  .top .toc-btn{display:inline-block;margin-left:auto}
+  .top .toc-btn{display:inline-block}
+  .top .demo-link{margin-left:auto}
   .layout{grid-template-columns:1fr}
   nav.toc{display:none;position:fixed;inset:3.2rem 0 0 0;max-height:none;z-index:30;background:var(--bg);border-right:none;padding:1rem}
   nav.toc.open{display:block}
@@ -76,6 +92,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <header class="top">
   <a class="home" href="../">DevFest Baguio 2026</a>
   <span class="ttl">Build a root cause agent with Agents CLI</span>
+  <a class="demo-link" href="../demo/">Live demo</a>
   <button class="toc-btn" id="tocBtn" aria-expanded="false" aria-controls="toc">Steps</button>
 </header>
 <div class="prog"><i id="bar"></i></div>
@@ -94,6 +111,17 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <li>A log file with one planted failure for it to find.</li>
 <li>A small eval dataset that checks the agent finds it.</li>
 </ul>
+<h3>Words you'll see</h3>
+<table>
+<tr><td>Agent</td><td>A model, an instruction and some tools, in a loop. It decides which tool to call, reads the result, and answers.</td></tr>
+<tr><td>Tool</td><td>A Python function the model can decide to call, like <code>read_log</code>.</td></tr>
+<tr><td>ADK</td><td>Agent Development Kit: Google's open source framework for writing agents in code.</td></tr>
+<tr><td>Agents CLI</td><td>A command-line tool that creates, runs, evaluates and deploys ADK projects.</td></tr>
+<tr><td>Skill</td><td>A markdown file that teaches a coding agent how to use Agents CLI and the current ADK API.</td></tr>
+<tr><td>Playground</td><td>A local web chat for your agent that shows every step it takes.</td></tr>
+<tr><td>Eval</td><td>Test prompts plus scoring rules, so you know the agent still works after a change.</td></tr>
+</table>
+<p>The same pattern runs in production. Color Health's assistant, built with ADK, checks if a woman is due for a mammogram and books the appointment (<a href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">Google Cloud blog</a>).</p>
 <h3>What you'll learn</h3>
 <ul>
 <li>How to install Agents CLI and its skills.</li>
@@ -109,6 +137,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <li>About 45 minutes.</li>
 </ul>
 <p>Mobile developers: think of the agent as a backend your Flutter or web app can call over HTTP. This codelab stays in the terminal.</p>
+<div class="note">Want to see the whole thing first? <a href="../demo/">Watch the live demo</a>: a recorded session you click through, from install to eval. Most commands below also have a <b>Show output</b> button that replays what you should see.</div>
 <div class="see"><h4>You should see</h4><p>The list of 12 steps on the left (tap <b>Steps</b> on a phone). Your place is saved in the page address, so you can reload or share the link.</p></div>
 </section>
 
@@ -127,10 +156,30 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <tr><td>Model</td><td><code>gemini-3.8-flash</code></td><td>The project's default.</td></tr>
 </table>
 <h3>1. Install uv</h3>
-<p>uv installs Python packages and Python itself. On macOS, Linux or WSL:</p>
+<p>uv installs Python packages, and Python itself. Pick your system:</p>
+<div class="os-tabs">
+<div data-os="mac" data-label="macOS">
 <pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
-<p>Open a new terminal so the <code>uv</code> command is found. Other install options: <a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener">docs.astral.sh/uv</a>.</p>
+<p>Or, with Homebrew: <code>brew install uv</code>.</p>
+</div>
+<div data-os="linux" data-label="Linux">
+<pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+<p>No <code>curl</code>? Use <code>wget -qO- https://astral.sh/uv/install.sh | sh</code>.</p>
+</div>
+<div data-os="win" data-label="Windows">
+<p>Agents CLI supports Windows through WSL 2 only. You run every command in this codelab inside Ubuntu on WSL.</p>
+<p><b>a. Install WSL.</b> Needs Windows 10 version 2004 or later, or Windows 11. Right-click PowerShell, choose <b>Run as administrator</b>, and run:</p>
+<pre><code>wsl --install</code></pre>
+<p>Restart your computer. Then open <b>Ubuntu</b> from the Start menu and create a Linux user name and password when it asks.</p>
+<p><b>b. Install uv inside Ubuntu:</b></p>
+<pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+<p>Keep your project in the Linux home folder (<code>~</code>), not under <code>/mnt/c</code>. It's much faster.</p>
+</div>
+</div>
+<p>Open a new terminal so the <code>uv</code> command is found, then check:</p>
 <pre><code>uv --version</code></pre>
+<p>Optional: install Node.js (LTS) from <a href="https://nodejs.org/en/download" target="_blank" rel="noopener">nodejs.org/en/download</a>. Setup uses it to install the skills for coding agents, and copies them without it. On Windows, install the Linux version inside Ubuntu.</p>
+<p>Sources: <a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener">uv install</a>, <a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank" rel="noopener">Install WSL</a>, <a href="https://google.github.io/agents-cli/guide/getting-started/" target="_blank" rel="noopener">Agents CLI platform support</a>.</p>
 <h3>2. Get a Gemini API key</h3>
 <ol>
 <li>Go to <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in.</li>
@@ -145,11 +194,12 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 <section class="step" data-min="4" data-title="Install Agents CLI and its skills">
 <h2>Install Agents CLI and its skills</h2>
 <p>One command installs the <code>agents-cli</code> command and seven <b>skills</b>. A skill is a markdown file that teaches a coding agent, like Claude Code or Antigravity, how to build ADK agents with the current API.</p>
-<pre><code>uvx google-agents-cli@1.13.0 setup</code></pre>
+<pre data-demo="install:0"><code>uvx google-agents-cli@1.13.0 setup</code></pre>
+<p class="os-only" data-os="win">On Windows, run this in the Ubuntu terminal, not PowerShell.</p>
 <p>The <code>@1.13.0</code> pins the version so your output matches this codelab. The first run downloads the CLI and takes a minute or two.</p>
 <p>Setup installs the skills for every coding agent it finds. If you have none, that's fine. You need the skills only in step 9.</p>
 <p>Check the install:</p>
-<pre><code>agents-cli --version</code></pre>
+<pre data-demo="install:1"><code>agents-cli --version</code></pre>
 <div class="note">If you see <code>agents-cli: command not found</code>, run <code>uv tool update-shell</code>, then open a new terminal.</div>
 <div class="see"><h4>You should see</h4>
 <p>A summary at the end of setup:</p>
@@ -162,7 +212,7 @@ Skills: Installed</code></pre>
 <!-- ====================================================== 4 -->
 <section class="step" data-min="5" data-title="Create the project">
 <h2>Create the project</h2>
-<pre><code>agents-cli create root-cause-agent --prototype --yes
+<pre data-demo="create:all"><code>agents-cli create root-cause-agent --prototype --yes
 cd root-cause-agent
 agents-cli install</code></pre>
 <ul>
@@ -179,7 +229,8 @@ agents-cli install</code></pre>
   .env                       <span class="c"># settings, including your key</span>
   agents-cli-manifest.yaml   <span class="c"># project settings for agents-cli</span></code></pre>
 <h3>Add your API key</h3>
-<p>Open <code>.env</code>. Comment out the three Google Cloud lines and set your key:</p>
+<p>Open <code>.env</code> in your editor. Comment out the three Google Cloud lines and set your key:</p>
+<p class="os-only" data-os="win">On Windows, open the project from Ubuntu with <code>code .</code> (VS Code with the WSL extension), or use <code>nano .env</code>.</p>
 <pre><code><span class="c"># GOOGLE_GENAI_USE_ENTERPRISE=true</span>
 <span class="c"># GOOGLE_CLOUD_PROJECT=your-gcp-project-id</span>
 <span class="c"># GOOGLE_CLOUD_LOCATION=global</span>
@@ -189,7 +240,7 @@ GEMINI_API_KEY=your-api-key-here</code></pre>
 <p>Open <code>app/fast_api_app.py</code> and find this line:</p>
 <pre><code>otel_to_cloud = True</code></pre>
 <p>Change it to:</p>
-<pre><code>otel_to_cloud = False</code></pre>
+<pre data-demo="key:all"><code>otel_to_cloud = False</code></pre>
 <p>Why: in Agents CLI 1.13.0, prototype projects send traces to Google Cloud by default. On a laptop with no gcloud login, <code>agents-cli run</code> and <code>agents-cli eval run</code> then fail with <code>DefaultCredentialsError</code>. If you already use gcloud, the change is still safe.</p>
 <div class="see"><h4>You should see</h4><p><code>create</code> ends with <code>Success! Your agent project is ready.</code> <code>install</code> ends with a list of packages, including <code>google-adk</code>. Your <code>.env</code> has one active line: <code>GEMINI_API_KEY=...</code>.</p></div>
 </section>
@@ -203,9 +254,26 @@ GEMINI_API_KEY=your-api-key-here</code></pre>
 <li><code>order-api-healthy.log</code>: the same service the day before. Use it to compare.</li>
 </ul>
 <p>From inside <code>root-cause-agent</code>:</p>
-<pre><code>curl -LO https://joshuamdeguzman.com/devfest_baguio/sample_logs.zip
+<div class="os-tabs">
+<div data-os="mac" data-label="macOS">
+<pre data-demo="logs:all"><code>curl -LO https://joshuamdeguzman.com/devfest_baguio/sample_logs.zip
 unzip sample_logs.zip
 rm sample_logs.zip</code></pre>
+</div>
+<div data-os="linux" data-label="Linux">
+<p>If <code>unzip</code> is missing, install it first. On Ubuntu or Debian: <code>sudo apt install -y unzip</code>.</p>
+<pre data-demo="logs:all"><code>curl -LO https://joshuamdeguzman.com/devfest_baguio/sample_logs.zip
+unzip sample_logs.zip
+rm sample_logs.zip</code></pre>
+</div>
+<div data-os="win" data-label="Windows">
+<p>In the Ubuntu terminal. Ubuntu on WSL may not have <code>unzip</code> yet:</p>
+<pre data-demo="logs:all"><code>sudo apt install -y unzip
+curl -LO https://joshuamdeguzman.com/devfest_baguio/sample_logs.zip
+unzip sample_logs.zip
+rm sample_logs.zip</code></pre>
+</div>
+</div>
 <p>No <code>curl</code> or <code>unzip</code>? <a href="../sample_logs.zip" download>Download sample_logs.zip</a> and unzip it into the project folder. You can also <a href="../sample_logs/order-api.log" target="_blank">read order-api.log</a> in the browser.</p>
 <p>Don't look for the bug yet. Let the agent find it.</p>
 <div class="see"><h4>You should see</h4>
@@ -318,7 +386,7 @@ app = App(
 <li><b>The instruction</b> tells the agent its job and the order to use the tools in.</li>
 </ul>
 <p>Check that the tools work before you involve the model:</p>
-<pre><code>uv run python -c "from app.agent import find_errors; print(find_errors('order-api.log')['count'])"</code></pre>
+<pre data-demo="tools:1"><code>uv run python -c "from app.agent import find_errors; print(find_errors('order-api.log')['count'])"</code></pre>
 <div class="see"><h4>You should see</h4><p>The number <code>15</code>. That's how many ERROR and WARN lines the failing log has.</p></div>
 </section>
 
@@ -326,8 +394,9 @@ app = App(
 <section class="step" data-min="5" data-title="Run the playground">
 <h2>Run the playground</h2>
 <p>The playground is the ADK web UI. You chat with the agent and see every step it takes.</p>
-<pre><code>agents-cli playground</code></pre>
+<pre data-demo="playground:0"><code>agents-cli playground</code></pre>
 <p>Open the address it prints: <a href="http://127.0.0.1:8080/dev-ui/?app=app" target="_blank" rel="noopener">http://127.0.0.1:8080/dev-ui/?app=app</a>. Keep the terminal open.</p>
+<p class="os-only" data-os="win">On Windows, open that address in your normal Windows browser. WSL 2 forwards <code>localhost</code> to Ubuntu.</p>
 <h3>Ask the question</h3>
 <p>Type this in the chat:</p>
 <pre><code>What went wrong in this log?</code></pre>
@@ -340,7 +409,8 @@ app = App(
 </ol>
 <p>This is how you debug an agent. If the answer is wrong, check here whether the model called the right tool with the right argument, before you change any prompt.</p>
 <p>The same works in the terminal, without the browser. Open a second terminal in the project folder:</p>
-<pre><code>agents-cli run "What went wrong in order-api.log?"</code></pre>
+<pre data-demo="run:all"><code>agents-cli run "What went wrong in order-api.log?"</code></pre>
+<p class="tiny">In the replay, lines tagged <i>sample</i> show a typical answer. The model words it differently each time.</p>
 <div class="note"><code>API key not valid</code> means the key in <code>.env</code> is wrong, or one of the <code>GOOGLE_*</code> lines is still active. A <code>429</code> means you hit the free rate limit. Wait a minute and try again.</div>
 <div class="see"><h4>You should see</h4><p>An answer that says payments fail because the new deploy (v2.4.1) set <code>PAYMENT_TIMEOUT_MS=30</code>, 30 milliseconds, while the gateway needs about 400 ms. Every charge times out and <code>/pay</code> returns 502. The fix is to set it back to 3000. Your wording will differ. The cache miss warning is not the cause.</p></div>
 </section>
@@ -349,7 +419,7 @@ app = App(
 <section class="step" data-min="3" data-title="Change the instruction">
 <h2>Change the instruction, see hot reload</h2>
 <p>Leave the playground running. In <code>app/agent.py</code>, change the instruction to ask for a fixed format:</p>
-<pre><code>    instruction=(
+<pre data-demo="playground:1,2"><code>    instruction=(
         "You are an on-call engineer. When asked about a log, call find_errors "
         "first, then read_log for context. Answer in three short bullet "
         "points: Root cause, Evidence (quote the log lines), Fix. "
@@ -471,7 +541,7 @@ custom_metrics:
 </ul>
 <p>Both run on your laptop. Built-in metrics such as <code>tool_use_quality</code> call the Eval Service in Gemini platform and need a Google Cloud project.</p>
 <h3>3. Run it</h3>
-<pre><code>agents-cli eval run --dataset tests/eval/datasets/root-cause.json</code></pre>
+<pre data-demo="eval:all"><code>agents-cli eval run --dataset tests/eval/datasets/root-cause.json</code></pre>
 <p>It runs the agent on each case, then grades the answers. Open the HTML report in <code>artifacts/grade_results/</code> to read why each case scored what it did.</p>
 <p>Now break it on purpose. Remove <code>"Use this first to locate problems quickly."</code> from the <code>find_errors</code> docstring, or tell the agent to answer in one word. Run the eval again and compare.</p>
 <div class="see"><h4>You should see</h4><p>Two stages, <code>Step 1/2: eval generate</code> and then the grading. The output ends with <code>RESULT: PASS</code>, or <code>RESULT: FAIL (...)</code> with the failing metrics and cases listed above it. A results file appears in <code>artifacts/grade_results/</code>.</p></div>
@@ -481,7 +551,28 @@ custom_metrics:
 <section class="step" data-min="15" data-title="Optional: deploy to Cloud Run" data-optional="1">
 <h2>Optional: deploy to Cloud Run</h2>
 <div class="note warn"><b>This step needs a Google Cloud project with billing enabled.</b> Cloud Run, Cloud Build and Artifact Registry can charge you. Use a sandbox project, and delete what you create at the end of this step.</div>
-<p>You also need the <a href="https://cloud.google.com/sdk/docs/install" target="_blank" rel="noopener">Google Cloud SDK</a> (<code>gcloud</code>).</p>
+<h3>0. Install the Google Cloud CLI</h3>
+<div class="os-tabs">
+<div data-os="mac" data-label="macOS">
+<p>Apple silicon (M1 or later). On an Intel Mac, use <code>google-cloud-cli-darwin-x86_64.tar.gz</code>.</p>
+<pre><code>curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-darwin-arm.tar.gz
+tar -xf google-cloud-cli-darwin-arm.tar.gz
+./google-cloud-sdk/install.sh</code></pre>
+</div>
+<div data-os="linux" data-label="Linux">
+<p>x86_64. On ARM, use <code>google-cloud-cli-linux-arm.tar.gz</code>. Debian, Ubuntu and Fedora also have packages; see the docs.</p>
+<pre><code>curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz
+tar -xf google-cloud-cli-linux-x86_64.tar.gz
+./google-cloud-sdk/install.sh</code></pre>
+</div>
+<div data-os="win" data-label="Windows">
+<p>Install it inside Ubuntu on WSL, where Agents CLI runs, not with the Windows installer:</p>
+<pre><code>curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-linux-x86_64.tar.gz
+tar -xf google-cloud-cli-linux-x86_64.tar.gz
+./google-cloud-sdk/install.sh</code></pre>
+</div>
+</div>
+<p>Open a new terminal afterwards. Source: <a href="https://docs.cloud.google.com/sdk/docs/install-sdk" target="_blank" rel="noopener">Install the Google Cloud CLI</a>.</p>
 <h3>1. Sign in and pick the project</h3>
 <pre><code>agents-cli login -i
 gcloud config set project YOUR_PROJECT_ID</code></pre>
@@ -547,6 +638,8 @@ rm -rf root-cause-agent log-agent</code></pre>
 </main>
 </div>
 
+<script src="../assets/demo-data.js"></script>
+<script src="../assets/terminal.js"></script>
 <script>
 (function(){
 "use strict";
@@ -582,7 +675,48 @@ steps.forEach(function(s,i){
       ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
       try{document.execCommand('copy');done();}catch(e){b.textContent='Select and copy';}document.body.removeChild(ta);}
   };
-  wrap.appendChild(b);
+  var tools=document.createElement('div');tools.className='code-tools';tools.appendChild(b);
+  wrap.appendChild(tools);
+});
+
+/* OS tabs: one choice for the whole page, remembered on this device */
+var OS_KEY='devfest-baguio-os';
+function guessOS(){var u=navigator.userAgent||'';return /Windows/.test(u)?'win':/Mac|iPhone|iPad/.test(u)?'mac':'linux';}
+var os=(function(){try{return localStorage.getItem(OS_KEY)}catch(e){return null}})()||guessOS();
+var tabSets=[].slice.call(document.querySelectorAll('.os-tabs'));
+tabSets.forEach(function(set){
+  var bar=document.createElement('div');bar.className='os-bar';bar.setAttribute('role','tablist');
+  [].slice.call(set.children).forEach(function(panel){
+    var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');
+    b.textContent=panel.dataset.label;b.dataset.os=panel.dataset.os;
+    b.onclick=function(){setOS(panel.dataset.os);};bar.appendChild(b);
+  });
+  set.insertBefore(bar,set.firstChild);
+});
+function setOS(v){
+  os=v;try{localStorage.setItem(OS_KEY,v)}catch(e){}
+  tabSets.forEach(function(set){
+    [].slice.call(set.querySelectorAll('.os-bar button')).forEach(function(b){b.setAttribute('aria-selected',String(b.dataset.os===v));});
+    [].slice.call(set.querySelectorAll(':scope>[data-os]')).forEach(function(p){p.hidden=p.dataset.os!==v;});
+  });
+  [].slice.call(document.querySelectorAll('.os-only')).forEach(function(p){p.hidden=p.dataset.os!==v;});
+}
+setOS(os);
+
+/* replays of recorded output */
+if(window.Term)window.Term.attachPreviews(document);
+
+/* "Got it" checks, remembered on this device */
+var CK='devfest-baguio-checks',checks={};
+try{checks=JSON.parse(localStorage.getItem(CK)||'{}')}catch(e){}
+steps.forEach(function(s,i){
+  var see=s.querySelector('.see');if(!see)return;
+  var lab=document.createElement('label');lab.className='got';
+  var cb=document.createElement('input');cb.type='checkbox';cb.checked=!!checks[i+1];
+  lab.appendChild(cb);lab.appendChild(document.createTextNode(' Got it, my output matches'));
+  see.appendChild(lab);see.classList.toggle('ok',cb.checked);
+  cb.onchange=function(){checks[i+1]=cb.checked;see.classList.toggle('ok',cb.checked);
+    try{localStorage.setItem(CK,JSON.stringify(checks))}catch(e){}render();};
 });
 
 function current(){var n=parseInt((location.hash||'').replace('#',''),10);
@@ -591,7 +725,7 @@ function current(){var n=parseInt((location.hash||'').replace('#',''),10);
 function render(){
   var n=current();
   steps.forEach(function(s,i){s.classList.toggle('on',i===n-1);});
-  links.forEach(function(a,i){a.classList.toggle('on',i===n-1);a.classList.toggle('done',i<n-1);
+  links.forEach(function(a,i){a.classList.toggle('on',i===n-1);a.classList.toggle('done',!!checks[i+1]||i<n-1);
     if(i===n-1)a.setAttribute('aria-current','step');else a.removeAttribute('aria-current');});
   bar.style.width=(n/steps.length*100)+'%';
   prevBtn.hidden=n===1;prevBtn.href='#'+(n-1);

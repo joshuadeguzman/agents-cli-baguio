@@ -13,8 +13,9 @@
 <style>
 .wrap{max-width:68rem;margin:0 auto;padding:4.5rem 2rem 3rem;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 .hero{display:grid;grid-template-columns:1.25fr .75fr;gap:3.5rem;align-items:center;flex:1}
-h1{font-size:clamp(2.3rem,5.2vw,3.9rem);font-weight:700;letter-spacing:-.035em;line-height:1.02;margin:.9rem 0 1.2rem}
-.lede{font-size:1.3rem;font-weight:400;letter-spacing:-.01em;color:var(--gray);max-width:32ch}
+h1{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:700;letter-spacing:-.018em;word-spacing:.04em;line-height:1.12;margin:1.1rem 0 1.4rem;text-wrap:balance;max-width:16ch}
+h1 .grad-text{white-space:nowrap}
+.lede{font-size:1.25rem;font-weight:400;line-height:1.55;color:var(--gray);max-width:34ch;text-wrap:pretty}
 .who{margin-top:2rem;padding-top:1.3rem;border-top:1px solid var(--line)}
 .who b{display:block;font-size:1.1rem;font-weight:500}
 .who span{color:var(--gray);font-weight:300}
@@ -23,12 +24,13 @@ h1{font-size:clamp(2.3rem,5.2vw,3.9rem);font-weight:700;letter-spacing:-.035em;l
 .qr img{width:100%;max-width:15rem;aspect-ratio:1;display:block;margin:0 auto;image-rendering:pixelated}
 .qr p{margin-top:.9rem;font-size:.95rem;color:var(--gray)}
 .qr .url{font-family:var(--mono);font-size:.8rem;color:var(--gray-2);margin-top:.2rem;overflow-wrap:anywhere}
-.more{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3.5rem}
+.more{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:3.5rem}
 .more a{text-decoration:none;color:inherit}
 .more h3{font-size:1rem;font-weight:600}
 .more p{font-size:.9rem;color:var(--gray);font-weight:300;margin-top:.2rem}
 footer{margin-top:2.5rem;font-size:.85rem;color:var(--gray-2)}
 footer a{color:var(--gray)}
+@media (max-width:1000px){.more{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:760px){
   .wrap{padding:2.2rem 1.25rem 2rem}
   .hero{grid-template-columns:1fr;gap:2.2rem}
@@ -48,6 +50,7 @@ footer a{color:var(--gray)}
       <p class="lede">Create, run, test and evaluate an ADK agent on your laptop. Then build your own in the codelab.</p>
       <div class="actions">
         <a class="btn d" href="codelab/">Start the codelab</a>
+        <a class="btn" href="demo/">Watch the demo</a>
         <a class="btn" href="slides/">Open the slides</a>
       </div>
       <div class="who">
@@ -63,6 +66,7 @@ footer a{color:var(--gray)}
   </div>
   <div class="more">
     <a class="card" href="codelab/"><h3>Codelab</h3><p>12 steps, about 45 minutes. A Gemini API key is all you need.</p></a>
+    <a class="card" href="demo/"><h3>Live demo</h3><p>Click through a recorded run, from install to eval.</p></a>
     <a class="card" href="slides/"><h3>Slides</h3><p>Use the arrow keys. Press N for notes, J to jump.</p></a>
     <a class="card" href="sample_logs.zip" download><h3>Sample logs</h3><p>The log files the codelab agent reads. <code>sample_logs.zip</code></p></a>
   </div>

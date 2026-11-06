@@ -31,3 +31,30 @@ pre{font-family:var(--mono);font-size:.85rem;line-height:1.65;background:var(--i
 pre code{background:none;padding:0;font-size:inherit;color:inherit}
 pre .k{color:#C39BE8}pre .s{color:#9DD1A0}pre .c{color:#6E7480}pre .t{color:#8AB4F8}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---- terminal replay (assets/terminal.js). Colors are the deck's pre colors. ---- */
+.term{background:var(--ink);color:#D6D8DC;border-radius:var(--r-md);overflow:hidden;display:flex;flex-direction:column;font-family:var(--mono)}
+.term-bar{display:flex;align-items:center;gap:.8rem;padding:.55rem .9rem;background:#26262B;font-family:var(--sans);font-size:.78rem;color:#9AA0A6}
+.term-dots{width:2.6rem;height:.62rem;background:radial-gradient(circle at .31rem 50%,#F28B82 .3rem,transparent .32rem),radial-gradient(circle at 1.3rem 50%,#FDD663 .3rem,transparent .32rem),radial-gradient(circle at 2.29rem 50%,#81C995 .3rem,transparent .32rem)}
+.term-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.term-replay{font-size:.75rem;padding:.2em .8em;border-radius:var(--pill);background:rgba(255,255,255,.1);color:#fff}
+.term-body{padding:.9rem 1rem;overflow:auto;font-size:.8rem;line-height:1.55;flex:1;cursor:default}
+.term-mini{margin:.4rem 0 1rem}
+.term-mini .term-body{max-height:22rem}
+.t-line{white-space:pre;min-height:1.55em}
+.t-cmd{color:#fff;margin-top:.35em}
+.t-cwd{color:#8AB4F8}
+.t-dollar{color:#6E7480}
+.t-typed{color:#7EE787;font-weight:500}
+.t-caret{display:inline-block;width:.55em;height:1.1em;vertical-align:-.15em;background:#D6D8DC;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.t-ok{color:#81C995}.t-warn{color:#FDD663}.t-err{color:#F28B82}
+.t-gap{color:#6E7480;font-style:italic}
+.t-sample{color:#C39BE8}
+.t-sim{color:#8AB4F8}
+.t-tag::after{content:attr(data-tag);margin-left:.8em;font-family:var(--sans);font-size:.68rem;padding:.05em .5em;border-radius:var(--pill);background:rgba(195,155,232,.18);color:#C39BE8;vertical-align:.1em}
+.t-edit{margin:.4rem 0 .6rem;border-left:2px solid #3C3C43;padding-left:.8rem}
+.t-edit-h{font-family:var(--sans);font-size:.72rem;color:#9AA0A6;margin-bottom:.2rem}
+.t-diff-add{color:#9DD1A0}.t-diff-del{color:#F28B82;opacity:.75}.t-diff-ctx{color:#9AA0A6}
+.run-btn{font-size:.75rem;font-weight:500;padding:.3em .8em;border-radius:var(--pill);background:rgba(255,255,255,.12);color:#fff}
+.run-btn:hover{background:rgba(255,255,255,.22)}

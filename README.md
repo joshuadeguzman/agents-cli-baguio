@@ -10,6 +10,10 @@ each repo with Pages turned on serves at `/<repo-name>/`.
 | `slides/index.html` | Copy of the `/agents-cli` deck, retargeted to DevFest Baguio |
 | `codelab/index.html` | 12-step codelab: build a root cause agent |
 | `sample_logs/`, `sample_logs.zip` | Log files the codelab agent reads. One planted failure. |
+| `demo/index.html` | Click-through replay of a recorded agents-cli session. `?embed=1` for a compact view |
+| `assets/demo-data.js` | The recorded terminal output. Generated, see below |
+| `assets/terminal.js` | Replays `demo-data.js` in the demo page and the codelab's "Show output" buttons |
+| `assets/live-demo.js` | The "One prompt, a local chat, then Gemini Enterprise" slide: terminal tabs and a mock chat, one step per key press |
 | `assets/site.css` | Tokens copied from the deck, shared by the landing page and codelab |
 | `assets/qr-codelab.svg` | QR code for `https://joshuamdeguzman.com/devfest_baguio/codelab/` |
 
@@ -26,5 +30,9 @@ Rebuild the zip after you edit the logs:
 ```bash
 rm sample_logs.zip && zip -q -X -r sample_logs.zip sample_logs
 ```
+
+Recorded output: real runs of agents-cli on macOS. Lines tagged `sample` (model answers) or `simulated`
+(coding agent narration, deploy, publish) were not recorded. Re-record with a real `GEMINI_API_KEY`
+to replace the sample answers.
 
 Tested with google-agents-cli 1.13.0, google-adk 2.13.0, uv 0.13.7, on November 6, 2026.
