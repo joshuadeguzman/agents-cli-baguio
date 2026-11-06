@@ -27,7 +27,7 @@ input{font:inherit}
 
 #app{height:100vh;height:100dvh;display:grid;place-items:center}
 .stage{position:relative;width:min(100vw,177.7vh);height:min(56.25vw,100vh);container-type:inline-size;overflow:hidden;background:var(--bg)}
-.slide{position:absolute;inset:0;display:none;font-size:1.28cqw;padding:3.1em max(4em,calc((100% - 62em)/2)) 3.3em;flex-direction:column;justify-content:center;overflow:hidden}
+.slide{position:absolute;inset:0;display:none;font-size:1.28cqw;padding:3.1em max(4em,calc((100% - 62em)/2)) 3.3em;flex-direction:column;justify-content:safe center;overflow:hidden}
 .slide>*{min-height:0;width:100%}
 /* a heading that spans the slide should not wrap at the column cap */
 .slide>h1,.slide>h2{max-width:none}
@@ -226,7 +226,9 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .lv-bar{display:flex;align-items:center;gap:.7em;padding:.6em .9em;background:#2B2B31}
 .lv-dots{width:3.1em;height:.75em;flex:none;background:radial-gradient(circle at .37em 50%,#F28B82 .36em,transparent .38em),radial-gradient(circle at 1.55em 50%,#FDD663 .36em,transparent .38em),radial-gradient(circle at 2.73em 50%,#81C995 .36em,transparent .38em)}
 .lv-bar b{font-size:.62em;font-weight:500;color:#9AA0A6;flex:1;text-align:center;margin-right:3.1em}
-.lv-tabs{display:flex;gap:.2em;padding:.3em .5em 0;background:#232328;min-height:2.1em}
+.lv-tabs{display:flex;gap:.2em;padding:.3em .5em 0;background:#232328;min-height:2.1em;overflow-x:auto;scrollbar-width:none}
+.lv-tabs::-webkit-scrollbar{display:none}
+.lv-tab{flex:none}
 .lv-tab{font-family:var(--mono);font-size:.6em;color:#9AA0A6;padding:.55em 1.1em;border-radius:.7em .7em 0 0;white-space:nowrap;animation:lvIn .35s cubic-bezier(.2,.9,.3,1) both}
 .lv-tab.on{background:#1B1B1F;color:#fff}
 .lv-tab i{font-style:normal;color:#6E7480;margin-right:.6em}
@@ -291,6 +293,23 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 .shot figcaption{position:absolute;right:.55em;bottom:.5em;font-size:.56em;font-weight:400;color:rgba(27,27,31,.7);background:rgba(255,255,255,.82);padding:.2em .6em;border-radius:var(--pill);backdrop-filter:blur(4px)}
 @media (max-aspect-ratio:1/1){.slide h1.two{white-space:normal!important;font-size:2.2em!important}.slide h1.two br{display:none}.slide .t1{grid-template-columns:1fr!important;gap:2em!important}.slide .t1 img{max-width:12em!important}}
+
+/* ---- production section: focus, insight line, full company slides ---- */
+.prod .card{transition:opacity .35s,filter .35s}
+.prod.f1 .card:not(:nth-child(1)),.prod.f2 .card:not(:nth-child(2)),.prod.f3 .card:not(:nth-child(3)){opacity:.38;filter:grayscale(.7)}
+.prod.f1 .card:nth-child(1),.prod.f2 .card:nth-child(2),.prod.f3 .card:nth-child(3){background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent;box-shadow:0 1.2em 3em rgba(27,27,31,.1)}
+.insight{display:flex;align-items:flex-start;gap:.7em;margin-top:1.3em;max-width:none;color:var(--ink);font-weight:400;font-size:1em;line-height:1.5}
+.insight .spark{width:1.5em;height:1.5em;flex:none;margin-top:-.05em}
+.co{display:grid;grid-template-columns:1.35fr 1fr;gap:2.6em;align-items:center}
+.co-shot{margin:0;aspect-ratio:auto;box-shadow:0 1.4em 3.5em rgba(27,27,31,.14)}
+.co-shot img{height:auto}
+.co-shot figcaption{font-size:.62em}
+.co-txt blockquote{font-size:1.25em;line-height:1.42;letter-spacing:-.008em;color:var(--ink);font-weight:400;text-wrap:pretty}
+.co-who{margin-top:.8em;font-size:.85em;color:var(--gray);max-width:none}
+.co-facts{margin:1.1em 0 .2em;display:flex;flex-direction:column;gap:.35em}
+.co-facts li{font-size:.85em;color:var(--gray);padding-left:1.1em;position:relative}
+.co-facts li::before{content:"";position:absolute;left:0;top:.55em;width:.45em;height:.45em;border-radius:50%;background:var(--grad)}
+@media (max-aspect-ratio:1/1){.co{grid-template-columns:1fr;gap:1.4em}}
 </style>
 </head>
 <body>
@@ -364,10 +383,10 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   Scheduling and pipelines need the agent deployed somewhere. That's the last part of the talk.<br>
   If someone asks about cost: <strong>available 24/7 doesn't mean running 24/7.</strong> Since Agents CLI 1.4.1, deploys default to <code>--min-instances 0</code>, so an idle agent scales to zero.</div>
 </section>
-<!-- DevFest Baguio: ADK in production -->
+<!-- DevFest Baguio: ADK in production, focus 1 -->
 <section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production">
   <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
-  <div class="cols c3 prod" style="align-items:stretch;margin-top:.2em">
+  <div class="cols c3 prod f1" style="align-items:stretch;margin-top:.2em">
     <div class="card line" style="padding:1.1em 1.2em">
       <figure class="shot"><img src="../assets/brands/color.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
       <span class="pill">Healthcare</span><h3 style="margin-top:.6em;font-size:1.3em">Color Health</h3>
@@ -381,15 +400,121 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
       <span class="pill">Fleet data</span><h3 style="margin-top:.6em;font-size:1.3em">Geotab</h3>
       <p>Uses ADK as the framework for its AI Agent Center of Excellence, one governed path to production.</p></div>
   </div>
-  <div class="card gen" style="margin-top:.9em;padding:.8em 1.3em"><p style="max-width:none;color:var(--ink);font-weight:400;font-size:.92em">ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</p></div>
+  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</span></p>
   <div class="srcs" style="flex-direction:row;gap:1.4em">
     <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
     <a class="src" href="https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/" target="_blank" rel="noopener">developers.googleblog.com &middot; May 20, 2025</a>
   </div>
-  <div class="notes"><h4>One minute. This is why it's worth your afternoon.</h4>
-  Pick one story and tell it: <strong>Color Health</strong> is the easiest. A patient asks, the agent checks screening guidelines, finds a clinician, books the slot.<br>
-  Everything on this slide is quoted from the two Google posts linked at the bottom. Agent Engine is the earlier name of Agent Runtime.</div>
+  <div class="notes"><h4>One minute. Three companies, one at a time.</h4>
+  Read the headline, then press &rarr; for each company. The highlighted box is the one coming next.<br>
+  Everything here is quoted from the two Google posts linked at the bottom. Agent Engine is the earlier name of Agent Runtime.</div>
 </section>
+
+<!-- DevFest Baguio: Color Health -->
+<section class="slide" data-sec="Why agents" data-at="4" data-title="In production: Color Health">
+  <div class="co">
+    <figure class="shot co-shot"><img src="../assets/brands/color-lg.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+    <div class="co-txt">
+      <span class="pill">Healthcare &middot; 1 of 3</span>
+      <h2 class="dm" style="margin:.5em 0 .5em">Color Health</h2>
+      <blockquote>&ldquo;The Color Assistant determines if women are due for a mammogram, connects them with clinicians, and schedules care. The power of the agent lies in the scale it enables, helping us reach more women, collect diverse and context-rich answers, and respond in real time.&rdquo;</blockquote>
+      <p class="co-who">Jayodita Sanghvi, PhD., Head of AI Platform, Color</p>
+      <ul class="co-facts"><li>Built with ADK, powered by Gemini</li><li>Scaled into production on Agent Engine</li><li>With Google Cloud and Google.org</li></ul>
+      <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
+    </div>
+  </div>
+  <div class="notes"><h4>One minute</h4>
+  Tell it as a flow: a patient asks, the agent checks if she is due for a screening, finds a clinician, books the slot. Same pattern as ours: an instruction and a few tools.<br>The quote is word for word from the Google Cloud blog post.</div>
+</section>
+
+<!-- DevFest Baguio: ADK in production, focus 2 -->
+<section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production: PayPal next">
+  <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
+  <div class="cols c3 prod f2" style="align-items:stretch;margin-top:.2em">
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/color.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Healthcare</span><h3 style="margin-top:.6em;font-size:1.3em">Color Health</h3>
+      <p>Color Assistant checks if a woman is due for a mammogram, connects her with clinicians, and schedules care. Built with ADK, scaled on Agent Engine.</p></div>
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/paypal.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Payments</span><h3 style="margin-top:.6em;font-size:1.3em">PayPal</h3>
+      <p>Builds and deploys agents with ADK. Uses its CLI and visual tools to trace multi-agent flows for agent-based commerce.</p></div>
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/geotab.jpg" alt="Geotab homepage" loading="lazy"><figcaption>geotab.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Fleet data</span><h3 style="margin-top:.6em;font-size:1.3em">Geotab</h3>
+      <p>Uses ADK as the framework for its AI Agent Center of Excellence, one governed path to production.</p></div>
+  </div>
+  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg2)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</span></p>
+  <div class="srcs" style="flex-direction:row;gap:1.4em">
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
+    <a class="src" href="https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/" target="_blank" rel="noopener">developers.googleblog.com &middot; May 20, 2025</a>
+  </div>
+  <div class="notes"><h4>Back to the overview, ten seconds.</h4>
+  Point at PayPal, then press &rarr;.<br>
+  Everything here is quoted from the two Google posts linked at the bottom. Agent Engine is the earlier name of Agent Runtime.</div>
+</section>
+
+<!-- DevFest Baguio: PayPal -->
+<section class="slide" data-sec="Why agents" data-at="4" data-title="In production: PayPal">
+  <div class="co">
+    <figure class="shot co-shot"><img src="../assets/brands/paypal-lg.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+    <div class="co-txt">
+      <span class="pill">Payments &middot; 2 of 3</span>
+      <h2 class="dm" style="margin:.5em 0 .5em">PayPal</h2>
+      <blockquote>&ldquo;We leverage the step-by-step visibility feature for tracing and debugging agent workflows. This lets the team easily trace requests/responses and visualize the flow of intent, cart, and payment mandates.&rdquo;</blockquote>
+      <p class="co-who">Nitin Sharma, Principal Engineer, AI, PayPal</p>
+      <ul class="co-facts"><li>Builds and deploys agents with ADK</li><li>Uses the ADK CLI and visual tools to inspect agent interactions and state</li><li>Multi-agent workflows for agent-based commerce</li></ul>
+      <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
+    </div>
+  </div>
+  <div class="notes"><h4>One minute</h4>
+  The point for developers: they debug agents the way we will today, by looking at each step. That is the event view in the playground.<br>The quote is word for word from the Google Cloud blog post.</div>
+</section>
+
+<!-- DevFest Baguio: ADK in production, focus 3 -->
+<section class="slide" data-sec="Why agents" data-at="3" data-title="ADK agents in production: Geotab next">
+  <h2 class="dm" style="margin-bottom:.45em">Agents built with ADK are already in production</h2>
+  <div class="cols c3 prod f3" style="align-items:stretch;margin-top:.2em">
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/color.jpg" alt="Color Health homepage" loading="lazy"><figcaption>color.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Healthcare</span><h3 style="margin-top:.6em;font-size:1.3em">Color Health</h3>
+      <p>Color Assistant checks if a woman is due for a mammogram, connects her with clinicians, and schedules care. Built with ADK, scaled on Agent Engine.</p></div>
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/paypal.jpg" alt="PayPal homepage" loading="lazy"><figcaption>paypal.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Payments</span><h3 style="margin-top:.6em;font-size:1.3em">PayPal</h3>
+      <p>Builds and deploys agents with ADK. Uses its CLI and visual tools to trace multi-agent flows for agent-based commerce.</p></div>
+    <div class="card line" style="padding:1.1em 1.2em">
+      <figure class="shot"><img src="../assets/brands/geotab.jpg" alt="Geotab homepage" loading="lazy"><figcaption>geotab.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+      <span class="pill">Fleet data</span><h3 style="margin-top:.6em;font-size:1.3em">Geotab</h3>
+      <p>Uses ADK as the framework for its AI Agent Center of Excellence, one governed path to production.</p></div>
+  </div>
+  <p class="insight"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spg3)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>ADK also powers agents in Gemini Enterprise and in products across Google. Renault Group, Box and Revionics were named as early ADK users. Python ADK passed 7 million downloads by November 2025.</span></p>
+  <div class="srcs" style="flex-direction:row;gap:1.4em">
+    <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
+    <a class="src" href="https://developers.googleblog.com/en/agents-adk-agent-engine-a2a-enhancements-google-io/" target="_blank" rel="noopener">developers.googleblog.com &middot; May 20, 2025</a>
+  </div>
+  <div class="notes"><h4>Back to the overview, ten seconds.</h4>
+  Point at Geotab, then press &rarr;.<br>
+  Everything here is quoted from the two Google posts linked at the bottom. Agent Engine is the earlier name of Agent Runtime.</div>
+</section>
+
+<!-- DevFest Baguio: Geotab -->
+<section class="slide" data-sec="Why agents" data-at="4" data-title="In production: Geotab">
+  <div class="co">
+    <figure class="shot co-shot"><img src="../assets/brands/geotab-lg.jpg" alt="Geotab homepage" loading="lazy"><figcaption>geotab.com &middot; Retrieved Nov 6, 2026</figcaption></figure>
+    <div class="co-txt">
+      <span class="pill">Fleet data &middot; 3 of 3</span>
+      <h2 class="dm" style="margin:.5em 0 .5em">Geotab</h2>
+      <blockquote>&ldquo;For Geotab, ADK is the foundation that allows us to rapidly and safely scale our agentic AI solutions across the enterprise.&rdquo;</blockquote>
+      <p class="co-who">Mike Branch, Vice President, Data &amp; Analytics, Geotab</p>
+      <ul class="co-facts"><li>ADK is the framework for its AI Agent Center of Excellence</li><li>One governable path to production</li><li>A faster build, test and deploy cycle</li></ul>
+      <a class="src" href="https://cloud.google.com/blog/products/ai-machine-learning/more-ways-to-build-and-scale-ai-agents-with-vertex-ai-agent-builder" target="_blank" rel="noopener">cloud.google.com/blog &middot; Nov 6, 2025</a>
+    </div>
+  </div>
+  <div class="notes"><h4>One minute</h4>
+  This one is about teams: one framework, one path to production, so every team ships agents the same way.<br>The quote is word for word from the Google Cloud blog post.</div>
+</section>
+
 
 <!-- DevFest Baguio: what is an agent -->
 <section class="slide" data-sec="Why agents" data-at="2" data-steps="4">
@@ -1217,6 +1342,19 @@ slides.forEach(function(s,i){
 });
 var progBar=document.getElementById('progBar');
 
+/* shrink the current slide until nothing is cut off (fonts, zoom, long text) */
+function fit(s){
+  if(!s)return;
+  s.style.fontSize='';
+  if(getComputedStyle(s).position!=='absolute')return;  /* phone layout scrolls instead */
+  var base=parseFloat(getComputedStyle(s).fontSize),f=1;
+  var over=function(){return s.scrollHeight>s.clientHeight+1||s.scrollWidth>s.clientWidth+1;};
+  while(over()&&f>0.6){f-=0.03;s.style.fontSize=(base*f)+'px';}
+}
+function fitCurrent(){fit(slides[idx]);}
+window.addEventListener('resize',function(){clearTimeout(fit.t);fit.t=setTimeout(fitCurrent,80);});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitCurrent);
+if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',fitCurrent);
 function render(){
   slides.forEach(function(s,i){s.classList.toggle('is-current',i===idx);});
   progBar.style.width=((idx+1)/slides.length*100)+'%';
@@ -1224,6 +1362,7 @@ function render(){
   document.getElementById('notes').innerHTML=slides[idx].dataset.notes||'<h4>No notes</h4>';
   [].slice.call(document.querySelectorAll('#jump button')).forEach(function(b){b.classList.toggle('on',+b.dataset.i===idx);});
   try{history.replaceState(null,'','#'+(idx+1));}catch(e){/* sandboxed iframe */}
+  fitCurrent();
   updatePace();
 }
 
