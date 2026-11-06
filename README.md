@@ -33,9 +33,19 @@ python3 -m http.server 8811 --directory /tmp/www
 
 ## Run the example agents
 
-See [`examples/agents/README.md`](examples/agents/README.md). Each agent needs
-[uv](https://docs.astral.sh/uv/getting-started/installation/), Agents CLI
-(`uvx google-agents-cli@1.13.0 setup`) and a Gemini API key in its own `.env`.
+You need three things: [uv](https://docs.astral.sh/uv/getting-started/installation/), Agents CLI and a Gemini API key.
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh   # uv (on Windows, inside Ubuntu on WSL)
+uvx google-agents-cli@1.13.0 setup                # Agents CLI and its skills, then open a new terminal
+cd examples/agents/root-cause-agent
+cp .env.example .env                              # paste your key from aistudio.google.com/apikey
+agents-cli install
+agents-cli playground
+```
+
+The full steps, running all four at once, and a checklist for the session are in
+[`examples/agents/README.md`](examples/agents/README.md).
 
 ## Publish
 
