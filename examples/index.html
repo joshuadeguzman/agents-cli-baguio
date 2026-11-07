@@ -165,7 +165,7 @@ app = App(root_agent=root_agent, name="app")</code></pre>
 <pre><code>agents-cli create code-reviewer --prototype --yes
 cd code-reviewer &amp;&amp; agents-cli install
 <span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
-agents-cli playground</code></pre>
+agents-cli playground --port 8502</code></pre>
     <p><b>Evaluate it.</b> The ready-made project has eval cases and a metric that checks the facts it must get right:</p>
 <pre><code>agents-cli eval run --dataset tests/eval/datasets/code-review.json</code></pre>
     <p><b>On Google Cloud.</b> Needs a billed project.</p>
@@ -260,7 +260,7 @@ app = App(root_agent=root_agent, name="app")</code></pre>
 <pre><code>agents-cli create design-reviewer --prototype --yes
 cd design-reviewer &amp;&amp; agents-cli install
 <span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
-agents-cli playground</code></pre>
+agents-cli playground --port 8503</code></pre>
     <p><b>Evaluate it.</b> The ready-made project has eval cases and a metric that checks the facts it must get right:</p>
 <pre><code>agents-cli eval run --dataset tests/eval/datasets/design-review.json</code></pre>
     <p><b>On Google Cloud.</b> Needs a billed project.</p>
@@ -342,7 +342,7 @@ app = App(root_agent=root_agent, name="app")</code></pre>
 <pre><code>agents-cli create release-notes-writer --prototype --yes
 cd release-notes-writer &amp;&amp; agents-cli install
 <span class="c"># paste the agent code into app/agent.py, add your key to .env</span>
-agents-cli playground</code></pre>
+agents-cli playground --port 8504</code></pre>
     <p><b>Evaluate it.</b> The ready-made project has eval cases and a metric that checks the facts it must get right:</p>
 <pre><code>agents-cli eval run --dataset tests/eval/datasets/release-notes.json</code></pre>
     <p><b>On Google Cloud.</b> Needs a billed project.</p>
@@ -378,6 +378,7 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
 </article>
   </div>
   <p class="foot"><b>Ready-made projects</b> for every agent on this page, with sample data, unit tests and an eval: <a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">github.com/joshuadeguzman/agents-cli-baguio/examples/agents</a>.</p>
+  <p class="foot"><b>Talk to all of them at once</b> in the <a href="../console/">agent console</a>. Start every agent with <code>examples/agents/run_all.sh</code>, then open the console from <code>127.0.0.1</code>. It finds them on their ports and lets you <code>@</code> the one you want.</p>
   <p class="foot"><b>Your API key</b> goes only in each project's <code>.env</code>, which <code>agents-cli create</code> lists in <code>.gitignore</code>. Before you commit, check with <code>git check-ignore -v .env</code>. Share <code>.env.example</code>, never <code>.env</code>.</p>
   <p class="foot">The tools in each example were run against real inputs, and each agent loads with google-adk 2.13.0 and agents-cli 1.13.0. Model answers vary, so none are shown. Without a gcloud login, set <code>otel_to_cloud = False</code> in <code>app/fast_api_app.py</code> first (codelab step 4).</p>
 </main>

@@ -15,6 +15,7 @@ Slides, a live demo, a hands-on codelab and six example agents for the talk
 | `slides/index.html` | The talk deck. Arrow keys to move, `N` for speaker notes, `J` to jump |
 | `demo/index.html` | Click-through replay of a recorded agents-cli session. `?embed=1` for a compact view |
 | `codelab/index.html` | 14-step codelab: build a root cause agent with guardrails, unit tests and an eval, deploy it (optional), then four more in the bonus step, including one that chains four agents |
+| `console/` | Agent console: a Material 3 chat page that finds the example agents running on your laptop and talks to them. Start them with `examples/agents/run_all.sh` |
 | `examples/index.html` | Example agents for developers, with code, a one-prompt version and deploy steps |
 | `examples/agents/` | The six example agents as runnable Agents CLI projects. Start with its README |
 | `sample_logs/`, `sample_logs.zip` | Log files the codelab agent reads. One planted failure |

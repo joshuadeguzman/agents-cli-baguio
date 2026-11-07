@@ -459,11 +459,12 @@ app = App(
 <h2>Run the playground</h2>
 <p>The playground is the ADK web UI. You chat with the agent and see every step it takes.</p>
 <div class="ask"><p class="ask-h"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg>Shortcut: paste this into your coding agent instead</p>
-<pre class="prompt"><code>In root-cause-agent, start agents-cli playground in the background and give me the URL.
+<pre class="prompt"><code>In root-cause-agent, start agents-cli playground --port 8501 in the background and give me the URL.
 Then run: agents-cli run "What went wrong in this log?"
 Show me which tools the agent called and its answer. Don't change any files.</code></pre></div>
-<pre data-demo="playground:0"><code>agents-cli playground</code></pre>
-<p>Open the address it prints: <a href="http://127.0.0.1:8080/dev-ui/?app=app" target="_blank" rel="noopener">http://127.0.0.1:8080/dev-ui/?app=app</a>. Keep the terminal open.</p>
+<pre><code>agents-cli playground --port 8501</code></pre>
+<p>Open the address it prints: <a href="http://127.0.0.1:8501/dev-ui/?app=app" target="_blank" rel="noopener">http://127.0.0.1:8501/dev-ui/?app=app</a>. Keep the terminal open.</p>
+<p class="note">Each agent in this codelab gets its own port (8501 to 8505), the same ports as the repo's <code>examples/agents</code>, so they never clash. The default, 8080, is left for the sales agent from the talk.</p>
 <p class="os-only" data-os="win">On Windows, open that address in your normal Windows browser. WSL 2 forwards <code>localhost</code> to Ubuntu.</p>
 <h3>Ask the question</h3>
 <p>Type this in the chat:</p>
@@ -1288,7 +1289,7 @@ agents-cli run "Review this screen." --file login.png --url SERVICE_URL --mode a
 <h3>Or build all of them with one prompt each</h3>
 <p>Each part above starts with a prompt that builds that agent from an empty folder with the skills from step 3. Start your coding agent in your home folder, paste one prompt, and you still add the key to <code>.env</code> yourself.</p>
 <p>Review what it wrote with the checklist from step 9.</p>
-<div class="see"><h4>You should see</h4><p>Up to five playgrounds running at once, on ports 8080, 8502, 8503, 8504 and 8505, each with its own agent. That's the closing slide of the talk: one engineer, a team of agents.</p></div>
+<div class="see"><h4>You should see</h4><p>Up to five playgrounds running at once, on ports 8501, 8502, 8503, 8504 and 8505, each with its own agent. That's the closing slide of the talk: one engineer, a team of agents.</p></div>
 </section>
 
 <!-- ====================================================== 12 -->

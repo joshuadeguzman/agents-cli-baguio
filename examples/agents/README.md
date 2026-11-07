@@ -65,6 +65,36 @@ cd examples/agents/release-notes-writer && agents-cli playground --port 8504
 cd examples/agents/sales-brief          && agents-cli playground --port 8505
 ```
 
+## Talk to all of them in one place: the agent console
+
+`console/` in the repo root is a chat page for every agent at once. It finds the playgrounds running on
+127.0.0.1, ports 8080 and 8501 to 8505, and lets you pick who answers with a chip or by typing `@` in the chat box.
+Tool calls, the code an agent ran, and each agent's turn in the sales brief team show up as they stream in.
+
+```bash
+examples/agents/run_all.sh                      # starts all six playgrounds, Ctrl+C stops them
+# in a second terminal, from the folder that contains the repo:
+python3 -m http.server 8811
+# open http://127.0.0.1:8811/agents-cli-baguio/console/
+```
+
+`run_all.sh` skips any folder without a `.env` and any port that is already taken, so it never starts two agents on
+one port. Each agent keeps its own port everywhere: in its README, in the codelab and in the console.
+
+| Agent | Port |
+|---|---|
+| ask-your-data | 8080 |
+| root-cause-agent | 8501 |
+| code-reviewer | 8502 |
+| design-reviewer | 8503 |
+| release-notes-writer | 8504 |
+| sales-brief | 8505 |
+
+The console talks to the playgrounds straight from your browser: `agents-cli playground` allows that with
+`--allow_origins "*"` on macOS and Linux. Nothing leaves your laptop except each agent's own calls to Gemini. To scan
+other ports, use **Ports** at the bottom of the agent list. On Windows, `agents-cli playground` doesn't pass
+`--allow_origins`, so the browser blocks the calls. Run the agents in WSL, where the flag is set.
+
 ## Checklist for the session
 
 - [ ] `agents-cli --version` prints 1.13.0
