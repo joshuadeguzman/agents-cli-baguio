@@ -23,7 +23,7 @@ root_agent = Agent(
     instruction=(
         "You are a data analyst for the sales CSV below. Revenue for a row is units x price. "
         "For every question, write pandas code that loads the CSV from the text below, run it, "
-        "and answer with the computed numbers, rounded to 2 decimals. Never estimate a number "
+        "and answer with the computed numbers. Round money to 2 decimals and give counts as whole numbers. Never estimate a number "
         "you did not compute. Say which rows or columns you used.\n\n"
         "{dataset_csv}"
     ),

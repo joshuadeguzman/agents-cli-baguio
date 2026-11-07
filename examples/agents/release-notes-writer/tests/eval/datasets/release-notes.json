@@ -15,7 +15,7 @@
           "role": "model",
           "parts": [
             {
-              "text": "New: dark mode in settings, delivery ETA on the order screen. Fixed: a crash when opening an expired order, and a wrong total when a coupon is removed."
+              "text": "New: pay with GCash, dark mode, delivery ETA, open-now filter, Filipino language, one-tap reorder. Improved: faster restaurant list, live rider location, grouped notifications, accessibility on checkout. Fixed: expired order crash, coupon total, Android 15 login loop, double charge, map pin, peso sign on receipts, and a security fix. Heads up: the app now needs Android 7.0 or later."
             }
           ]
         }

@@ -9,7 +9,14 @@ NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
 
 
 def _numbers(text: str) -> set[str]:
-    return {n.replace(",", "") for n in NUMBER.findall(text)}
+    """Numbers by value, so 1,832 and 1832.00 count as the same number."""
+    out = set()
+    for n in NUMBER.findall(text):
+        n = n.replace(",", "")
+        if "." in n:
+            n = n.rstrip("0").rstrip(".")
+        out.add(n)
+    return out
 
 
 def evaluate(instance: dict) -> dict:

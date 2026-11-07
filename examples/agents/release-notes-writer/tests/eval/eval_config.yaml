@@ -16,7 +16,8 @@ custom_metrics:
           prompt = str(instance.get("prompt", "")).lower()
           text = str(instance.get("response", "")).lower()
           if "since v1.4.0" in prompt:
-              keep, drop = ["dark mode", "eta", "crash", "coupon"], ["refactor", "flutter 3.38", "dependenc"]
+              keep = ["gcash", "dark mode", "deliver", "coupon", "crash", "double", "android 7"]
+              drop = ["refactor", "flutter", "dependenc", "golden", "lint", "holiday", "#4", "apiclient", "firebase"]
           elif "offline mode" in prompt:
               keep, drop = ["offline", "login"], ["gradle", "refactor"]
           else:

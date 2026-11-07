@@ -88,6 +88,6 @@ commands and terminal output.
 
 ## Credits
 
-The ADK and Agents CLI logos are from Google's [adk-python](https://github.com/google/adk-python) and
+Sundar Pichai's photo is by Lukasz Kobus, European Commission, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sundar_Pichai_(2023)_cropped.jpg), cropped. Lauren Tan's picture is her public GitHub avatar (github.com/poteto). The ADK and Agents CLI logos are from Google's [adk-python](https://github.com/google/adk-python) and
 [agents-cli](https://github.com/google/agents-cli) repositories. Illustrations generated for this talk with Higgsfield (GPT Image 2.6). Company screenshots are of public homepages,
 retrieved November 6, 2026, and quotes come from the Google posts linked on each slide.

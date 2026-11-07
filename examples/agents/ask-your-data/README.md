@@ -31,10 +31,29 @@ What's the median revenue per row, and which row is the biggest outlier above th
 
 The answer is a median of **1,378.97**, and May, South, Gadget at **6,196.90**, which is **4,696.77** above the mean.
 
+## Build it with one prompt
+
+This folder is what a coding agent builds from one prompt. To show it live, make an empty folder, open your coding agent
+there with the Agents CLI skills installed (`uvx google-agents-cli@1.13.0 setup`), and paste
+[`PROMPT.txt`](PROMPT.txt):
+
+```text
+Use agents-cli 1.13.0 and its skills to build an ADK 2 agent in a new prototype project called ask-your-data.
+Download the sample data to app/data/sales.csv from https://joshuamdeguzman.com/agents-cli-baguio/examples/agents/ask-your-data/app/data/sales.csv
+The agent answers questions about that CSV. Revenue for a row is units x price.
+Load the CSV into session state with a before_agent_callback, and give the agent BuiltInCodeExecutor so it writes and runs pandas code instead of guessing.
+Round money to 2 decimals and give counts as whole numbers.
+Use gemini-3.8-flash with my Gemini API key. I will add the key to .env myself. Don't read or print .env.
+Set otel_to_cloud = False in app/fast_api_app.py. Don't deploy anything.
+When it's done, run: agents-cli run "What is the total revenue for the year?" The answer should be 72,006.26.
+```
+
+Then put your key in the new project's `.env` and run `agents-cli playground`. Approve each command the agent runs.
+
 ## Test it
 
 ```bash
-uv run pytest tests/unit                       # 5 passed, no API key needed
+uv run pytest tests/unit                       # 6 passed, no API key needed
 uv run python tests/eval/build_dataset.py      # rebuilds the eval cases from the CSV
 agents-cli eval run --dataset tests/eval/datasets/basic-dataset.json
 ```

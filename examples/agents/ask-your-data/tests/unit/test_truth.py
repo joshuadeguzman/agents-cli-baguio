@@ -34,3 +34,8 @@ def test_metric_passes_a_right_answer():
 def test_metric_fails_a_wrong_answer():
     out = answer_match.evaluate({"reference": "Total revenue is 72,006.26.", "response": "About 72,000."})
     assert out["score"] == 0.0
+
+
+def test_metric_compares_numbers_by_value():
+    out = answer_match.evaluate({"reference": "Widget: 3542 units.", "response": "Widget: 3,542.00 units"})
+    assert out["score"] == 1.0

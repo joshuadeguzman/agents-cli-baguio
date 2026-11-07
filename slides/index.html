@@ -246,7 +246,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .lv-body{flex:1;overflow:auto;padding:.9em 1.1em;font-family:var(--mono);font-size:.58em;line-height:1.55;color:#D6D8DC;min-height:0}
 .lv-body[hidden]{display:none}
 .lv-body .t-line{white-space:pre;min-height:1.55em}
-.lv-body .t-cmd{color:#fff;margin-top:.35em}.lv-body .t-cwd{color:#8AB4F8}.lv-body .t-dollar{color:#6E7480}.lv-body .t-typed{color:#7EE787;font-weight:500}
+.lv-body .t-cmd{color:#fff;margin-top:.35em;white-space:pre-wrap;overflow-wrap:anywhere}.lv-body .t-cwd{color:#8AB4F8}.lv-body .t-dollar{color:#6E7480}.lv-body .t-typed{color:#7EE787;font-weight:500}
 .lv-body .t-caret{display:inline-block;width:.55em;height:1.1em;vertical-align:-.15em;background:#D6D8DC;animation:lvBlink 1s steps(1) infinite}
 @keyframes lvBlink{50%{opacity:0}}
 .lv-body .t-ok{color:#81C995}.lv-body .t-warn{color:#FDD663}.lv-body .t-err{color:#F28B82}
@@ -340,6 +340,9 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .qt blockquote{font-size:2.55em;font-weight:500;letter-spacing:-.014em;line-height:1.25;color:var(--ink);max-width:24ch;text-wrap:balance}
 .qt-who{margin-top:1em;font-size:1.05em;color:var(--gray);max-width:none}
 .qt-who b{color:var(--ink);font-weight:600}
+.qt-who.pp{display:flex;align-items:center;gap:.9em}
+.qt-who.pp img{width:3.6em;height:3.6em;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px #9B72CB}
+.qt-who.pp small{display:block;font-size:.72em;color:var(--gray-2);margin-top:.25em}
 .qt-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1em;margin-top:1.6em;width:100%}
 .qt-stats div{background:var(--surf);border-radius:var(--r-md);padding:.9em 1em}
 .qt-stats div.hi{background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
@@ -396,6 +399,44 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
 .hx-fan{position:absolute;left:.45em;top:.55em;width:calc(100% + 3.2em);height:4em;overflow:visible;pointer-events:none}
 .hx-fan path{fill:none;stroke:url(#hxf);stroke-width:2;stroke-dasharray:2 5;vector-effect:non-scaling-stroke;stroke-linecap:round}
 .hx-fan circle{fill:#D96570;opacity:.35}
+.hx-low{display:flex;flex-direction:column;align-items:center;gap:.9em;margin-top:1.3em}
+.hx-demo{display:grid;min-height:11.6em;width:min(100%,46em)}
+.hx-demo>.ex{grid-area:1/1;background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;box-shadow:0 6px 24px rgba(27,27,31,.07);font-size:.82em;display:flex;flex-direction:column}
+.hx-demo .ex-h{display:flex;align-items:center;gap:.5em;padding:.5em .9em;border-bottom:1px solid var(--line);font-size:.82em;color:var(--gray)}
+.hx-demo .ex-h i{width:.6em;height:.6em;border-radius:50%;background:#E3E3E8}
+.hx-demo .ex-h b{margin-left:auto;font-weight:500;font-size:.85em;color:var(--gray-2)}
+.hx-demo .ex-b{padding:.8em 1em;flex:1;display:flex;flex-direction:column;gap:.45em;justify-content:center}
+.hx-demo .mono{font-family:var(--mono);font-size:.92em;line-height:1.6}
+.hx-demo .dark{background:var(--ink);color:#D6D8DC}
+.hx-demo .dark .ex-h{border-color:#33343a;color:#9AA0A6}
+.hx-demo .ghost{color:#A8ACB3}
+.hx-demo .kbd{display:inline-block;font-family:var(--sans);font-size:.78em;border:1px solid var(--line);border-radius:.35em;padding:0 .45em;color:var(--gray);margin-left:.5em}
+.hx-demo .bub{max-width:85%;padding:.45em .8em;border-radius:1em;line-height:1.4}
+.hx-demo .bub.me{align-self:flex-end;background:var(--surf)}
+.hx-demo .bub.ai{background:var(--pri-c)}
+.hx-demo .chip{display:inline-flex;align-items:center;gap:.35em;background:var(--surf);border-radius:999px;padding:.25em .75em;font-size:.9em}
+.hx-demo .row{display:flex;gap:.5em;align-items:center;flex-wrap:wrap}
+.hx-demo .ok{color:#81C995}.hx-demo .bad{color:#F28B82}.hx-demo .dim{color:#8A8F98}
+.hx-demo .ag{display:grid;grid-template-columns:1.2em 9em 1fr;gap:.4em;align-items:center}
+.hx-demo .ag .dot{width:.55em;height:.55em;border-radius:50%;background:#9B72CB;animation:hxp 1.4s ease-in-out infinite}
+.hx-demo .ag .dot.done{background:#34A853;animation:none}
+@keyframes hxp{50%{opacity:.25}}
+.hx-cap{font-size:.95em;color:var(--gray);line-height:1.5}
+.hx-cap b{color:var(--ink)}
+.hx-tag{display:block;margin-top:.6em;font-size:.72em;color:var(--gray-2)}
+.hx-demo .foot{font-family:var(--sans);font-size:.85em;color:var(--gray-2);border-top:1px dashed #33343a;padding-top:.45em;margin-top:.2em}
+.hx-demo .orc{display:grid;grid-template-columns:auto 1fr;gap:.4em 1.2em;align-items:center}
+.hx-demo .orc .you{grid-row:1/5;display:flex;flex-direction:column;align-items:center;gap:.3em;padding:.6em .9em;border-radius:var(--r-md);background:var(--ink);color:#fff;font-weight:600}
+.hx-demo .orc .you span{font-weight:400;font-size:.78em;color:#BDC1C6}
+.hx-demo .lane{display:grid;grid-template-columns:1.6em 8.6em 1fr 6.4em;gap:.5em;align-items:center}
+.hx-demo .lane .hand{color:#9B72CB;font-weight:600}
+.hx-demo .lane .task{font-size:.88em;color:var(--gray);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hx-demo .lane .st{font-size:.8em;text-align:right;white-space:nowrap}
+.hx-demo .bar{height:.35em;border-radius:999px;background:var(--surf);overflow:hidden;grid-column:2/5;margin-top:-.15em}
+.hx-demo .bar i{display:block;height:100%;background:var(--grad);border-radius:inherit;animation:hxbar 3.2s ease-in-out infinite alternate}
+@keyframes hxbar{from{width:var(--a)}to{width:var(--b)}}
+.hx-demo .ex.orch-ex .ex-b{gap:.3em}
+@media (prefers-reduced-motion:reduce){.hx-demo .bar i{animation:none;width:var(--b)}.hx-demo .ag .dot{animation:none}}
 .hx:last-child h3{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 @media (max-aspect-ratio:1/1){.hist{grid-template-columns:1fr 1fr}.hist::before,.hx-fan{display:none}}
 
@@ -507,8 +548,32 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
       <h3>Orchestration</h3><p>Engineers direct teams of agents, inside a harness that checks their work.</p><span>ADK 2.0, Agents CLI, Antigravity CLI</span>
     </div>
   </div>
-  <p class="insight" data-step="7" style="margin-top:1.6em"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="sph1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#sph1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>Each step moved more of the work to the model. What stays with you: the instructions, the tools, and the checks. That's the job now.</span></p>
+  <div class="hx-low">
+    <div class="hx-demo" aria-label="An example from each era">
+      <div class="ex" data-step="1"><div class="ex-h"><i></i><i></i><i></i>sales.py<b>2021 &middot; autocomplete</b></div>
+        <div class="ex-b mono"><div><span style="color:#8430CE">def</span> total_revenue(rows):</div><div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="ghost">return sum(r.units * r.price for r in rows)</span><span class="kbd">Tab</span></div></div></div>
+      <div class="ex" data-step="2"><div class="ex-h"><i></i><i></i><i></i>Chat<b>2022 &middot; chat</b></div>
+        <div class="ex-b"><div class="bub me">How do I add up a column in pandas?</div><div class="bub ai"><code>df["revenue"].sum()</code> <span class="chip" style="margin-left:.4em;font-size:.8em">Copy</span></div></div></div>
+      <div class="ex" data-step="3"><div class="ex-h"><i></i><i></i><i></i>Function calling<b>2023 &middot; tools</b></div>
+        <div class="ex-b"><div class="bub me">Is it cold in Baguio today?</div><div class="mono dim">&rarr; get_weather(city="Baguio")<br>&larr; {"temp_c": 16}</div><div class="bub ai">Yes, 16&deg;C. Bring a jacket.</div></div></div>
+      <div class="ex" data-step="4"><div class="ex-h"><i></i><i></i><i></i>Model Context Protocol<b>2024 &middot; context</b></div>
+        <div class="ex-b"><div class="row"><span class="chip"><b>Your assistant</b></span><span class="dim">&harr;</span><span class="chip" style="background:var(--pri-c)">MCP</span><span class="dim">&harr;</span><span class="chip">GitHub</span><span class="chip">Drive</span><span class="chip">Postgres</span></div><div class="hx-cap" style="font-size:.9em">One standard plug instead of one integration per app.</div></div></div>
+      <div class="ex dark" data-step="5"><div class="ex-h"><i></i><i></i><i></i>terminal &middot; 1 coding agent, 1 task<b>2025 &middot; coding agent</b></div>
+        <div class="ex-b mono"><div>you &gt; fix the failing cart test</div><div class="dim">&#9679; Read tests/test_cart.py</div><div class="dim">&#9679; Run pytest <span class="bad">1 failed</span></div><div class="dim">&#9679; Edit app/cart.py</div><div class="dim">&#9679; Run pytest <span class="ok">12 passed</span></div><div class="foot">One agent works through one task. You watch, then give it the next one.</div></div></div>
+      <div class="ex orch-ex" data-step="6"><div class="ex-h"><i></i><i></i><i></i>You hand off four tasks at once<b>2026 &middot; orchestration</b></div>
+        <div class="ex-b"><div class="orc">
+          <div class="you">You<span>hand off, then review</span></div>
+          <div><div class="lane"><span class="hand">&rarr;</span><b class="mono">code_reviewer</b><span class="task">review PR #212</span><span class="st ok" style="color:#188038">&#10003; 2 findings</span></div><div class="bar"><i style="--a:100%;--b:100%"></i></div></div>
+          <div><div class="lane"><span class="hand">&rarr;</span><b class="mono">root_cause</b><span class="task">why did /pay fail at 2am?</span><span class="st dim">reading logs</span></div><div class="bar"><i style="--a:35%;--b:70%"></i></div></div>
+          <div><div class="lane"><span class="hand">&rarr;</span><b class="mono">release_notes</b><span class="task">notes for v1.5.0</span><span class="st dim">writing</span></div><div class="bar"><i style="--a:55%;--b:85%"></i></div></div>
+          <div><div class="lane"><span class="hand">&rarr;</span><b class="mono">ask_your_data</b><span class="task">weekly sales brief</span><span class="st ok" style="color:#188038">&#10003; ready</span></div><div class="bar"><i style="--a:100%;--b:100%"></i></div></div>
+        </div><div class="foot" style="border-color:var(--line)">They run at the same time. You check what comes back and approve it.</div></div></div>
+    </div>
+      <p class="insight" data-step="7" style="margin:0"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="sph1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#sph1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span>Each step moved more of the work to the model. What stays with you: the instructions, the tools, and the checks. That's the job now.</span></p>
+    <span class="hx-tag" style="grid-column:1">Illustrations of each era, not product screenshots.</span>
+  </div>
   <div class="notes"><h4>Two minutes. Seven presses. Tell it as a story.</h4>
+  Each press also shows a small example in the lower left: a ghost-text completion, a chat answer you copy, a weather tool call for Baguio, MCP plugging into GitHub and Drive, a coding agent fixing a test, and your own agents running at once.<br>
   2021: Copilot finishes your line. 2022: ChatGPT, and everyone copy-pastes answers into their code. 2023: every app is a prompt wrapper, and function calling lets a model call your functions. 2024: MCP gives models one standard way to reach tools and data. 2025: coding agents like Claude Code and Gemini CLI work in your repo in a loop, and Google ships ADK and A2A. 2026: engineers run teams of agents in a harness that checks their work, which is the next two slides.<br>
   <strong>Why software engineers should care:</strong> the model does more of the typing every year. The part that stays yours is deciding what the agent should do, giving it good tools, and checking its work. That's what this talk teaches.<br>
   Dates: Copilot technical preview June 2021, ChatGPT Nov 30 2022, function calling in model APIs 2023, MCP Nov 2024, Claude Code Feb 2025, ADK Apr 9 2025 (Cloud Next), Gemini CLI Jun 2025, ADK 2.0 May 19 2026, Agents CLI Apr 22 2026, Antigravity CLI replaced Gemini CLI for individual users Jun 18 2026.</div>
@@ -521,7 +586,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   <div class="qt">
     <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spq1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spq1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg>
     <blockquote>&ldquo;Our engineers are orchestrating fully autonomous digital task forces, firing off agents and accomplishing incredible things.&rdquo;</blockquote>
-    <p class="qt-who"><b>Sundar Pichai</b>, CEO of Google and Alphabet &middot; Google Cloud Next, April 22, 2026</p>
+    <div class="qt-who pp"><img src="../assets/people/sundar-pichai.jpg" alt="Portrait of Sundar Pichai"><p style="max-width:none"><b>Sundar Pichai</b>, CEO of Google and Alphabet &middot; Google Cloud Next, April 22, 2026<small>Photo: Lukasz Kobus, European Commission, CC BY 4.0, via Wikimedia Commons</small></p></div>
     <div class="qt-stats" data-step="1">
       <div><b>25%</b><span>of new code at Google written by AI, Oct 2024</span></div>
       <div><b>50%</b><span>last fall</span></div>
@@ -544,7 +609,7 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   <div class="qt">
     <svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spp1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spp1)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg>
     <blockquote>&ldquo;Throughput without quality is not a goal I aspire to. If you want to go fast, go deep first.&rdquo;</blockquote>
-    <p class="qt-who"><b>Lauren Tan (poteto)</b>, React core team, creator of pstack &middot; &ldquo;Shipping 1,000&rsquo;s of PR&rsquo;s a month at SpaceX&rdquo;</p>
+    <div class="qt-who pp"><img src="../assets/people/lauren-tan.jpg" alt="Lauren Tan's avatar: an illustrated portrait"><p style="max-width:none"><b>Lauren Tan (poteto)</b>, React core team, creator of pstack &middot; &ldquo;Shipping 1,000&rsquo;s of PR&rsquo;s a month at SpaceX&rdquo;<small>Avatar from github.com/poteto</small></p></div>
     <div class="qt-stats" data-step="1">
       <div class="hi"><b>2,500</b><span>pull requests in one month, one engineer with agents</span></div>
       <div><b>10+</b><span>coordinator agents keeping work moving, around the clock</span></div>
@@ -787,7 +852,44 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   2. Ask <strong>&ldquo;What's the median revenue per row, and which row is the biggest outlier above the mean?&rdquo;</strong> Expect a median of 1,378.97, and May, South, Gadget at 6,196.90, which is 4,696.77 above the mean.<br>
   3. Open the Events tab: the code, the result and the answer are separate events. That's the next slide.<br>
   Extra, only if there's time: the code reviewer on port 8502 (<code>./setup.sh</code> first, ask &ldquo;Review this branch against main.&rdquo;) and the release notes writer on 8504 (&ldquo;Write release notes since v1.4.0.&rdquo;).<br>
+  <strong>To show how easy building it is:</strong> open your coding agent in an empty folder and paste <code>examples/agents/ask-your-data/PROMPT.txt</code>. The next slide replays the whole flow if you would rather not build live.<br>
   If the Wi-Fi fails, use the demo page instead: <code>/demo</code>.</div>
+</section>
+
+<!-- DevFest Baguio: live demo, sales version -->
+<section class="slide roomy lv-slide" data-sec="What is an agent" data-at="7" data-steps="7" data-title="Live demo: ask your data, from one prompt" id="liveDemoSales" style="padding-top:2em;padding-bottom:2em">
+  <div style="display:flex;align-items:center;gap:1em">
+    <h2 class="dm" style="margin:0;max-width:none">One prompt to a sales data agent</h2>
+    <span class="pill b" style="flex:none;margin-left:auto">Press &rarr; to run each step</span>
+  </div>
+  <div class="lv">
+    <div class="lv-term">
+      <div class="lv-bar"><span class="lv-dots"></span><b data-lv="title">zsh</b></div>
+      <div class="lv-tabs" data-lv="tabs"></div>
+      <div class="lv-body" data-lv="idle"><div class="lv-idle">Press &rarr; to open a terminal.</div></div>
+    </div>
+    <div class="lv-chat" data-lv="chat">
+      <div class="lv-top"><svg class="lv-spark" style="width:1.4em;height:1.4em" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="lvs0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#lvs0)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span class="lv-brand" data-lv="brand">Chat</span><span class="lv-crumb" data-lv="crumb">Ask your data</span><span class="lv-status"><i></i><em data-lv="status" style="font-style:normal">Not built</em></span></div>
+      <div class="lv-msgs" data-lv="msgs"><div class="lv-empty"><b>Ask your data</b>Doesn't exist yet. One prompt to a coding agent builds it.</div></div>
+      <div class="lv-chips" data-lv="chips"></div>
+      <div class="lv-input"><span>Ask your data</span><span class="lv-send">&#8593;</span></div>
+    </div>
+  </div>
+  <p class="tiny" style="max-width:none;margin-top:.7em;font-size:.68em">Playground and eval: real recordings, v1.13.0. Tagged <em>simulated</em>: not recorded. Chat answers: real, trimmed.</p>
+  <i data-step="1" hidden></i><i data-step="2" hidden></i><i data-step="3" hidden></i><i data-step="4" hidden></i><i data-step="5" hidden></i><i data-step="6" hidden></i><i data-step="7" hidden></i>
+  <div class="notes"><h4>Optional. Five minutes. Seven presses. Or do it live.</h4>
+  Same flow as the live demo you just did, as a replay: 1 setup, 2 one prompt to a coding agent, 3 playground, 4 a question, 5 eval, 6 deploy and publish to Gemini Enterprise, 7 one more question there. Click any chip yourself.<br>
+  <strong>To do step 2 for real:</strong> make an empty folder, open your coding agent there, and paste the prompt from <code>examples/agents/ask-your-data/PROMPT.txt</code>:<br>
+  <code style="white-space:pre-wrap">Use agents-cli 1.13.0 and its skills to build an ADK 2 agent in a new prototype project called ask-your-data.
+Download the sample data to app/data/sales.csv from https://joshuamdeguzman.com/agents-cli-baguio/examples/agents/ask-your-data/app/data/sales.csv
+The agent answers questions about that CSV. Revenue for a row is units x price.
+Load the CSV into session state with a before_agent_callback, and give the agent BuiltInCodeExecutor so it writes and runs pandas code instead of guessing.
+Round money to 2 decimals and give counts as whole numbers.
+Use gemini-3.8-flash with my Gemini API key. I will add the key to .env myself. Don&#x27;t read or print .env.
+Set otel_to_cloud = False in app/fast_api_app.py. Don&#x27;t deploy anything.
+When it&#x27;s done, run: agents-cli run &quot;What is the total revenue for the year?&quot; The answer should be 72,006.26.</code><br>
+  Approve each command it runs. Then add your key to <code>.env</code> and run <code>agents-cli playground</code>.<br>
+  <span class="flag">Say it out loud:</span> the coding agent narration, deploy and publish are simulated. Playground, eval and the answers are real.</div>
 </section>
 
 <!-- DevFest Baguio: how ADK runs an agent -->
@@ -877,50 +979,6 @@ root_agent = <span class="k">Workflow</span>(
 </section>
 
 
-<!-- 03 -->
-<section class="slide" data-sec="What is an agent" data-at="2" data-steps="2">
-  <h2 class="dm" style="margin-bottom:.2em">Why write an agent when you already have Claude or Antigravity?</h2>
-  <p style="font-size:1.05em;max-width:none">A chat session starts from zero every time. An agent keeps the instructions, tools and checks in code.</p>
-  <svg class="flow-d" viewBox="-6 -6 1172 304" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same weekly task typed into a chat session three times, compared with one agent that runs every week's file">
-    <defs><linearGradient id="fdg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4285F4"/><stop offset=".52" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs>
-    <g data-step="1">
-      <text class="fd-l" x="0" y="14">A CHAT SESSION, EVERY WEEK</text>
-      <rect class="fd-n" x="0" y="28" width="560" height="76" rx="16"/>
-      <text class="fd-t" x="22" y="56">Week 36</text><text class="fd-l" x="538" y="56" text-anchor="end">median 1,378.97 &#183; outlier found</text>
-      <text class="fd-s" x="22" y="78">Here's sales.csv. Revenue is units &#215; price. Find the median</text>
-      <text class="fd-s" x="22" y="95">and the biggest outlier. Use pandas. Round to 2 decimals.</text>
-      <rect class="fd-n" x="0" y="116" width="560" height="76" rx="16"/>
-      <text class="fd-t" x="22" y="144">Week 37</text><text class="fd-l" x="538" y="144" text-anchor="end">median 1,378.97 &#183; outlier found</text>
-      <text class="fd-s" x="22" y="166">New file attached. Same as last week, median and outliers.</text>
-      <text class="fd-s" x="22" y="183">Oh, and revenue is units &#215; price.</text>
-      <rect class="fd-n" x="0" y="204" width="560" height="76" rx="16"/>
-      <text class="fd-t" x="22" y="232">Week 38</text><text class="fd-l" x="538" y="232" text-anchor="end">median 1378.9696 &#183; no outlier</text>
-      <text class="fd-s" x="22" y="254">Can you do the revenue analysis again?</text>
-      <text class="fd-s" x="22" y="271">(the rules from week 36 aren't in this prompt)</text>
-    </g>
-    <g data-step="2">
-      <text class="fd-l" x="620" y="14">AN AGENT, WRITTEN ONCE</text>
-      <rect class="fd-n" x="620" y="36" width="150" height="44" rx="12"/><text class="fd-s" x="695" y="63" text-anchor="middle">week_36.csv</text>
-      <rect class="fd-n" x="620" y="92" width="150" height="44" rx="12"/><text class="fd-s" x="695" y="119" text-anchor="middle">week_37.csv</text>
-      <rect class="fd-n" x="620" y="148" width="150" height="44" rx="12"/><text class="fd-s" x="695" y="175" text-anchor="middle">week_38.csv</text>
-      <path class="fd-line" d="M770 58 H840 M770 114 H840 M770 170 H840"/>
-      <rect class="fd-n gen" x="840" y="28" width="320" height="170" rx="16"/>
-      <text class="fd-t" x="862" y="60">ask_your_data</text>
-      <text class="fd-s" x="862" y="88">Instruction: the rules, written once</text>
-      <text class="fd-s" x="862" y="110">Code executor: runs the pandas</text>
-      <text class="fd-s" x="862" y="132">Same steps for every file</text>
-      <text class="fd-l" x="862" y="180">app/agent.py</text>
-      <path class="fd-tie" d="M1000 198 V222"/>
-      <rect class="fd-cat" x="840" y="222" width="320" height="62" rx="16"/>
-      <text class="fd-t" x="862" y="249">agents-cli eval run</text>
-      <text class="fd-s" x="862" y="271">Same checks after every change</text>
-    </g>
-  </svg>
-  <div class="notes"><h4>90 seconds. Press &rarr; twice.</h4>
-  Left: the same weekly task typed into a chat app. <strong>You repeat the rules, you phrase them differently, and the answer drifts.</strong> In week 38 the rounding and outlier rules weren't in the prompt, so they didn't happen.<br>
-  Right: the rules live in <code>app/agent.py</code>. Every file goes through the same agent, and <code>eval run</code> tells you when a change breaks it.<br>
-  Don't knock chat apps. They're the right tool for one-off work. <strong>Write an agent when the task repeats, or when something other than you needs to run it.</strong></div>
-</section>
 <!-- DevFest Baguio: chapter 3 -->
 <section class="slide chapter" data-sec="ADK and Agents CLI" data-at="15" data-title="Chapter 3: ADK and Agents CLI">
   <div class="ch-num">Chapter 03 <span>of 6</span></div>
@@ -1548,21 +1606,21 @@ custom_metrics:
 
 
 <!-- DevFest Baguio: live demo -->
-<section class="slide roomy" data-sec="Evaluate and deploy" data-at="33" data-steps="7" data-title="Live demo: one prompt to Gemini Enterprise" id="liveDemo" style="padding-top:2em;padding-bottom:2em">
+<section class="slide roomy lv-slide" data-sec="Evaluate and deploy" data-at="33" data-steps="7" data-title="Live demo: one prompt to Gemini Enterprise" id="liveDemo" style="padding-top:2em;padding-bottom:2em">
   <div style="display:flex;align-items:center;gap:1em">
     <h2 class="dm" style="margin:0;max-width:none">One prompt, a local chat, then Gemini Enterprise</h2>
     <span class="pill b" style="flex:none;margin-left:auto">Press &rarr; to run each step</span>
   </div>
   <div class="lv">
     <div class="lv-term">
-      <div class="lv-bar"><span class="lv-dots"></span><b id="lvTitle">zsh</b></div>
-      <div class="lv-tabs" id="lvTabs"></div>
-      <div class="lv-body" id="lvIdle"><div class="lv-idle">Press &rarr; to open a terminal.</div></div>
+      <div class="lv-bar"><span class="lv-dots"></span><b data-lv="title">zsh</b></div>
+      <div class="lv-tabs" data-lv="tabs"></div>
+      <div class="lv-body" data-lv="idle"><div class="lv-idle">Press &rarr; to open a terminal.</div></div>
     </div>
-    <div class="lv-chat" id="lvChat">
-      <div class="lv-top"><svg class="lv-spark" style="width:1.4em;height:1.4em" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="lvg0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#lvg0)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span class="lv-brand" id="lvBrand">Chat</span><span class="lv-crumb" id="lvCrumb">Root cause agent</span><span class="lv-status"><i></i><em id="lvStatus" style="font-style:normal">Not built</em></span></div>
-      <div class="lv-msgs" id="lvMsgs"><div class="lv-empty"><b>Root cause agent</b>Doesn't exist yet. One prompt to a coding agent builds it.</div></div>
-      <div class="lv-chips" id="lvChips"></div>
+    <div class="lv-chat" data-lv="chat">
+      <div class="lv-top"><svg class="lv-spark" style="width:1.4em;height:1.4em" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="lvg0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#lvg0)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span class="lv-brand" data-lv="brand">Chat</span><span class="lv-crumb" data-lv="crumb">Root cause agent</span><span class="lv-status"><i></i><em data-lv="status" style="font-style:normal">Not built</em></span></div>
+      <div class="lv-msgs" data-lv="msgs"><div class="lv-empty"><b>Root cause agent</b>Doesn't exist yet. One prompt to a coding agent builds it.</div></div>
+      <div class="lv-chips" data-lv="chips"></div>
       <div class="lv-input"><span>Ask Root cause agent</span><span class="lv-send">&#8593;</span></div>
     </div>
   </div>
@@ -1825,6 +1883,7 @@ go(isNaN(h)?0:h-1);
 </script>
 <script src="../assets/demo-data.js"></script>
 <script src="../assets/terminal.js"></script>
+<script src="../assets/live-demo-sales.js"></script>
 <script src="../assets/live-demo.js"></script>
 </body>
 </html>
