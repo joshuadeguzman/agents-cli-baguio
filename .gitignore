@@ -10,3 +10,6 @@ screenshots/
 *.pem
 service-account*.json
 *credentials*.json
+
+# Eval traces and results from agents-cli eval
+artifacts/

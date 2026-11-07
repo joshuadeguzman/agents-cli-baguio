@@ -1,0 +1,46 @@
+{
+  "eval_cases": [
+    {
+      "eval_case_id": "weekly_brief",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Make this week's sales brief."
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Total revenue 72,006.26. Q1 16,417.66, Q2 18,506.44, Q3 18,496.35, Q4 18,585.81. North 34,363.31, South 37,642.95. Top row: May, South, Gadget at 6,196.90."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "eval_case_id": "brief_for_manager",
+      "prompt": {
+        "role": "user",
+        "parts": [
+          {
+            "text": "Write the sales brief for my manager."
+          }
+        ]
+      },
+      "reference": {
+        "response": {
+          "role": "model",
+          "parts": [
+            {
+              "text": "Total revenue 72,006.26. Q1 16,417.66, Q2 18,506.44, Q3 18,496.35, Q4 18,585.81. North 34,363.31, South 37,642.95. Top row: May, South, Gadget at 6,196.90."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+metrics_to_run:
+  - answer_matches_truth
+  - custom_response_quality
+
+thresholds:
+  answer_matches_truth: 1.0      # every expected number must appear
+  custom_response_quality: 3     # the judge scores 1-5
+
+custom_metrics:
+  # Plain Python, no model call. Expected numbers come from build_dataset.py.
+  - name: answer_matches_truth
+    custom_function_file: answer_match.py
+  # Local LLM judge from the template. Uses your GEMINI_API_KEY.
+  - name: custom_response_quality
+    custom_function_file: response_quality.py

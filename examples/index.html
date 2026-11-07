@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Example agents for developers · DevFest Baguio 2026</title>
-<meta name="description" content="ADK agents developers can build with one prompt and deploy to Google Cloud: code reviewer, design reviewer, release notes writer, root cause agent, ask your data.">
+<meta name="description" content="ADK agents developers can build with one prompt and deploy to Google Cloud: code reviewer, design reviewer, release notes writer, root cause agent, ask your data, and a four-agent sales brief.">
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -358,6 +358,13 @@ agents-cli deploy --project YOUR_PROJECT_ID --region us-east1</code></pre>
   <p class="what">Answers questions about a sales CSV by writing pandas code and running it, so the numbers are computed, not guessed. No tools to write: it uses ADK's built-in code execution.</p>
   <p class="ex-tools tools">Tools: <code>BuiltInCodeExecutor</code></p>
   <div class="actions"><a class="btn d" href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents/ask-your-data" target="_blank" rel="noopener">Open the project</a></div>
+</article>
+<article class="ex link" id="sales-brief">
+  <span class="pill d">Multi-agent</span>
+  <h2>Sales brief</h2>
+  <p class="what">Four agents in one ADK <code>Workflow</code>: an analyst runs pandas code on the sales CSV, two writers draft a summary and actions at the same time, and a fact checker checks every number before you see the brief.</p>
+  <p class="ex-tools tools">Agents: <code>analyst</code><code>exec_writer</code><code>team_writer</code><code>fact_checker</code></p>
+  <div class="actions"><a class="btn d" href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents/sales-brief" target="_blank" rel="noopener">Open the project</a><a class="btn" href="../codelab/">Build it in the codelab bonus</a></div>
 </article>
 <article class="ex link" id="root-cause-agent">
   <span class="pill g">Codelab</span>

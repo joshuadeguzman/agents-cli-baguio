@@ -1,6 +1,6 @@
 # Deploy an example agent to Cloud Run
 
-The same steps work for all five agents. Each agent's README lists what is different for it.
+The same steps work for all six agents. Each agent's README lists what is different for it.
 
 > **This needs a Google Cloud project with billing enabled.** Cloud Run, Cloud Build and Artifact Registry can
 > charge you. Use a sandbox project, and delete what you create (step 10).

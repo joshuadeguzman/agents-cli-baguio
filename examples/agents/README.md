@@ -1,11 +1,12 @@
 # Example agents
 
-Five small ADK agents built with Agents CLI for the DevFest Baguio 2026 talk and codelab.
+Six small ADK agents built with Agents CLI for the DevFest Baguio 2026 talk and codelab.
 Each folder is a complete `agents-cli create --prototype` project you can run on your laptop.
 
 | Agent | What it does | Tools | Port |
 |---|---|---|---|
 | [ask-your-data](ask-your-data/) | Answers questions about a sales CSV by running pandas code. Start here | Code execution | 8080 |
+| [sales-brief](sales-brief/) | Four agents in one app: an analyst, two writers and a fact checker turn the sales CSV into a checked brief | Code execution, `Workflow` | 8505 |
 | [root-cause-agent](root-cause-agent/) | Reads a log and explains what broke | `read_log`, `find_errors` | 8501 |
 | [code-reviewer](code-reviewer/) | Reviews a branch for bugs, security problems and missing tests | `get_diff`, `read_file` | 8502 |
 | [design-reviewer](design-reviewer/) | Reviews a phone screenshot for contrast and tap targets | `contrast_ratio`, `check_touch_target` | 8503 |
@@ -36,12 +37,12 @@ Open a new terminal, then check: `agents-cli --version` prints `agents-cli, vers
 
 **3. Get a Gemini API key**
 
-Create one at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). One key works for all five agents.
+Create one at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). One key works for all six agents.
 
 ## Run one agent
 
 ```bash
-cd examples/agents/ask-your-data        # or any of the five folders
+cd examples/agents/ask-your-data        # or any of the six folders
 cp .env.example .env                    # then open .env and paste your key after GEMINI_API_KEY=
 ./setup.sh                              # only in code-reviewer and release-notes-writer
 agents-cli install
@@ -51,7 +52,7 @@ agents-cli playground                   # add --port 8502 and so on to run sever
 Open the address it prints, usually `http://127.0.0.1:8080/dev-ui/?app=app`. Each agent's README has the question to
 ask and what you should see. Stop the playground with `Ctrl+C`.
 
-## Run all five at once
+## Run all six at once
 
 In each folder, run the `cp`, `./setup.sh` (where there is one) and `agents-cli install` lines above once. Then start each playground in its own terminal tab, from the repo root:
 
@@ -61,6 +62,7 @@ cd examples/agents/root-cause-agent     && agents-cli playground --port 8501
 cd examples/agents/code-reviewer        && agents-cli playground --port 8502
 cd examples/agents/design-reviewer      && agents-cli playground --port 8503
 cd examples/agents/release-notes-writer && agents-cli playground --port 8504
+cd examples/agents/sales-brief          && agents-cli playground --port 8505
 ```
 
 ## Checklist for the session
@@ -84,7 +86,7 @@ cd examples/agents/release-notes-writer && agents-cli playground --port 8504
 ## The whole path for each agent
 
 1. **Run it locally:** the steps above, then the question in its README.
-2. **Unit test it:** `uv run pytest tests/unit`. These test the tools (or, for ask-your-data, the ground truth) with
+2. **Unit test it:** `uv run pytest tests/unit`. These test the tools (or, for ask-your-data and sales-brief, the ground truth and the wiring) with
    plain Python. No API key and no model call, so they are fast and free. Run them after every change.
 3. **Evaluate it:** `agents-cli eval run --dataset tests/eval/datasets/<file>.json`. Each agent has eval cases, a plain
    Python check for the facts it must get right, an LLM judge, and pass thresholds. The run ends with `RESULT: PASS`

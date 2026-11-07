@@ -101,7 +101,7 @@ main{padding:2.2rem 3rem 4rem;min-width:0}
 </header>
 <div class="prog"><i id="bar"></i></div>
 <div class="layout">
-<nav class="toc" id="toc" aria-label="Codelab steps"><ol id="tocList"></ol><p class="total">About 55 minutes. Bonus: 25 more. Deploy: 20 more.</p></nav>
+<nav class="toc" id="toc" aria-label="Codelab steps"><ol id="tocList"></ol><p class="total">About 55 minutes. Bonus: 35 more. Deploy: 20 more.</p></nav>
 <main id="main">
 
 <!-- ====================================================== 1 -->
@@ -817,13 +817,13 @@ gcloud artifacts repositories delete cloud-run-source-deploy --location us-east1
 </section>
 
 <!-- ====================================================== bonus -->
-<section class="step" data-min="25" data-title="Bonus: three more agents" data-optional="1">
-<h2>Bonus: build three more agents</h2>
+<section class="step" data-min="35" data-title="Bonus: four more agents" data-optional="1">
+<h2>Bonus: build four more agents</h2>
 <p>Same pattern as the root cause agent: an instruction, a few Python tools, the playground. Each one gets its own project, its own <code>.env</code> and its own port, so you can run all of them side by side.</p>
 <div class="note">On Windows, run everything in the Ubuntu terminal, as before. Each part takes about 8 minutes.<br>Prefer ready-made projects? These agents, the root cause agent and the sales agent from the talk demo are in the repo under <a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">examples/agents</a>, each with a README, a <code>.env.example</code>, unit tests, an eval and, where it needs one, a setup script for its sample data.</div>
 
 <h3>Set up each project the same way</h3>
-<p>Replace <code>NAME</code> with <code>code-reviewer</code>, <code>design-reviewer</code> or <code>release-notes-writer</code>:</p>
+<p>Replace <code>NAME</code> with <code>code-reviewer</code>, <code>design-reviewer</code>, <code>release-notes-writer</code> or <code>sales-brief</code>:</p>
 <pre><code>cd ~
 agents-cli create NAME --prototype --yes
 cd NAME
@@ -1053,11 +1053,118 @@ agents-cli playground --port 8504</code></pre>
 <pre><code>Write release notes since v1.4.0.</code></pre>
 <div class="see"><h4>You should see</h4><p>A <code>git_log</code> call, then notes grouped into New (dark mode, delivery ETA) and Fixed (the expired order crash, the coupon total). The refactor, the CI bump and the dependency update are left out.</p></div>
 
+<h3>D. Chain four agents in one app</h3>
+<p>One agent per job, chained in one ADK <code>Workflow</code>. An analyst runs pandas code on a sales CSV, two writers turn its numbers into a summary and actions at the same time, and a fact checker checks every number before you see the brief.</p>
+<pre><code>START -&gt; analyst -&gt; exec_writer  -&gt; join -&gt; fact_checker
+                 -&gt; team_writer  -&gt;</code></pre>
+<p>Get the sample data:</p>
+<pre><code>mkdir -p app/data
+curl -L -o app/data/sales.csv https://joshuamdeguzman.com/agents-cli-baguio/examples/agents/sales-brief/app/data/sales.csv</code></pre>
+<p>Replace <code>app/agent.py</code> with:</p>
+<pre><code>"""Weekly sales brief: four agents chained in one ADK Workflow.
+
+START -&gt; analyst -&gt; (exec_writer, team_writer) -&gt; join -&gt; fact_checker
+
+Each agent saves its answer in session state with output_key. The next agent reads it
+with a {placeholder} in its instruction. The Workflow edges say who runs after whom.
+"""
+
+from pathlib import Path
+
+from google.adk.agents import Agent
+from google.adk.apps import App
+from google.adk.code_executors import BuiltInCodeExecutor
+from google.adk.models import Gemini
+from google.adk.workflow import JoinNode, Workflow
+from google.genai import types
+
+MODEL = Gemini(model="gemini-3.8-flash", retry_options=types.HttpRetryOptions(attempts=3))
+
+# 48 rows of monthly sales: month, quarter, region, product, units, price.
+DATASET = Path(__file__).resolve().parent / "data" / "sales.csv"
+
+
+async def load_dataset(callback_context):
+    """Put the CSV into session state so the analyst's instruction can include it."""
+    callback_context.state["dataset_csv"] = DATASET.read_text()
+
+
+# 1. Computes the numbers. The only agent that runs code.
+analyst = Agent(
+    name="analyst",
+    model=MODEL,
+    instruction=(
+        "You are a data analyst. Revenue for a row is units x price. Write pandas code that "
+        "loads the CSV below, run it, and report these numbers, rounded to 2 decimals:\n"
+        "- total revenue\n- revenue by quarter\n- revenue by region\n- units by product\n"
+        "- the single row with the highest revenue: month, region, product and revenue\n"
+        "Report only computed numbers, as a short list. No advice.\n\n{dataset_csv}"
+    ),
+    code_executor=BuiltInCodeExecutor(),
+    before_agent_callback=load_dataset,
+    output_key="figures",
+)
+
+# 2a and 2b. Two writers, same figures, different readers. The edges run them at the same time.
+exec_writer = Agent(
+    name="exec_writer",
+    model=MODEL,
+    instruction=(
+        "Write a 3-bullet summary of the year for a busy manager, using only these figures. "
+        "Include the total, every quarter, both regions and the top row. "
+        "Copy numbers exactly. No new numbers.\n\nFIGURES:\n{figures}"
+    ),
+    output_key="exec_summary",
+)
+
+team_writer = Agent(
+    name="team_writer",
+    model=MODEL,
+    instruction=(
+        "Suggest 2 concrete actions for the sales team next quarter, each tied to one of these "
+        "figures. Copy numbers exactly. No new numbers.\n\nFIGURES:\n{figures}"
+    ),
+    output_key="team_actions",
+)
+
+# 3. Checks every number the writers used against the analyst's figures.
+fact_checker = Agent(
+    name="fact_checker",
+    model=MODEL,
+    instruction=(
+        "You are a fact checker. Check every number in the SUMMARY and ACTIONS against the "
+        "FIGURES. Then output the final brief in markdown: a 'Summary' section, an 'Actions' "
+        "section, and a last line 'Checked: all numbers match' or 'Checked: fixed N numbers'. "
+        "Fix any number that does not match the FIGURES.\n\n"
+        "FIGURES:\n{figures}\n\nSUMMARY:\n{exec_summary}\n\nACTIONS:\n{team_actions}"
+    ),
+    output_key="brief",
+)
+
+# Waits for both writers before the fact checker starts.
+join = JoinNode(name="join")
+
+root_agent = Workflow(
+    name="sales_brief",
+    description="Turns the sales CSV into a checked weekly brief.",
+    # A tuple in the chain runs those agents at the same time.
+    edges=[("START", analyst, (exec_writer, team_writer), join, fact_checker)],
+)
+
+app = App(root_agent=root_agent, name="app")</code></pre>
+<p class="tip"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="url(#tipgrad)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><b>Two lines do the chaining.</b> <code>output_key="figures"</code> saves an agent's answer in session state, and <code>{figures}</code> in the next instruction reads it. The <code>edges</code> only set the order. A tuple runs agents at the same time, and <code>JoinNode</code> waits for all of them.</span></p>
+<pre><code>agents-cli playground --port 8505</code></pre>
+<p>Open <a href="http://127.0.0.1:8505/dev-ui/?app=app" target="_blank" rel="noopener">127.0.0.1:8505/dev-ui/?app=app</a> and ask:</p>
+<pre><code>Make this week&#39;s sales brief.</code></pre>
+<div class="see"><h4>You should see</h4><p>Four turns, one per agent, in 30 to 60 seconds. The analyst shows its code and a total of 72,006.26. The brief ends with <code>Checked: all numbers match</code>. Open the <b>State</b> tab to see <code>figures</code>, <code>exec_summary</code>, <code>team_actions</code> and <code>brief</code>.</p></div>
+<div class="note">Older ADK examples use <code>SequentialAgent</code> and <code>ParallelAgent</code>. They still run in ADK 2.13.0 but print a deprecation warning. <code>Workflow</code> replaces them.</div>
+
 <h3>Evaluate and deploy them</h3>
 <p>Each agent in the repo's <a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">examples/agents</a> folder comes with eval cases and a metric that checks the facts it must get right. From the matching folder, copy the dataset in <code>tests/eval/datasets/</code> and <code>tests/eval/eval_config.yaml</code> into the same places in your project, then run the one for that agent:</p>
 <pre><code>agents-cli eval run --dataset tests/eval/datasets/code-review.json
 agents-cli eval run --dataset tests/eval/datasets/design-review.json
-agents-cli eval run --dataset tests/eval/datasets/release-notes.json</code></pre>
+agents-cli eval run --dataset tests/eval/datasets/release-notes.json
+agents-cli eval run --dataset tests/eval/datasets/basic-dataset.json   # sales-brief</code></pre>
 <p>To deploy any of them, follow step 12 with that agent's folder. Two differences: a deployed agent has no checkout of your repo, so send the git output in the message, and the design reviewer takes the screenshot with <code>--file</code>:</p>
 <pre><code>agents-cli run "Review this diff: $(git diff main...feature/login)" --url SERVICE_URL --mode a2a
 agents-cli run "Write release notes for these commits: $(git log v1.4.0..HEAD --pretty=%s)" --url SERVICE_URL --mode a2a
@@ -1085,7 +1192,7 @@ Skip refactors, CI and dependency bumps.
 Set otel_to_cloud = False in app/fast_api_app.py. Use a Gemini API key; I will add it to .env myself.
 Never read, print or copy .env. Never put the key in code, tests, docs or git.</code></pre>
 <p>Review what it wrote with the checklist from step 9.</p>
-<div class="see"><h4>You should see</h4><p>Up to four playgrounds running at once, on ports 8080, 8502, 8503 and 8504, each with its own agent. That's the closing slide of the talk: one engineer, a team of agents.</p></div>
+<div class="see"><h4>You should see</h4><p>Up to five playgrounds running at once, on ports 8080, 8502, 8503, 8504 and 8505, each with its own agent. That's the closing slide of the talk: one engineer, a team of agents.</p></div>
 </section>
 
 <!-- ====================================================== 12 -->
@@ -1114,7 +1221,7 @@ rm -rf root-cause-agent log-agent code-reviewer design-reviewer release-notes-wr
 <li><a href="https://adk.dev/" target="_blank" rel="noopener">ADK docs</a> and <a href="https://adk.dev/tools-custom/" target="_blank" rel="noopener">custom tools</a></li>
 <li><a href="https://github.com/google/agents-cli" target="_blank" rel="noopener">github.com/google/agents-cli</a></li>
 <li><a href="../slides/">The slides from this talk</a></li>
-<li><a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">All five example agents, ready to run</a></li>
+<li><a href="https://github.com/joshuadeguzman/agents-cli-baguio/tree/main/examples/agents" target="_blank" rel="noopener">All six example agents, ready to run</a></li>
 </ul>
 <div class="see"><h4>You should see</h4><p>No <code>root-cause-agent</code> folder left, unless you want to keep building. Thanks for joining DevFest Baguio 2026.</p></div>
 </section>

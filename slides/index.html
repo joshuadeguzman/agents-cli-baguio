@@ -92,6 +92,14 @@ ul{list-style:none}
 
 pre{font-family:var(--mono);font-size:.74em;line-height:1.7;background:var(--ink);color:#D6D8DC;border-radius:var(--r-md);padding:1.2em 1.3em;overflow:auto}
 pre .k{color:#C39BE8}pre .s{color:#9DD1A0}pre .c{color:#6E7480}pre .t{color:#8AB4F8}
+.chain{display:flex;flex-direction:column;align-items:stretch;gap:.35em;min-width:0}
+.chain .ch-row{display:grid;grid-template-columns:1fr 1fr;gap:.6em}
+.chain .ch-a{background:var(--surf);border-radius:var(--r-md);padding:.6em .9em;display:flex;flex-direction:column;gap:.1em}
+.chain .ch-a b{font-family:var(--mono);font-weight:500;font-size:.95em}
+.chain .ch-a span{font-size:.82em;color:var(--gray)}
+.chain .ch-last{background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
+.chain .ch-arrow{text-align:center;color:var(--gray-2);font-size:1.1em;line-height:1}
+.chain .ch-arrow small{font-size:.65em}
 code{font-family:var(--mono);font-size:.88em;background:var(--surf-2);padding:.12em .4em;border-radius:.35em}
 .stat{font-size:4.4em;font-weight:700;letter-spacing:-.05em;line-height:.9}
 
@@ -427,6 +435,33 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   One line about yourself. Then say what happens: <strong>we build one agent from an empty folder, run it, test it and evaluate it, all on an AI Studio key.</strong><br>
   Deploy needs a Google Cloud project, so we show that command and stop there.<br>
   There are four questions for the room along the way.</div>
+</section>
+
+<!-- DevFest Baguio: Google Cloud credits -->
+<section class="slide" data-sec="Why agents" data-at="0" data-title="Claim USD 5 in Google Cloud credits">
+  <div class="cols c2w">
+    <div style="display:flex;flex-direction:column;gap:.8em">
+      <span class="pill b" style="align-self:flex-start">Google Cloud credits &middot; USD 5</span>
+      <h2 style="margin-bottom:0">Claim your credits</h2>
+      <p style="font-size:1.1em;max-width:none">For the optional deploy step. No credit card needed.</p>
+      <ul class="bl">
+        <li>Open the link on your laptop or phone<span>Tip: use a Chrome profile that is signed in.</span></li>
+        <li>Sign in with a personal @gmail.com account<span>You need a Google Developer Program profile.</span></li>
+        <li>Scan the QR code it shows with your phone<span>This verifies you.</span></li>
+        <li>Wait 3 to 5 minutes<span>Click &ldquo;Open Billing Account&rdquo;. The credits billing account shows on your dashboard.</span></li>
+      </ul>
+      <p class="grad-text" style="font-size:1.3em;font-weight:600;letter-spacing:-.02em;max-width:none;overflow-wrap:anywhere">g.dev/credits/<wbr>gdg-baguio-<wbr><span style="white-space:nowrap">devfest-2026-2</span></p>
+      <p class="tiny" style="max-width:none">One per person. Claim within 4 hours of the event start. Credits last 12 hours, and 1 hour without use can turn them off, so start building right after. Full guide: <a href="https://g.dev/ai/usecloudcredits" target="_blank" rel="noopener" style="color:inherit">g.dev/ai/usecloudcredits</a></p>
+    </div>
+    <div class="card line" style="padding:1.6em;display:grid;place-items:center;min-width:0">
+      <img src="../assets/qr-credits.svg" alt="QR code for g.dev/credits/gdg-baguio-devfest-2026-2" style="width:100%;max-width:15em;aspect-ratio:1;display:block;image-rendering:pixelated">
+    </div>
+  </div>
+  <div class="notes"><h4>One minute, right after the title. Leave it up while people scan.</h4>
+  Say the link out loud once: <strong>g.dev/credits/gdg-baguio-devfest-2026-2</strong>. One coupon per person.<br>
+  The codelab itself only needs an AI Studio key. The credits are for step 12, deploy to Google Cloud.<br>
+  <strong>Timing:</strong> claim within 4 hours of the event start. Credits last 12 hours, and an hour of no activity can deactivate them. If the codelab starts much later, show this slide again then: press <code>J</code> and jump to it.<br>
+  Step by step with screenshots: g.dev/ai/build, slide 3, "Use Cloud Credits".</div>
 </section>
 <!-- DevFest Baguio: chapter 1 -->
 <section class="slide chapter" data-sec="Why agents" data-at="1" data-title="Chapter 1: Why agents">
@@ -802,6 +837,43 @@ td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
   3: for a tool call, the agent runs your Python function and sends the result back. This repeats until Gemini answers.<br>
   4: every step is an event. The Runner saves each one, applies any state changes, and passes it on. <strong>Those events are what you see in the playground's Events view.</strong><br>
   Source: ADK docs, Runtime &rsaquo; Event loop. The agent pauses after each event until the Runner has processed it.</div>
+</section>
+
+<!-- DevFest Baguio: chaining agents with Workflow -->
+<section class="slide" data-sec="What is an agent" data-at="3" data-title="One app, four agents">
+  <h2 class="dm" style="margin-bottom:.15em">One app, four agents</h2>
+  <p style="max-width:none;font-size:1.02em">Same sales CSV. One agent per job, chained in an ADK <code>Workflow</code>.</p>
+  <div class="cols c2" style="align-items:center;gap:1.4em">
+    <div class="chain">
+      <div class="ch-a"><b>analyst</b><span>runs pandas, saves <code>figures</code></span></div>
+      <div class="ch-arrow" aria-hidden="true">&darr;</div>
+      <div class="ch-row">
+        <div class="ch-a"><b>exec_writer</b><span>3 bullets for a manager</span></div>
+        <div class="ch-a"><b>team_writer</b><span>2 actions for the team</span></div>
+      </div>
+      <div class="ch-arrow" aria-hidden="true">&darr; <small>both at once, then join</small></div>
+      <div class="ch-a ch-last"><b>fact_checker</b><span>checks every number, writes the brief</span></div>
+    </div>
+<pre><span class="t">analyst</span> = Agent(..., output_key=<span class="s">"figures"</span>)
+<span class="t">exec_writer</span> = Agent(
+    instruction=<span class="s">"... FIGURES: {figures}"</span>,
+    output_key=<span class="s">"exec_summary"</span>)
+<span class="c"># team_writer, fact_checker: same pattern</span>
+
+root_agent = <span class="k">Workflow</span>(
+    name=<span class="s">"sales_brief"</span>,
+    edges=[(<span class="s">"START"</span>, analyst,
+            (exec_writer, team_writer),
+            JoinNode(name=<span class="s">"join"</span>),
+            fact_checker)])</pre>
+  </div>
+  <p class="insight" style="margin-top:.9em"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="spwf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4285F4"/><stop offset=".55" stop-color="#9B72CB"/><stop offset="1" stop-color="#D96570"/></linearGradient></defs><path fill="url(#spwf)" d="M12 2c.6 4.9 3.1 7.4 8 8-4.9.6-7.4 3.1-8 8-.6-4.9-3.1-7.4-8-8 4.9-.6 7.4-3.1 8-8z" transform="translate(0 2)"/></svg><span><code>output_key</code> saves an answer. <code>{figures}</code> reads it. The edges set the order.</span></p>
+  <div class="notes"><h4>Two minutes. Optional live run on port 8505.</h4>
+  The demo agent did one job. Real work has steps, so give each step its own agent.<br>
+  <strong>Point at two things:</strong> <code>output_key="figures"</code> saves the analyst's answer in session state, and <code>{figures}</code> in the next instruction reads it. The tuple runs both writers at the same time. <code>JoinNode</code> waits for both.<br>
+  Only the analyst runs code. The writers can only reuse its numbers, and the fact checker catches any that change.<br>
+  Live, if time: <code>examples/agents/sales-brief</code>, <code>agents-cli playground --port 8505</code>, ask &ldquo;Make this week's sales brief.&rdquo; It takes 30 to 60 seconds, so talk through the diagram while it runs. Expect 72,006.26 and &ldquo;Checked: all numbers match&rdquo;. Open the State tab: <code>figures</code>, <code>exec_summary</code>, <code>team_actions</code>, <code>brief</code>.<br>
+  If asked: <code>SequentialAgent</code> and <code>ParallelAgent</code> still work but are deprecated in ADK 2. <code>Workflow</code> replaces them.</div>
 </section>
 
 
@@ -1554,32 +1626,6 @@ custom_metrics:
   It builds a different agent from the demo: a root cause agent with two tools, <code>read_log</code> and <code>find_errors</code>, on a planted failure.</div>
 </section>
 
-<!-- DevFest Baguio: Google Cloud credits -->
-<section class="slide" data-sec="Your turn" data-at="35" data-title="Claim USD 5 in Google Cloud credits">
-  <div class="cols c2w">
-    <div style="display:flex;flex-direction:column;gap:.8em">
-      <span class="pill b" style="align-self:flex-start">Google Cloud credits &middot; USD 5</span>
-      <h2 style="margin-bottom:0">Claim your credits</h2>
-      <p style="font-size:1.1em;max-width:none">For the optional deploy step. No credit card needed.</p>
-      <ul class="bl">
-        <li>Open the link on your laptop or phone<span>Tip: use a Chrome profile that is signed in.</span></li>
-        <li>Sign in with a personal @gmail.com account<span>You need a Google Developer Program profile.</span></li>
-        <li>Scan the QR code it shows with your phone<span>This verifies you.</span></li>
-        <li>Wait 3 to 5 minutes<span>Click &ldquo;Open Billing Account&rdquo;. The credits billing account shows on your dashboard.</span></li>
-      </ul>
-      <p class="grad-text" style="font-size:1.3em;font-weight:600;letter-spacing:-.02em;max-width:none;overflow-wrap:anywhere">g.dev/credits/<wbr>gdg-baguio-<wbr><span style="white-space:nowrap">devfest-2026-2</span></p>
-      <p class="tiny" style="max-width:none">One per person. Claim within 4 hours of the event start. Credits last 12 hours, and 1 hour without use can turn them off, so start building right after. Full guide: <a href="https://g.dev/ai/usecloudcredits" target="_blank" rel="noopener" style="color:inherit">g.dev/ai/usecloudcredits</a></p>
-    </div>
-    <div class="card line" style="padding:1.6em;display:grid;place-items:center;min-width:0">
-      <img src="../assets/qr-credits.svg" alt="QR code for g.dev/credits/gdg-baguio-devfest-2026-2" style="width:100%;max-width:15em;aspect-ratio:1;display:block;image-rendering:pixelated">
-    </div>
-  </div>
-  <div class="notes"><h4>One minute. Leave it up while people scan.</h4>
-  Say the link out loud once: <strong>g.dev/credits/gdg-baguio-devfest-2026-2</strong>. One coupon per person.<br>
-  The codelab itself only needs an AI Studio key. The credits are for step 12, deploy to Google Cloud.<br>
-  <strong>Timing:</strong> claim within 4 hours of the event start. Credits last 12 hours, and an hour of no activity can deactivate them. Tell people to claim when they are ready to deploy, not hours before.<br>
-  Step by step with screenshots: g.dev/ai/build, slide 3, "Use Cloud Credits".</div>
-</section>
 
 <!-- 30 -->
 <section class="slide" data-sec="Wrap up" data-at="36">
